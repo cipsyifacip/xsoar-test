@@ -1,0 +1,132 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "95dbc89a-05a7-4d7d-800d-e15738b3ad71",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {},
+	"locked": false,
+	"logicalVersion": 0,
+	"mapping": {
+		"Impossible Traveler": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"Coordinates": {
+					"simple": "Coordinates"
+				},
+				"Previous Country": {
+					"complex": {
+						"filters": [],
+						"root": "Previous Country",
+						"transformers": []
+					}
+				},
+				"Previous Sign In Date Time": {
+					"complex": {
+						"filters": [],
+						"root": "Previous Sign In Date Time",
+						"transformers": []
+					}
+				},
+				"Previous Source IP": {
+					"complex": {
+						"filters": [],
+						"root": "Previous Source IP",
+						"transformers": []
+					}
+				},
+				"Sign In Date Time": {
+					"complex": {
+						"filters": [],
+						"root": "Sign In Date Time",
+						"transformers": []
+					}
+				},
+				"Tags": {
+					"complex": {
+						"accessor": "[0]",
+						"filters": [],
+						"root": "mirror_tags",
+						"transformers": []
+					}
+				},
+				"Travel Map Link": {
+					"complex": {
+						"filters": [],
+						"root": "Travel Map Link",
+						"transformers": []
+					}
+				},
+				"severity": {
+					"complex": {
+						"filters": [],
+						"root": "severity",
+						"transformers": []
+					}
+				}
+			}
+		},
+		"dbot_classification_incident_type_all": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"Previous Country": {
+					"complex": {
+						"filters": [],
+						"root": "Previous Country",
+						"transformers": []
+					}
+				},
+				"Previous Source IP": {
+					"complex": {
+						"filters": [],
+						"root": "Previous Source IP",
+						"transformers": []
+					}
+				},
+				"Tags": {
+					"complex": {
+						"accessor": "[0]",
+						"filters": [],
+						"root": "mirror_tags",
+						"transformers": []
+					}
+				},
+				"Travel Map Link": {
+					"complex": {
+						"filters": [],
+						"root": "Travel Map Link",
+						"transformers": []
+					}
+				},
+				"severity": {
+					"complex": {
+						"filters": [],
+						"root": "severity",
+						"transformers": []
+					}
+				}
+			}
+		}
+	},
+	"name": "Tech days demo",
+	"nameRaw": "Tech days demo",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {},
+	"type": "mapping-incoming",
+	"unclassifiedCases": null,
+	"version": -1
+}
