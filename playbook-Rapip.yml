@@ -1,0 +1,328 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: a74e6af4-2fa1-482f-812a-8248c642962e
+inputs: []
+name: Rapip
+outputs: []
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "7"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 05a2418b-1cb4-46e0-8755-33ee52ac880e
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 05a2418b-1cb4-46e0-8755-33ee52ac880e
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 65
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    defaultassigneecomplex:
+      simple: kumogakure
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 2
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 7e63948f-4b68-4471-8eac-93a6428550b0
+      iscommand: false
+      name: 'Auto Assign '
+      type: condition
+      version: -1
+    taskid: 7e63948f-4b68-4471-8eac-93a6428550b0
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 360,
+          "y": 900
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.close.inv
+      id: 965b4ab8-cb1c-435d-862b-51e49600f128
+      iscommand: true
+      name: Close Incident
+      script: Builtin|||closeInvestigation
+      type: regular
+      version: -1
+    taskid: 965b4ab8-cb1c-435d-862b-51e49600f128
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 50
+        }
+      }
+  "5":
+    continueonerrortype: ""
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body:
+        simple: |-
+          We have detected a suspicious traffic anomaly from an internal IP that requires immediate investigation.
+
+          Alert Details:
+          - Source IP      : ${incident.sourceip}
+          - Countries      : ${incident.sourcegeolocation}
+          - Total Countries: ${incident.countrycount}
+          - Duration       : ${incident.timespan} minutes
+          - First Seen     : ${incident.firstseen}
+          - Last Seen      : ${incident.lastseen}
+          - Severity       : ${incident.severity}
+
+          Action Required:
+
+          1. Identify which user or device was using IP ${incident.sourceip} between ${incident.firstseen} and ${incident.lastseen}
+
+          2. Once the user is identified, please confirm with them whether they were:
+             - Using a VPN/proxy during that timeframe or Traveling or working from a different location
+             - Aware of any unusual activity on their device
+
+          Please reply to this email with the user's response regarding the above questions.
+
+          Kindly provide an update within 1 hour.
+
+          Thank you,
+          SOC Team
+      cc: null
+      format: html
+      methods:
+      - email
+      replyOptions:
+      - VPN/PROXY or Travelling
+      - Aware of any unusual activity
+      - "Yes"
+      subject:
+        simple: Traffic Anomaly - Possible Impossible Traveler - ${incident.sourceip}
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to:
+        simple: rafifhz07@gmail.com
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 072f741f-f14c-478e-86fd-730ebba765a6
+      iscommand: false
+      name: Notify NOC Team
+      type: condition
+      version: -1
+    taskid: 072f741f-f14c-478e-86fd-730ebba765a6
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 910,
+          "y": 50
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: This script isolates endpoints using multiple integrations and
+        returns a success or failure message.
+      id: 1b1a954a-81af-495d-8afd-27dda980cef5
+      iscommand: false
+      name: Isolate
+      script: isolate-endpoint
+      type: regular
+      version: -1
+    taskid: 1b1a954a-81af-495d-8afd-27dda980cef5
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1340,
+          "y": 50
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "8"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      ip:
+        simple: ${incident.sourceip}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: eea00301-3d5e-4428-878d-49d305504aa3
+      iscommand: false
+      name: Cek IP Internal/External
+      script: c00ad9d7-badf-443c-8ccc-97aa502abdc4
+      type: regular
+      version: -1
+    taskid: eea00301-3d5e-4428-878d-49d305504aa3
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 225
+        }
+      }
+  "8":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: IPClassifier.Classification
+          operator: containsGeneral
+          right:
+            value:
+              simple: External
+      label: "yes"
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      "yes":
+      - "9"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: cc57fee2-3c4c-4a3e-85e5-73733e1d5ad1
+      iscommand: false
+      name: External?
+      type: condition
+      version: -1
+    taskid: cc57fee2-3c4c-4a3e-85e5-73733e1d5ad1
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 400
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      ip:
+        simple: ${incident.sourceip}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: AbuseIPDB
+      description: Checks the specified IP address against the AbuseIP database.
+      id: 844531e3-fc78-4378-8367-3f57e6e4054f
+      iscommand: true
+      name: Cek Reputasi IP AbuseIP
+      script: AbuseIPDB|||ip
+      type: regular
+      version: -1
+    taskid: 844531e3-fc78-4378-8367-3f57e6e4054f
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 590
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 945,
+        "width": 1670,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
