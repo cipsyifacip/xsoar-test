@@ -1,0 +1,27 @@
+commonfields:
+  id: 119a9750-4fc0-4cfe-8fc7-bb702a8f84b6
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.10404775
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: Stoptimer
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: demisto.results("Stop Timer")
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

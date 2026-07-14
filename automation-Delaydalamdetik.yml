@@ -1,0 +1,32 @@
+commonfields:
+  id: 795528ce-3244-4315-8bfb-ac98245cf4e0
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.10404775
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: Delaydalamdetik
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import time
+
+  time.sleep(60)
+
+  demisto.results("Delay selesai")
+scripttarget: 0
+subtype: python3
+tags: []
+type: python
