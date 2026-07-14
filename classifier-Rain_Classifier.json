@@ -1,0 +1,58 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "ac3166da-9fe3-4b9d-8641-073a9f738007",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {
+		"150": "Repeated Deny / Timeout - Rainier"
+	},
+	"locked": false,
+	"logicalVersion": 2,
+	"mapping": null,
+	"name": "Rain_Classifier",
+	"nameRaw": "Rain_Classifier",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {
+		"complex": {
+			"filters": [
+				[
+					{
+						"left": {
+							"isContext": true,
+							"value": {
+								"simple": "count"
+							}
+						},
+						"operator": "greaterThanOrEqual",
+						"right": {
+							"isContext": false,
+							"value": {
+								"simple": "50"
+							}
+						}
+					}
+				]
+			],
+			"root": "count",
+			"transformers": []
+		}
+	},
+	"type": "classification",
+	"unclassifiedCases": null,
+	"version": -1
+}
