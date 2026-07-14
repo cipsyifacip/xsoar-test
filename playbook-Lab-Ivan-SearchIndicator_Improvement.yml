@@ -1,0 +1,267 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 48d75400-f09e-40c3-88c7-212545f914a3
+inputs:
+- description: ""
+  key: domain
+  playbookInputQuery: null
+  required: false
+  value: {}
+name: Lab-Ivan-SearchIndicator_Improvement
+outputs:
+- contextPath: status_indicator
+  type: unknown
+quiet: true
+sourceplaybookid: d8608fd6-29c4-4c3e-8cce-7964f98f3339
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: dac58811-d6f3-48f8-84be-4d967bf3a300
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: dac58811-d6f3-48f8-84be-4d967bf3a300
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 265,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      query:
+        simple: type:domain and value:${inputs.domain}
+      retry-count:
+        simple: "0"
+      size:
+        simple: "100"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: |-
+        Searches Cortex XSOAR Indicators.
+
+        Search for XSOAR Indicators and returns the id, indicator_type, value, and score/verdict.
+
+        You can add additional fields from the indicators using the add_field_to_context argument.
+      id: a65b08fc-46d3-4131-815b-c1fec303dd65
+      iscommand: false
+      name: SearchIndicator
+      script: SearchIndicator
+      type: regular
+      version: -1
+    taskid: a65b08fc-46d3-4131-815b-c1fec303dd65
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 265,
+          "y": 195
+        }
+      }
+  "2":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              complex:
+                accessor: result
+                filters:
+                - - left:
+                      iscontext: true
+                      value:
+                        simple: foundIndicators.value
+                    operator: isEqualString
+                    right:
+                      iscontext: true
+                      value:
+                        simple: inputs.domain
+                root: foundIndicators
+          operator: isExists
+          right:
+            value: {}
+      label: "yes"
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "8"
+      "yes":
+      - "7"
+    note: false
+    quietmode: 2
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: f624c753-769c-438c-88f6-cbc84910d3c1
+      iscommand: false
+      name: Is indicator found?
+      type: condition
+      version: -1
+    taskid: f624c753-769c-438c-88f6-cbc84910d3c1
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 265,
+          "y": 370
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: d6ac25b6-f8fa-42be-8200-b21f5089fe84
+      iscommand: false
+      name: Complete
+      type: title
+      version: -1
+    taskid: d6ac25b6-f8fa-42be-8200-b21f5089fe84
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 265,
+          "y": 720
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: status_indicator
+      value:
+        simple: '{"domain":"${inputs.domain}","result":"found"}'
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 5f6b3d7f-3996-4617-8402-c77cdef7413c
+      iscommand: false
+      name: Set key Found
+      script: Set
+      type: regular
+      version: -1
+    taskid: 5f6b3d7f-3996-4617-8402-c77cdef7413c
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 545
+        }
+      }
+  "8":
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: status_indicator
+      value:
+        simple: '{"domain":"${inputs.domain}","result":"not found"}'
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 0b1f797c-f7d8-4c49-8739-96772ae7aa44
+      iscommand: false
+      name: Set key Not Found
+      script: Set
+      type: regular
+      version: -1
+    taskid: 0b1f797c-f7d8-4c49-8739-96772ae7aa44
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 545
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 735,
+        "width": 810,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
