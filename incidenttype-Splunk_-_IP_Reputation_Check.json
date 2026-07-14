@@ -1,0 +1,46 @@
+{
+	"autorun": true,
+	"cacheVersn": 0,
+	"closureScript": "",
+	"color": "#F8E7A5",
+	"days": 0,
+	"daysR": 0,
+	"default": false,
+	"definitionId": "",
+	"detached": false,
+	"disabled": false,
+	"extractSettings": {
+		"fieldCliNameToExtractSettings": {
+			"sourceip": {
+				"extractAsIsIndicatorTypeId": "ipRep",
+				"extractIndicatorTypesIDs": [],
+				"isExtractingAllIndicatorTypes": false
+			}
+		},
+		"mode": "Specific"
+	},
+	"fromServerVersion": "",
+	"hours": 3,
+	"hoursR": 0,
+	"id": "Splunk - IP Reputation Check",
+	"itemVersion": "",
+	"layout": "0edc6da8-1df0-4602-8341-5980c7b70834",
+	"locked": false,
+	"name": "Splunk - IP Reputation Check",
+	"onChangeRepAlg": 0,
+	"packID": "",
+	"packName": "",
+	"playbookId": "dd828765-4251-4b13-8543-56277243bf20",
+	"preProcessingScript": "",
+	"propagationLabels": [
+		"all"
+	],
+	"readonly": false,
+	"reputationCalc": 0,
+	"sla": 3,
+	"system": false,
+	"toServerVersion": "",
+	"version": -1,
+	"weeks": 0,
+	"weeksR": 0
+}
