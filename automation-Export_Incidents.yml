@@ -1,0 +1,193 @@
+args:
+- name: start_time
+  required: true
+- name: end_time
+  required: true
+- default: true
+  defaultValue: "500"
+  name: page_size
+commonfields:
+  id: 3a3d65df-1914-4caa-8aee-cf8b4457605d
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.8927230
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: Export_Incidents
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import csv
+  from io import StringIO
+
+  # =========================================
+  # ARGUMENTS
+  # =========================================
+
+  args = demisto.args()
+
+  start_time = args.get("start_time")
+  end_time = args.get("end_time")
+  page_size = int(args.get("page_size", 500))
+
+  if not start_time:
+      return_error("start_time is required")
+
+  if not end_time:
+      return_error("end_time is required")
+
+  # =========================================
+  # GET INCIDENTS
+  # =========================================
+
+  all_incidents = []
+  page = 0
+
+  while True:
+
+      demisto.info(f"Fetching page {page}")
+
+      res = demisto.executeCommand(
+          "SearchIncidentsV2",
+          {
+              "fromdate": start_time,
+              "todate": end_time,
+              "page": page,
+              "size": page_size,
+              "sort": "created.asc"
+          }
+      )
+
+      if is_error(res):
+          return_error(get_error(res))
+
+      contents = res[0].get("Contents", [])
+
+      if isinstance(contents, dict):
+          incidents = contents.get("data", [])
+
+      elif isinstance(contents, list):
+          incidents = contents
+
+      else:
+          incidents = []
+
+      if not incidents:
+          demisto.info("No more incidents found.")
+          break
+
+      demisto.info(
+          f"Retrieved {len(incidents)} incidents"
+      )
+
+      for inc in incidents:
+
+          playbook_name = (
+              inc.get("playbookName")
+              or inc.get("playbook")
+              or inc.get("playbookId")
+          )
+
+          all_incidents.append({
+              "id": inc.get("id"),
+              "name": inc.get("name"),
+              "type": inc.get("type"),
+              "severity": inc.get("severity"),
+              "status": inc.get("status"),
+              "owner": inc.get("owner"),
+              "playbook": playbook_name,
+              "playbookId": inc.get("playbookId"),
+              "investigationId": inc.get("investigationId"),
+              "created": inc.get("created"),
+              "modified": inc.get("modified"),
+              "closed": inc.get("closed")
+          })
+
+      page += 1
+
+  # =========================================
+  # EXPORT CSV
+  # =========================================
+
+  if not all_incidents:
+
+      return_results(
+          "No incidents found."
+      )
+
+  filename = (
+      f"xsoar_incidents_"
+      f"{start_time[:10].replace('-', '')}"
+      f"_to_"
+      f"{end_time[:10].replace('-', '')}.csv"
+  )
+
+  csv_buffer = StringIO()
+
+  fieldnames = [
+      "id",
+      "name",
+      "type",
+      "severity",
+      "status",
+      "owner",
+      "playbook",
+      "playbookId",
+      "investigationId",
+      "created",
+      "modified",
+      "closed"
+  ]
+
+  writer = csv.DictWriter(
+      csv_buffer,
+      fieldnames=fieldnames
+  )
+
+  writer.writeheader()
+
+  for row in all_incidents:
+      writer.writerow(row)
+
+  human_readable = tableToMarkdown(
+      "Incident Export Summary",
+      [
+          {
+              "Start Time": start_time,
+              "End Time": end_time,
+              "Total Incidents": len(all_incidents)
+          }
+      ]
+  )
+
+  return_results([
+      CommandResults(
+          readable_output=human_readable,
+          outputs_prefix="XSOAR.Export",
+          outputs={
+              "TotalIncidents": len(all_incidents),
+              "FileName": filename
+          }
+      ),
+
+      fileResult(
+          filename,
+          csv_buffer.getvalue()
+      )
+  ])
+scripttarget: 0
+subtype: python3
+tags: []
+type: python
