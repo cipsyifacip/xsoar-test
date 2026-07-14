@@ -1,0 +1,471 @@
+category: Utilities
+commonfields:
+  id: ZohoDesk
+  version: -1
+configuration:
+- defaultvalue: https://desk.zoho.com/api/v1
+  display: Desk API URL
+  name: desk_url
+  required: true
+  type: 0
+- defaultvalue: https://accounts.zoho.com
+  display: Accounts (OAuth) URL
+  name: accounts_url
+  required: true
+  type: 0
+- display: Client ID
+  name: client_id
+  required: true
+  type: 0
+- display: Client Secret
+  name: client_secret
+  required: true
+  type: 4
+- display: Refresh Token
+  name: refresh_token
+  required: true
+  type: 4
+- display: Org ID (kosongkan untuk auto-detect)
+  name: org_id
+  required: false
+  type: 0
+- defaultvalue: cf_no_pks_po
+  display: 'Ticket custom field: No PKS/PO (apiName, hasil probe cf_*)'
+  name: cf_ticket_contract
+  required: false
+  type: 0
+- defaultvalue: cf_acticity_category
+  display: 'Ticket custom field: Activity Category (apiName)'
+  name: cf_ticket_category
+  required: false
+  type: 0
+- defaultvalue: cf_plan_type
+  display: 'Task custom field: Plan/Support Type (apiName)'
+  name: cf_task_plan_type
+  required: false
+  type: 0
+- defaultvalue: cf_custom_credit
+  display: 'Task custom field: Custom Credit checkbox (apiName)'
+  name: cf_task_custom_credit
+  required: false
+  type: 0
+- defaultvalue: cf_credit_limit
+  display: 'Task custom field: Credit Limit (apiName)'
+  name: cf_task_credit_limit
+  required: false
+  type: 0
+- defaultvalue: Combo:6,Bronze:12,Silver:24,Gold:unlimited
+  display: Kuota per plan type (format Plan:angka atau Plan:unlimited, comma-separated)
+  name: plan_quota_map
+  required: false
+  type: 0
+- defaultvalue: Incident,Activity Support,Return Merchandise Authorization (RMA)
+  display: Kategori yang dihitung kuota (comma-separated, harus persis nilai picklist)
+  name: counted_categories
+  required: false
+  type: 0
+- display: Trust any certificate (not secure)
+  name: insecure
+  required: false
+  type: 8
+- display: Use system proxy settings
+  name: proxy
+  required: false
+  type: 8
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+description: Custom integration Zoho Desk untuk PT Dinamika Sistem Integrasi Solusi.
+  Menghitung kuota pemakaian tiket per kontrak (workaround license Professional),
+  plus utilitas search/list modul repurposed (Tasks=Project Contract, Events=Devices).
+display: Zoho Desk (Custom - Dinamika)
+image: data:image/png;base64,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
+name: ZohoDesk
+script:
+  commands:
+  - arguments:
+    - defaultValue: tickets
+      description: 'Modul: tickets / tasks / events / accounts / contacts.'
+      name: module
+    description: List semua field sebuah modul (untuk discover apiName custom fields
+      cf_*).
+    name: zohodesk-org-fields
+    outputs:
+    - contextPath: ZohoDesk.OrgField
+      description: Daftar field modul.
+  - arguments:
+    - defaultValue: "50"
+      description: Jumlah record.
+      name: limit
+    - defaultValue: "0"
+      description: Offset pagination.
+      name: from
+    description: List Project Contract (modul Tasks).
+    name: zohodesk-list-contracts
+    outputs:
+    - contextPath: ZohoDesk.Contract
+      description: Record kontrak.
+  - arguments:
+    - defaultValue: "50"
+      description: Jumlah record.
+      name: limit
+    - defaultValue: "0"
+      description: Offset pagination.
+      name: from
+    description: List Devices (modul Events).
+    name: zohodesk-list-devices
+    outputs:
+    - contextPath: ZohoDesk.Device
+      description: Record device.
+  - arguments:
+    - description: Nilai No PKS/PO (difilter via custom field tiket).
+      name: contract_number
+    - description: 'Filter custom field bebas, format: cf_apiname:value.'
+      name: custom_field
+    - description: Open / On Hold / Closed.
+      name: status
+    - description: ID account (CustomerDB).
+      name: accountId
+    - description: 'Format: startISO,endISO (mis. 2026-01-01T00:00:00.000Z,2026-12-31T23:59:59.999Z).'
+      name: createdTimeRange
+    - description: Sama seperti createdTimeRange, untuk modified time.
+      name: modifiedTimeRange
+    - description: Mis. -createdTime.
+      name: sortBy
+    - defaultValue: "50"
+      description: Jumlah hasil.
+      name: limit
+    description: Search tiket dengan filter kontrak/status/waktu/custom field.
+    name: zohodesk-search-tickets
+    outputs:
+    - contextPath: ZohoDesk.Ticket
+      description: Tiket hasil search.
+  - arguments:
+    - description: Opsional — hitung satu kontrak saja; kosongkan untuk semua kontrak.
+      name: contract_number
+    - description: Override kategori yang dihitung (comma-separated, persis nilai
+        picklist).
+      name: categories
+    - description: 'Override kuota per plan, format: Platinum:25,Gold:20,...'
+      name: plan_quota_map
+    description: Hitung pemakaian kuota tiket per kontrak (used=Closed, in-flight=Open/On
+      Hold; kategori Incident/Activity Support/RMA).
+    name: zohodesk-get-quota-usage
+    outputs:
+    - contextPath: ZohoDesk.Quota.ContractNumber
+      description: Nomor kontrak (No PKS/PO/SPK/LO).
+    - contextPath: ZohoDesk.Quota.TotalTicket
+      description: Kuota total kontrak.
+    - contextPath: ZohoDesk.Quota.Used
+      description: Tiket terpakai (Closed).
+    - contextPath: ZohoDesk.Quota.InFlight
+      description: Tiket Open/On Hold (belum makan kuota).
+    - contextPath: ZohoDesk.Quota.Remaining
+      description: Sisa kuota.
+    - contextPath: ZohoDesk.Quota.PercentUsed
+      description: Persentase terpakai.
+    - contextPath: ZohoDesk.Quota.IsUnlimited
+      description: Kontrak unlimited atau tidak.
+  - arguments:
+    - description: ID tiket (bukan ticketNumber).
+      name: ticket_id
+      required: true
+    - description: Isi komentar.
+      name: content
+      required: true
+    - defaultValue: "false"
+      description: true untuk komentar publik.
+      name: is_public
+    description: Tambah komentar (default private/internal note) ke tiket.
+    name: zohodesk-add-comment
+  - arguments:
+    - description: ID tiket.
+      name: ticket_id
+      required: true
+    - description: 'JSON field yang di-update, mis. {"status": "On Hold"} atau {"cf":
+        {"cf_x": "y"}}.'
+      name: fields_json
+      required: true
+    description: Update field tiket (PATCH).
+    name: zohodesk-update-ticket
+    outputs:
+    - contextPath: ZohoDesk.Ticket
+      description: Tiket setelah update.
+  dockerimage: docker.io/demisto/python3:3.12.13.10404775
+  runonce: false
+  script: |
+    import json
+    import time
+    import urllib3
+    urllib3.disable_warnings()
+
+    MAX_PAGES = 40          # pengaman pagination (40 x 100 = 4000 tiket per kontrak)
+    PAGE_SIZE = 100
+
+
+    class Client(BaseClient):
+        def __init__(self, params: dict):
+            super().__init__(
+                base_url=params['desk_url'].rstrip('/'),
+                verify=not params.get('insecure', False),
+                proxy=params.get('proxy', False))
+            self.accounts_url = params['accounts_url'].rstrip('/')
+            self.client_id = params['client_id']
+            self.client_secret = params.get('client_secret', {}).get('password') \
+                if isinstance(params.get('client_secret'), dict) else params.get('client_secret')
+            self.refresh_token = params.get('refresh_token', {}).get('password') \
+                if isinstance(params.get('refresh_token'), dict) else params.get('refresh_token')
+            self.org_id = params.get('org_id')
+
+        def get_access_token(self) -> str:
+            ctx = get_integration_context() or {}
+            now = int(time.time())
+            if ctx.get('access_token') and ctx.get('expires_at', 0) > now + 60:
+                return ctx['access_token']
+            resp = self._http_request(
+                'POST', url_suffix='', full_url=f'{self.accounts_url}/oauth/v2/token',
+                params={'grant_type': 'refresh_token', 'client_id': self.client_id,
+                        'client_secret': self.client_secret, 'refresh_token': self.refresh_token})
+            token = resp.get('access_token')
+            if not token:
+                raise DemistoException(f'Gagal refresh access token: {resp}')
+            set_integration_context({'access_token': token,
+                                     'expires_at': now + int(resp.get('expires_in', 3600))})
+            return token
+
+        def api(self, method: str, url_suffix: str, params: dict = None, json_data: dict = None):
+            headers = {'Authorization': f'Zoho-oauthtoken {self.get_access_token()}'}
+            if self.org_id:
+                headers['orgId'] = str(self.org_id)
+            resp = self._http_request(method, url_suffix, params=params, json_data=json_data,
+                                      headers=headers, ok_codes=(200, 201, 204),
+                                      resp_type='response')
+            # Zoho Desk balas HTTP 204 tanpa body kalau hasil list kosong
+            if resp.status_code == 204 or not resp.content:
+                return {}
+            return resp.json()
+
+        def paginate(self, url_suffix: str, params: dict = None) -> list:
+            params = dict(params or {})
+            params['limit'] = params.get('limit', PAGE_SIZE)
+            params['from'] = 0
+            out = []
+            for _ in range(MAX_PAGES):
+                page = self.api('GET', url_suffix, params=params).get('data', [])
+                out.extend(page)
+                if len(page) < params['limit']:
+                    break
+                params['from'] += params['limit']
+            return out
+
+
+    def build_search_params(client: Client, args: dict, params: dict) -> dict:
+        sp = {}
+        cf_idx = 1
+        if args.get('contract_number'):
+            sp[f'customField{cf_idx}'] = f"{params['cf_ticket_contract']}:{args['contract_number']}"
+            cf_idx += 1
+        if args.get('custom_field'):  # format bebas "cf_apiname:value"
+            sp[f'customField{cf_idx}'] = args['custom_field']
+        for key in ('status', 'accountId', 'createdTimeRange', 'modifiedTimeRange', 'sortBy'):
+            if args.get(key):
+                sp[key] = args[key]
+        return sp
+
+
+    def cmd_test(client: Client) -> str:
+        client.api('GET', '/tickets', params={'limit': 1})
+        return 'ok'
+
+
+    def cmd_org_fields(client: Client, args: dict) -> CommandResults:
+        module = args.get('module', 'tickets')
+        data = client.api('GET', '/organizationFields', params={'module': module}).get('data', [])
+        rows = [{'apiName': f.get('apiName'), 'label': f.get('displayLabel'),
+                 'type': f.get('type'), 'isCustom': f.get('isCustomField')} for f in data]
+        return CommandResults(
+            outputs_prefix='ZohoDesk.OrgField', outputs=rows,
+            readable_output=tableToMarkdown(f'Fields modul {module}', rows))
+
+
+    def cmd_list(client: Client, args: dict, endpoint: str, title: str, prefix: str) -> CommandResults:
+        params = {'limit': min(int(args.get('limit', 50)), PAGE_SIZE),
+                  'from': int(args.get('from', 0))}
+        data = client.api('GET', endpoint, params=params).get('data', [])
+        return CommandResults(
+            outputs_prefix=prefix, outputs_key_field='id', outputs=data,
+            readable_output=tableToMarkdown(title, data, removeNull=True))
+
+
+    def cmd_search_tickets(client: Client, args: dict, params: dict) -> CommandResults:
+        sp = build_search_params(client, args, params)
+        sp['limit'] = min(int(args.get('limit', 50)), PAGE_SIZE)
+        resp = client.api('GET', '/tickets/search', params=sp)
+        data = resp.get('data', [])
+        headers = ['ticketNumber', 'subject', 'status', 'createdTime', 'closedTime']
+        return CommandResults(
+            outputs_prefix='ZohoDesk.Ticket', outputs_key_field='id', outputs=data,
+            readable_output=tableToMarkdown(
+                f"Hasil search ({resp.get('count', len(data))} match)", data,
+                headers=headers, removeNull=True))
+
+
+    def count_tickets(client: Client, params: dict, contract_number: str,
+                      statuses: list, categories: list) -> int:
+        """Hitung tiket per kontrak. Filter kategori server-side via customField2,
+        karena list/search response tidak selalu menyertakan cf."""
+        total = 0
+        for status in statuses:
+            for cat in (categories or [None]):
+                sp = {'customField1': f"{params['cf_ticket_contract']}:{contract_number}",
+                      'status': status, 'limit': PAGE_SIZE, 'from': 0}
+                if cat:
+                    sp['customField2'] = f"{params['cf_ticket_category']}:{cat}"
+                for _ in range(MAX_PAGES):
+                    page = client.api('GET', '/tickets/search', params=sp).get('data', [])
+                    total += len(page)
+                    if len(page) < PAGE_SIZE:
+                        break
+                    sp['from'] += PAGE_SIZE
+        return total
+
+
+    def parse_plan_map(raw: str) -> dict:
+        """'Combo:6,Gold:unlimited' -> {'combo': 6, 'gold': 'unlimited'} (case-insensitive).
+        Nilai bisa angka atau string 'unlimited'."""
+        out = {}
+        for pair in argToList(raw):
+            if ':' in pair:
+                k, v = pair.rsplit(':', 1)
+                v = v.strip()
+                if v.isdigit():
+                    out[k.strip().lower()] = int(v)
+                elif v.lower() == 'unlimited':
+                    out[k.strip().lower()] = 'unlimited'
+        return out
+
+
+    def cmd_quota_usage(client: Client, args: dict, params: dict) -> CommandResults:
+        categories = argToList(args.get('categories') or params.get('counted_categories')
+                               or 'Incident,Activity Support,Return Merchandise Authorization (RMA)')
+        plan_map = parse_plan_map(args.get('plan_quota_map')
+                                  or params.get('plan_quota_map')
+                                  or 'Combo:6,Bronze:12,Silver:24,Gold:unlimited')
+        contracts = client.paginate('/tasks')
+        wanted = args.get('contract_number')
+        results = []
+        for c in contracts:
+            cf = c.get('cf') or c.get('customFields') or {}
+            if not cf:
+                # list /tasks tidak menyertakan cf — ambil detail per record
+                detail = client.api('GET', f"/tasks/{c['id']}")
+                if detail:
+                    c = detail
+                    cf = c.get('cf') or c.get('customFields') or {}
+
+            def cfv(api_name):
+                return cf.get(api_name) or cf.get(api_name.removeprefix('cf_')) or c.get(api_name)
+
+            number = cfv('cf_no_pks_po_spk_lo') or c.get('subject')
+            if wanted and str(number) != str(wanted):
+                continue
+            def truthy(v):
+                return str(v).lower() in ('true', '1', 'yes')
+
+            # resolusi kuota: Custom Credit (Credit Limit manual, override) > default plan type.
+            # Plan tertentu (mis. Gold) di-map ke 'unlimited'.
+            plan = (cfv(params['cf_task_plan_type']) or '').strip()
+            unlimited = False
+            if truthy(cfv(params['cf_task_custom_credit'])):
+                total_quota = arg_to_number(cfv(params['cf_task_credit_limit'])) or 0
+                quota_source = 'Custom Credit'
+            else:
+                mapped = plan_map.get(plan.lower())
+                if mapped == 'unlimited':
+                    unlimited = True
+                    total_quota = 0
+                    quota_source = f'Plan {plan} (unlimited)'
+                elif mapped is not None:
+                    total_quota = mapped
+                    quota_source = f'Plan {plan}'
+                else:
+                    total_quota = 0
+                    quota_source = f'Plan {plan} (tak dikenal!)' if plan else 'Plan tidak diisi!'
+            used = count_tickets(client, params, str(number), ['Closed'], categories)
+            in_flight = count_tickets(client, params, str(number),
+                                      ['Open', 'On Hold', 'Escalated', 'In Progress'], categories)
+            remaining = None if unlimited else max(total_quota - used, 0)
+            pct = None if unlimited or not total_quota else round(used * 100.0 / total_quota, 1)
+            results.append({
+                'ContractNumber': number, 'Subject': c.get('subject'),
+                'PlanType': plan or None, 'QuotaSource': quota_source,
+                'IsUnlimited': unlimited, 'TotalTicket': total_quota,
+                'Used': used, 'InFlight': in_flight,
+                'Remaining': remaining, 'PercentUsed': pct,
+                'TaskId': c.get('id'), 'Status': c.get('status'),
+            })
+        return CommandResults(
+            outputs_prefix='ZohoDesk.Quota', outputs_key_field='ContractNumber',
+            outputs=results,
+            readable_output=tableToMarkdown('Pemakaian kuota per kontrak', results,
+                                            removeNull=True))
+
+
+    def cmd_add_comment(client: Client, args: dict) -> CommandResults:
+        body = {'content': args['content'],
+                'isPublic': argToBoolean(args.get('is_public', 'false'))}
+        resp = client.api('POST', f"/tickets/{args['ticket_id']}/comments", json_data=body)
+        return CommandResults(readable_output=f"Komentar ditambahkan ke tiket {args['ticket_id']}.",
+                              outputs_prefix='ZohoDesk.Comment', outputs=resp)
+
+
+    def cmd_update_ticket(client: Client, args: dict) -> CommandResults:
+        fields = json.loads(args['fields_json'])
+        resp = client.api('PATCH', f"/tickets/{args['ticket_id']}", json_data=fields)
+        return CommandResults(readable_output=f"Tiket {args['ticket_id']} di-update.",
+                              outputs_prefix='ZohoDesk.Ticket', outputs_key_field='id',
+                              outputs=resp)
+
+
+    def main():
+        params = demisto.params()
+        args = demisto.args()
+        command = demisto.command()
+        client = Client(params)
+        try:
+            if command == 'test-module':
+                return_results(cmd_test(client))
+            elif command == 'zohodesk-org-fields':
+                return_results(cmd_org_fields(client, args))
+            elif command == 'zohodesk-list-contracts':
+                return_results(cmd_list(client, args, '/tasks',
+                                        'Project Contracts (Tasks)', 'ZohoDesk.Contract'))
+            elif command == 'zohodesk-list-devices':
+                return_results(cmd_list(client, args, '/events',
+                                        'Devices (Events)', 'ZohoDesk.Device'))
+            elif command == 'zohodesk-search-tickets':
+                return_results(cmd_search_tickets(client, args, params))
+            elif command == 'zohodesk-get-quota-usage':
+                return_results(cmd_quota_usage(client, args, params))
+            elif command == 'zohodesk-add-comment':
+                return_results(cmd_add_comment(client, args))
+            elif command == 'zohodesk-update-ticket':
+                return_results(cmd_update_ticket(client, args))
+            else:
+                raise NotImplementedError(f'Command {command} belum diimplementasikan')
+        except Exception as e:
+            return_error(f'Error di ZohoDesk integration: {e}')
+
+
+    if __name__ in ('__main__', '__builtin__', 'builtins'):
+        main()
+  subtype: python3
+  type: python
