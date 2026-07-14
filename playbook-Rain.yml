@@ -1,0 +1,801 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 7c19b4c0-9ceb-41b6-8978-438ad16f0dc2
+inputs: []
+name: Rain
+outputs: []
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 6b14951b-0ad1-444a-8192-b2a0ab353a0c
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 6b14951b-0ad1-444a-8192-b2a0ab353a0c
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 275,
+          "y": 50
+        }
+      }
+  "1":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: IPClassifier.Classification
+          operator: isEqualString
+          right:
+            value:
+              simple: Internal
+      label: Internal
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: IPClassifier.Classification
+          operator: isEqualString
+          right:
+            value:
+              simple: External
+      label: External
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      External:
+      - "3"
+      - "4"
+      Internal:
+      - "6"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the reputation of an IP address.
+      id: b9d98b49-333c-444a-8aed-d8537c96dba1
+      iscommand: false
+      name: Internal Or External
+      type: condition
+      version: -1
+    taskid: b9d98b49-333c-444a-8aed-d8537c96dba1
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 275,
+          "y": 370
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      ip:
+        complex:
+          accessor: sourceip
+          root: incident
+          transformers:
+          - operator: Stringify
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 415d1136-dd5a-46a6-8bca-6cae3b23103d
+      iscommand: false
+      name: Check Source IP Internal or External
+      script: c00ad9d7-badf-443c-8ccc-97aa502abdc4
+      type: regular
+      version: -1
+    taskid: 415d1136-dd5a-46a6-8bca-6cae3b23103d
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 275,
+          "y": 195
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "8"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      ip:
+        complex:
+          accessor: sourceip
+          root: incident
+          transformers:
+          - operator: Stringify
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: AbuseIPDB
+      description: Checks the specified IP address against the AbuseIP database.
+      id: 7d1a6ed7-a09c-439e-8e28-e06bff720ff5
+      iscommand: true
+      name: Check IP with Abuse IP
+      script: AbuseIPDB|||ip
+      type: regular
+      version: -1
+    taskid: 7d1a6ed7-a09c-439e-8e28-e06bff720ff5
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 895
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "8"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      ip:
+        complex:
+          accessor: sourceip
+          root: incident
+          transformers:
+          - operator: Stringify
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the reputation of an IP address.
+      id: ff7c5288-2258-46ee-867b-4f90b785240e
+      iscommand: true
+      name: Check IP with VirusTotal
+      script: VirusTotal (API v3)|||ip
+      type: regular
+      version: -1
+    taskid: ff7c5288-2258-46ee-867b-4f90b785240e
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 895
+        }
+      }
+  "5":
+    continueonerrortype: ""
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body:
+        simple: |-
+          Firewall block port 80 or 443.
+
+          Is this misconfiguration??
+      cc: null
+      format: ""
+      methods:
+      - email
+      replyOptions:
+      - Misconfiguration
+      - Correct Configuration
+      subject:
+        simple: "XSOAR \nIncident ID : ${incident.id}\nIncident Type : ${incident.type}"
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to:
+        simple: rainierw3535@gmail.com
+    nexttasks:
+      Correct Configuration:
+      - "9"
+      Misconfiguration:
+      - "15"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: AbuseIPDB
+      description: Checks the specified IP address against the AbuseIP database.
+      id: 1e9397dd-723f-4a84-8161-cbaaae6b8909
+      iscommand: false
+      name: Check Misconfiguration Firewall?
+      type: condition
+      version: -1
+    taskid: 1e9397dd-723f-4a84-8161-cbaaae6b8909
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 1340,
+          "y": 1245
+        }
+      }
+  "6":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: incident.destinationport
+          operator: containsGeneral
+          right:
+            value:
+              simple: "22"
+        - left:
+            iscontext: true
+            value:
+              simple: incident.destinationport
+          operator: containsGeneral
+          right:
+            value:
+              simple: "23"
+        - left:
+            iscontext: true
+            value:
+              simple: incident.destinationport
+          operator: containsGeneral
+          right:
+            value:
+              simple: "3389"
+      label: Dangerous (Contains SSH, Telnet or RDP)
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: incident.destinationport
+          operator: containsGeneral
+          right:
+            value:
+              simple: "80"
+        - left:
+            iscontext: true
+            value:
+              simple: incident.destinationport
+          operator: containsGeneral
+          right:
+            value:
+              simple: "443"
+      label: 'Suspicious (Contains HTTP or HTTPS) '
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      Dangerous (Contains SSH, Telnet or RDP):
+      - "7"
+      'Suspicious (Contains HTTP or HTTPS) ':
+      - "5"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: AbuseIPDB
+      description: Checks the specified IP address against the AbuseIP database.
+      id: 8cfe75ef-5efd-454f-8897-15a48e8612ab
+      iscommand: false
+      name: Dangerous port or Suspicious?
+      type: condition
+      version: -1
+    taskid: 8cfe75ef-5efd-454f-8897-15a48e8612ab
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 920,
+          "y": 545
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    form:
+      description: ""
+      expired: false
+      questions:
+      - defaultrows: []
+        fieldassociated: ""
+        gridcolumns: []
+        id: "0"
+        label: ""
+        labelarg:
+          simple: " Any Successful attempt to SSH, Telnet or RDP to \nIP : ${incident.destinationip}
+            ?"
+        options: []
+        optionsarg:
+        - simple: SSH
+        - simple: Telnet
+        - simple: RDP
+        - simple: 'None '
+        placeholder: ""
+        readonly: false
+        required: true
+        tooltip: Choose the successful attempt
+        type: multiSelect
+      sender: ""
+      title: XSOAR Data Collection
+      totalanswers: 0
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body:
+        simple: Please Answer the Questions
+      cc: null
+      format: ""
+      methods:
+      - email
+      replyOptions:
+      - "Yes"
+      - "No"
+      subject:
+        simple: "XSOAR \nIncident ID : ${incident.id}\nIncident Type : ${incident.type}"
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to:
+        simple: rainierw3535@gmail.com
+    nexttasks:
+      '#none#':
+      - "11"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: AbuseIPDB
+      description: Checks the specified IP address against the AbuseIP database.
+      id: 3c5245a8-60ee-45fd-8604-82deda8ef60b
+      iscommand: false
+      name: Check (SSH, Telnet or RDP) sucessful attempt
+      type: collection
+      version: -1
+    taskid: 3c5245a8-60ee-45fd-8604-82deda8ef60b
+    timertriggers: []
+    type: collection
+    view: |-
+      {
+        "position": {
+          "x": 910,
+          "y": 720
+        }
+      }
+  "8":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: IP.Malicious.Vendor
+          operator: greaterThanOrEqual
+          right:
+            value:
+              simple: "10"
+        - left:
+            iscontext: true
+            value:
+              simple: IP.VTVendors.EngineDetections
+          operator: greaterThanOrEqual
+          right:
+            value:
+              simple: "10"
+      label: Bad
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "13"
+      Bad:
+      - "9"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: AbuseIPDB
+      description: Checks the specified IP address against the AbuseIP database.
+      id: 2864a728-8cea-4cce-8363-32fe742293bc
+      iscommand: false
+      name: IP Reputation Bad?
+      type: condition
+      version: -1
+    taskid: 2864a728-8cea-4cce-8363-32fe742293bc
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 60,
+          "y": 1070
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    defaultassigneecomplex:
+      simple: kumogakure
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "14"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    sla:
+      days: 0
+      hours: 12
+      minutes: 0
+      weeks: 0
+    task:
+      brand: ""
+      id: aba5bd5b-c942-493a-8d99-153b8a1b657c
+      iscommand: false
+      name: Block IP
+      type: regular
+      version: -1
+    taskid: aba5bd5b-c942-493a-8d99-153b8a1b657c
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 797.5,
+          "y": 1420
+        }
+      }
+  "10":
+    continueonerrortype: ""
+    id: "10"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "12"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      severity:
+        simple: Critical
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Optionally increases the incident severity to the new value if
+        it is greater than the existing severity.
+      id: d87606d9-869c-4cba-864f-1a6517853f11
+      iscommand: false
+      name: Increase Incident Severity to Critical
+      script: IncreaseIncidentSeverity
+      type: regular
+      version: -1
+    taskid: d87606d9-869c-4cba-864f-1a6517853f11
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 910,
+          "y": 1070
+        }
+      }
+  "11":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: XSOAR Data Collection.Answers.0
+          operator: isEqualString
+          right:
+            value:
+              simple: SSH
+        - left:
+            iscontext: true
+            value:
+              simple: XSOAR Data Collection.Answers.0
+          operator: isEqualString
+          right:
+            value:
+              simple: Telnet
+        - left:
+            iscontext: true
+            value:
+              simple: XSOAR Data Collection.Answers.0
+          operator: isEqualString
+          right:
+            value:
+              simple: RDP
+      label: Success
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: XSOAR Data Collection.Answers.0
+          operator: isEqualString
+          right:
+            value:
+              simple: None
+      label: Failed
+    continueonerrortype: ""
+    id: "11"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      Failed:
+      - "9"
+      Success:
+      - "10"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: AbuseIPDB
+      description: Checks the specified IP address against the AbuseIP database.
+      id: e7994f79-490b-47f2-8874-6e70d63de83e
+      iscommand: false
+      name: Succesful?
+      type: condition
+      version: -1
+    taskid: e7994f79-490b-47f2-8874-6e70d63de83e
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 910,
+          "y": 895
+        }
+      }
+  "12":
+    continueonerrortype: ""
+    defaultassigneecomplex:
+      simple: kumogakure
+    id: "12"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "9"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    sla:
+      days: 0
+      hours: 1
+      minutes: 0
+      weeks: 0
+    task:
+      brand: ""
+      id: dfc8288c-d62c-4fcf-8bb0-186349f61f8f
+      iscommand: false
+      name: Isolate Endpoint
+      type: regular
+      version: -1
+    taskid: dfc8288c-d62c-4fcf-8bb0-186349f61f8f
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 910,
+          "y": 1245
+        }
+      }
+  "13":
+    continueonerrortype: ""
+    id: "13"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body:
+        simple: 'Is IP: ${incident.sourceip} a Remote Worker?'
+      cc: null
+      format: ""
+      methods:
+      - email
+      replyOptions:
+      - "Yes"
+      - "No"
+      subject:
+        simple: |-
+          XSOAR
+          Incident ID : ${incident.id}
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to:
+        simple: rainierw3535@gmail.com
+    nexttasks:
+      "No":
+      - "9"
+      "Yes":
+      - "14"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    sla:
+      days: 0
+      hours: 12
+      minutes: 0
+      weeks: 0
+    task:
+      brand: ""
+      id: a7fc08fb-732d-4a81-86ca-d47007a12bca
+      iscommand: false
+      name: Remote Worker?
+      type: condition
+      version: -1
+    taskid: a7fc08fb-732d-4a81-86ca-d47007a12bca
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 1245
+        }
+      }
+  "14":
+    continueonerrortype: ""
+    id: "14"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.close.inv
+      id: bde7559b-55a4-4bd4-8c68-cf72fecb6063
+      iscommand: true
+      name: Close Incident
+      script: Builtin|||closeInvestigation
+      type: regular
+      version: -1
+    taskid: bde7559b-55a4-4bd4-8c68-cf72fecb6063
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 797.5,
+          "y": 1595
+        }
+      }
+  "15":
+    continueonerrortype: ""
+    defaultassigneecomplex:
+      simple: kumogakure
+    id: "15"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "14"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    sla:
+      days: 0
+      hours: 12
+      minutes: 0
+      weeks: 0
+    task:
+      brand: ""
+      id: 201bd049-b97a-4bea-8b84-a11205e1be19
+      iscommand: false
+      name: Inform Network Team to Configure Firewall
+      type: regular
+      version: -1
+    taskid: 201bd049-b97a-4bea-8b84-a11205e1be19
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1340,
+          "y": 1420
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1640,
+        "width": 1670,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
