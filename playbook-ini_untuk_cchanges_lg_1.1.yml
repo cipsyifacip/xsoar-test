@@ -1,0 +1,119 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 9d9b57b6-50b6-4856-89d3-0991d4fb0c5b
+inputs: []
+name: ini untuk cchanges lg 1.1
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: ea465df1-b9f7-4db7-8fc6-23237d59d48f
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: ea465df1-b9f7-4db7-8fc6-23237d59d48f
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Append item(s) to the end of the json
+      id: f1b5ed88-9bb0-4ed2-8897-5a5c8ed46f5f
+      iscommand: false
+      name: AppendJson
+      script: ed28eee1-9dc1-41b6-89c8-0b37b627a36a
+      type: regular
+      version: -1
+    taskid: f1b5ed88-9bb0-4ed2-8897-5a5c8ed46f5f
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: b95afe7a-66a2-4966-8e15-a629aac51733
+      iscommand: false
+      name: End
+      type: title
+      version: -1
+    taskid: b95afe7a-66a2-4966-8e15-a629aac51733
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 460,
+          "y": 400
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 415,
+        "width": 390,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }
