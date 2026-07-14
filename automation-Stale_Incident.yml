@@ -1,0 +1,143 @@
+commonfields:
+  id: 98b725e7-6134-4905-81ea-c2c4eb85d312
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.9059085
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: Stale_Incident
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  from datetime import datetime, timedelta
+  import re
+
+  def main():
+      # Inisialisasi variabel untuk menampung semua log debugging
+      debug_logs = []
+      debug_logs.append("=== START DEBUGGING: SMC INCIDENT CHECKER ===")
+
+      # 1. Hitung batas tanggal (6 bulan terakhir)
+      today = datetime.now()
+      six_months_ago = (today - timedelta(days=6 * 30)).strftime('%Y-%m-%dT%H:%M:%SZ')
+      debug_logs.append(f"[STEP 1] Hari ini: {today.strftime('%Y-%m-%d %H:%M:%S')}")
+      debug_logs.append(f"[STEP 1] Batas tanggal 6 bulan lalu: {six_months_ago}")
+
+      # 2. Setup & Jalankan Query SearchIncidentsV2
+      query = f"tags:SMC and status:Active and created:>={six_months_ago} and handovercomment:*"
+      debug_logs.append(f"[STEP 2] Menjalankan SearchIncidentsV2 dengan query: {query}")
+
+      search_args = {"query": query, "limit": 500}
+      search_res = demisto.executeCommand("SearchIncidentsV2", search_args)
+
+      if is_error(search_res):
+          error_msg = f"Gagal mencari insiden: {get_error(search_res)}"
+          debug_logs.append(f"[ERROR] {error_msg}")
+          # Print apa yang sempat tercatat sebelum error
+          return_results("\n".join(debug_logs))
+          return_error(error_msg)
+
+      incidents = search_res[0].get("Contents", {}).get("data", [])
+      debug_logs.append(f"[STEP 2] Berhasil menarik {len(incidents)} insiden dari query awal.")
+
+      if not incidents:
+          debug_logs.append("[STEP 2] Selesai. Tidak ada insiden untuk diproses.")
+          return_results("\n".join(debug_logs))
+          return
+
+      updated_incidents_summary = []
+      date_pattern = r"^\[(\d{1,2}\s[A-Za-z]+\s\d{4}),\s\d{2}:\d{2}\]"
+
+      # 3. Looping & Filter Detail per Insiden
+      debug_logs.append("[STEP 3] Memulai pemeriksaan detail per insiden...")
+
+      for idx, incident in enumerate(incidents, 1):
+          incident_id = incident.get("id")
+          incident_name = incident.get("name", "No Name")
+          custom_fields = incident.get("CustomFields", {})
+
+          # GANTI dengan Machine Name field asli kamu
+          handover_comment = custom_fields.get("handovercomment", "")
+
+          debug_logs.append(f"\n--- Pengecekan Tiket ke-{idx} (ID: {incident_id}) ---")
+          debug_logs.append(f"Nama Tiket: {incident_name}")
+          debug_logs.append(f"Isi Handover Comment: {handover_comment}")
+
+          if not handover_comment:
+              debug_logs.append("-> [SKIP] Handover Comment kosong secara tidak terduga.")
+              continue
+
+          match = re.search(date_pattern, handover_comment)
+
+          if match:
+              date_str = match.group(1)
+              debug_logs.append(f"-> [REGEX MATCH] Berhasil ambil string tanggal: '{date_str}'")
+
+              try:
+                  comment_date = datetime.strptime(date_str, "%d %b %Y")
+                  delta = today - comment_date
+                  debug_logs.append(f"-> [DATETIME PARSED] Tanggal update: {comment_date.strftime('%Y-%m-%d')} | Umur update: {delta.days} hari")
+
+                  if delta.days >= 5:
+                      debug_logs.append(f"-> [CRITERIA MET] Umur {delta.days} hari (>= 5 hari). Menjalankan setIncident...")
+
+                      set_args = {
+                          "id": incident_id,
+                          "customFields": {
+                              "smcneedaction": "yes" # GANTI dengan Machine Name field asli
+                          }
+                      }
+                      demisto.executeCommand("setIncident", set_args)
+                      debug_logs.append(f"-> [SUCCESS] setIncident dipanggil (smcneedaction=yes)")
+
+                      updated_incidents_summary.append({
+                          "Incident ID": incident_id,
+                          "Incident Name": incident_name,
+                          "Last Handover Comment": handover_comment,
+                          "Parsed Date": date_str,
+                          "Days Unupdated": delta.days,
+                          "Action Set To": "yes"
+                      })
+                  else:
+                      debug_logs.append(f"-> [SKIP] Umur update baru {delta.days} hari (< 5 hari).")
+
+              except ValueError as e:
+                  debug_logs.append(f"-> [ERROR PARSING] Gagal cocokkan format tanggal pada '{date_str}'. Error: {str(e)}")
+                  continue
+          else:
+              debug_logs.append(f"-> [REGEX FAILED] Format comment tidak sesuai regex pattern.")
+
+      debug_logs.append("\n=== END DEBUGGING: SMC INCIDENT CHECKER ===")
+
+      # 4. Cetak Log Debugging ke Playground
+      # Menggabungkan seluruh list log menjadi satu string teks panjang
+      full_debug_output = "\n".join(debug_logs)
+      return_results(full_debug_output)
+
+      # 5. Cetak Tabel Hasil Akhir (jika ada yang terupdate) ke Playground
+      if updated_incidents_summary:
+          markdown_table = tblToMd(
+              "SMC Incidents Automatically Set to 'Need Action' (>= 5 Days No Update)",
+              updated_incidents_summary,
+              headers=["Incident ID", "Incident Name", "Last Handover Comment", "Parsed Date", "Days Unupdated", "Action Set To"]
+          )
+          return_results(markdown_table)
+
+  if __name__ in ("__main__", "__builtin__", "builtins"):
+      main()
+scripttarget: 0
+subtype: python3
+tags: []
+type: python
