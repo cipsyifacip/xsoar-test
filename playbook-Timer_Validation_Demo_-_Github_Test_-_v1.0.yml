@@ -147,7 +147,7 @@ tasks:
     isoversize: false
     nexttasks:
       '#none#':
-      - "9"
+      - "5"
     note: false
     quietmode: 0
     separatecontext: false
@@ -246,37 +246,6 @@ tasks:
           "y": 820
         }
       }
-  "9":
-    continueonerrortype: ""
-    id: "9"
-    ignoreworker: false
-    isautoswitchedtoquietmode: false
-    isoversize: false
-    nexttasks:
-      '#none#':
-      - "5"
-    note: false
-    quietmode: 0
-    separatecontext: false
-    skipunavailable: false
-    task:
-      brand: ""
-      id: c39dffa9-37ab-45f8-8a95-b7765098e81b
-      iscommand: false
-      name: Delay 30 detik
-      script: 795528ce-3244-4315-8bfb-ac98245cf4e0
-      type: regular
-      version: -1
-    taskid: c39dffa9-37ab-45f8-8a95-b7765098e81b
-    timertriggers: []
-    type: regular
-    view: |-
-      {
-        "position": {
-          "x": -200,
-          "y": 570
-        }
-      }
 version: -1
 view: |-
   {
@@ -284,8 +253,8 @@ view: |-
     "paper": {
       "dimensions": {
         "height": 905,
-        "width": 1450,
-        "x": -200,
+        "width": 1060,
+        "x": 190,
         "y": 10
       }
     }
