@@ -1,0 +1,197 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: ca7dd0d9-33b7-4d03-8c5a-8d226fb4a96b
+inputs: []
+name: SLA-test-Ivan
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: cb515afa-bd00-428b-8d21-c7cf32035ff3
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: cb515afa-bd00-428b-8d21-c7cf32035ff3
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 76442138-0ba8-4924-8fa7-c305fe5a3c37
+      iscommand: false
+      name: Test Containment Timers
+      type: title
+      version: -1
+    taskid: 76442138-0ba8-4924-8fa7-c305fe5a3c37
+    timertriggers:
+    - action: start
+      fieldname: containmentsla
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 220
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "4"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "true"
+      key:
+        simple: Containment
+      stringify:
+        simple: "true"
+      value:
+        simple: hello world
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 43928eb3-b0af-4f30-8e8d-c9fd7afcc67a
+      iscommand: false
+      name: Set
+      script: Set
+      type: regular
+      version: -1
+    taskid: 43928eb3-b0af-4f30-8e8d-c9fd7afcc67a
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 390
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: c86d3320-5afe-4835-8e82-e2c1a1b9477d
+      iscommand: false
+      name: End of Containment
+      type: title
+      version: -1
+    taskid: c86d3320-5afe-4835-8e82-e2c1a1b9477d
+    timertriggers:
+    - action: stop
+      fieldname: containmentsla
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 570
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      testingtimerfinal:
+        simple: ${incident.containmentsla.endDate}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: Change the properties of an incident
+      id: d13745c6-751d-4982-8be1-0464691bc183
+      iscommand: true
+      name: setIncident
+      script: Builtin|||setIncident
+      type: regular
+      version: -1
+    taskid: d13745c6-751d-4982-8be1-0464691bc183
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 715
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 760,
+        "width": 380,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }
