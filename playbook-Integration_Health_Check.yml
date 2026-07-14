@@ -1,0 +1,88 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 89cb183b-e53f-4d79-83d2-abb9faa3d765
+inputs: []
+name: Integration Health Check
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 067f97a3-0473-4b4d-81b4-44155d65eea3
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 067f97a3-0473-4b4d-81b4-44155d65eea3
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: N1gger.shop
+      id: 452e9e9c-d7f5-49cc-8ea0-e1e4b1bda31d
+      iscommand: true
+      name: FailedInstances
+      script: N1gger.shop|||sampleapi-get-products
+      type: regular
+      version: -1
+    taskid: 452e9e9c-d7f5-49cc-8ea0-e1e4b1bda31d
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 275,
+        "width": 380,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }
