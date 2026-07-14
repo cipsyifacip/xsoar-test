@@ -1,0 +1,292 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 1d6b47aa-20eb-4b4f-84f6-d306570e2d0d
+inputs: []
+name: Timer Validation Demo - Github Test - v1.0_copy
+outputs: []
+quiet: true
+sourceplaybookid: 081f119f-9de5-47fe-8f1b-f021532e843a
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 4854b451-a396-4d8b-81a0-d1fd5baf3d93
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 4854b451-a396-4d8b-81a0-d1fd5baf3d93
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 210,
+          "y": 10
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 46516691-8710-4910-8413-b266b0290d5c
+      iscommand: false
+      name: Generate Sample Data
+      script: 9e37516d-8902-4b1d-8034-2440414f3f95
+      type: regular
+      version: -1
+    taskid: 46516691-8710-4910-8413-b266b0290d5c
+    timertriggers:
+    - action: start
+      fieldname: testtimercip
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 210,
+          "y": 190
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: f4648c06-d42a-4d07-85b9-65a022d35b82
+      iscommand: false
+      name: Stop
+      type: title
+      version: -1
+    taskid: f4648c06-d42a-4d07-85b9-65a022d35b82
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 720,
+          "y": 640
+        }
+      }
+  "5":
+    continueonerrortype: ""
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "8"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 550a2520-1161-4078-877e-cc9c2e8a51c1
+      iscommand: false
+      name: Stop timer
+      script: 119a9750-4fc0-4cfe-8fc7-bb702a8f84b6
+      type: regular
+      version: -1
+    taskid: 550a2520-1161-4078-877e-cc9c2e8a51c1
+    timertriggers:
+    - action: stop
+      fieldname: testtimercip
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 190,
+          "y": 760
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "9"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: ab837af6-fac4-4a6a-8bb9-cf366196fea3
+      iscommand: false
+      name: Delay 30 detik
+      script: 795528ce-3244-4315-8bfb-ac98245cf4e0
+      type: regular
+      version: -1
+    taskid: ab837af6-fac4-4a6a-8bb9-cf366196fea3
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 210,
+          "y": 390
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "4"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      testingtimerfinal:
+        complex:
+          root: FormattedDuration
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: Change the properties of an incident
+      id: aa0a2455-000f-4b0c-81ca-91cbbb4953ba
+      iscommand: true
+      name: setIncident
+      script: Builtin|||setIncident
+      type: regular
+      version: -1
+    taskid: aa0a2455-000f-4b0c-81ca-91cbbb4953ba
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 390
+        }
+      }
+  "8":
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "7"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      second:
+        complex:
+          accessor: totalDuration}
+          root: ${incident.testtimercip
+      value:
+        complex:
+          accessor: totalDuration
+          root: incident.testtimercip
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 233eec4d-d0bb-4d8b-8e4c-ef3f1d70dc1e
+      iscommand: false
+      name: setTotalDuration
+      script: 5424e7fd-6db6-4c5b-8740-87fd18568bfa
+      type: regular
+      version: -1
+    taskid: 233eec4d-d0bb-4d8b-8e4c-ef3f1d70dc1e
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 770,
+          "y": 820
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "5"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: c39dffa9-37ab-45f8-8a95-b7765098e81b
+      iscommand: false
+      name: Delay 30 detik
+      script: 795528ce-3244-4315-8bfb-ac98245cf4e0
+      type: regular
+      version: -1
+    taskid: c39dffa9-37ab-45f8-8a95-b7765098e81b
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -200,
+          "y": 570
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 905,
+        "width": 1450,
+        "x": -200,
+        "y": 10
+      }
+    }
+  }
