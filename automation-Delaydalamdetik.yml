@@ -23,7 +23,7 @@ runonce: false
 script: |-
   import time
 
-  time.sleep(180)
+  time.sleep(60)
 
   demisto.results("Delay selesai")
 scripttarget: 0
