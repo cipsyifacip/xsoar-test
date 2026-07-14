@@ -1,0 +1,28 @@
+{
+	"allRead": true,
+	"allReadWrite": true,
+	"cacheVersn": 0,
+	"data": "[{\n\t\"0\":\"satu\",\n\t\"1\":\"dua\",\n\t\"2\":\"tiga\"\n}]",
+	"definitionId": "",
+	"description": "",
+	"detached": false,
+	"fromServerVersion": "",
+	"id": "test_ivan",
+	"itemVersion": "",
+	"locked": false,
+	"name": "test_ivan",
+	"nameLocked": false,
+	"packID": "",
+	"packName": "",
+	"previousAllRead": true,
+	"previousAllReadWrite": true,
+	"propagationLabels": [
+		"all"
+	],
+	"system": false,
+	"tags": null,
+	"toServerVersion": "",
+	"truncated": false,
+	"type": "json",
+	"version": -1
+}
