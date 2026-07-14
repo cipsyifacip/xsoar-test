@@ -1,0 +1,318 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 1ed4fab7-3bc3-409b-8bbc-d320386dadd3
+inputs: []
+name: After Playbook Modular
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 75f057ca-0269-4919-8a44-16d8e10f9b1f
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 75f057ca-0269-4919-8a44-16d8e10f9b1f
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": -10
+        }
+      }
+  "1":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: $alertcategory{}
+          operator: isEqualString
+          right:
+            value:
+              simple: socmed
+      label: Socmed
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: $alertcategory{}
+          operator: isEqualString
+          right:
+            value:
+              simple: Mobile Apps
+      label: Mobile Apps
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: $alertcategory{}
+          operator: isEqualString
+          right:
+            value:
+              simple: Phising
+      label: Phising
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: $alertcategory{}
+          operator: isEqualString
+          right:
+            value:
+              simple: Others
+      label: Others
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      Mobile Apps:
+      - "4"
+      Others:
+      - "6"
+      Phising:
+      - "5"
+      Socmed:
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 2e10d9a0-23d5-45b2-877f-29eb2db7e264
+      iscommand: false
+      name: Insert/update to Continental
+      type: condition
+      version: -1
+    taskid: 2e10d9a0-23d5-45b2-877f-29eb2db7e264
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 240
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: d865a3cb-12d9-4eb4-860d-9144c5f7b84c
+      iscommand: false
+      name: Stop
+      type: title
+      version: -1
+    taskid: d865a3cb-12d9-4eb4-860d-9144c5f7b84c
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 850
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: ac1c91eb-c3ba-45c5-80d6-a420cdfa1471
+      iscommand: false
+      name: Socmed
+      script: Socmed
+      type: regular
+      version: -1
+    taskid: ac1c91eb-c3ba-45c5-80d6-a420cdfa1471
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -530,
+          "y": 450
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: acf63d80-11df-4ed7-8f7e-ca8cf153a671
+      iscommand: false
+      name: Mobile Apps
+      script: apps
+      type: regular
+      version: -1
+    taskid: acf63d80-11df-4ed7-8f7e-ca8cf153a671
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -140,
+          "y": 450
+        }
+      }
+  "5":
+    continueonerrortype: ""
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 978574e9-603a-473b-8621-44a192a552ca
+      iscommand: false
+      name: Phising
+      script: webphising
+      type: regular
+      version: -1
+    taskid: 978574e9-603a-473b-8621-44a192a552ca
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 250,
+          "y": 450
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.close.inv
+      id: 852879aa-19cb-472f-830f-51a0ddc63b63
+      iscommand: true
+      name: Others
+      script: Builtin|||closeInvestigation
+      type: regular
+      version: -1
+    taskid: 852879aa-19cb-472f-830f-51a0ddc63b63
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 640,
+          "y": 450
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Pretty-print the contents of the playbook context.
+      id: 01b63b9d-3607-42f1-8aff-53ed1cc3412b
+      iscommand: false
+      name: Print
+      script: PrintContext
+      type: regular
+      version: -1
+    taskid: 01b63b9d-3607-42f1-8aff-53ed1cc3412b
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 80,
+          "y": 1740
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1845,
+        "width": 1550,
+        "x": -530,
+        "y": -10
+      }
+    }
+  }
