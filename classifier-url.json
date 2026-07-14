@@ -1,0 +1,61 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "566e5c24-9e7f-4454-8329-9940f93be5a2",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {},
+	"locked": false,
+	"logicalVersion": 0,
+	"mapping": {
+		"dbot_classification_incident_type_all": {
+			"dontMapEventToLabels": true,
+			"internalMapping": {
+				"URLs": {
+					"complex": {
+						"accessor": "attack_url}",
+						"filters": [],
+						"root": "${Netcraft.Takedown",
+						"transformers": [
+							{
+								"args": {
+									"chars": {
+										"isContext": false,
+										"value": {
+											"simple": "/"
+										}
+									}
+								},
+								"operator": "StripChars"
+							},
+							{
+								"operator": "URLDecode"
+							}
+						]
+					}
+				}
+			}
+		}
+	},
+	"name": "url",
+	"nameRaw": "url",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {},
+	"type": "mapping-incoming",
+	"unclassifiedCases": null,
+	"version": -1
+}
