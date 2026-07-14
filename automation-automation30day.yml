@@ -1,0 +1,55 @@
+commonfields:
+  id: df8a3375-bd56-4b2a-8835-801178a337e7
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.8428455
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: automation30day
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import datetime
+  import calendar
+  from datetime import timedelta
+  import pytz
+
+  args = demisto.args()
+  firstemaildate = args.get("firstemaildate")
+  maximumemaildate = args.get("maximumemaildate")
+  timezone = 'Asia/Jakarta'
+
+  #untuk dapetin tanggal hari ini
+  def get_local_time(timezone):
+      utc_now = datetime.datetime.utcnow()
+
+      local_timezone = pytz.timezone(timezone)
+      local_time = utc_now.replace(tzinfo=pytz.utc).astimezone(local_timezone)
+
+      return local_time
+
+  today = get_local_time(timezone)
+  today_convert = today.strftime('%d/%m/%Y')
+  print("Tanggal hari ini adalah: " + today_convert)
+  print("Tanggal maksimum reminder adalah: " + maximumemaildate)
+
+  if today_convert >= maximumemaildate:
+      demisto.executeCommand("setIncident", {"breakloop":"yes"})
+  else:
+      demisto.executeCommand("setIncident", {"breakloop":"no"})
+scripttarget: 0
+subtype: python3
+tags: []
+type: python
