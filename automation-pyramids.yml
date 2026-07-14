@@ -1,0 +1,50 @@
+args:
+- description: Number of rows
+  name: rows
+  required: true
+commonfields:
+  id: 4c67c790-0a03-4d64-826c-2f4f3c2d3802
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.8428455
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: pyramids
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  args = demisto.args()
+
+  def build_pyramid(rows):
+      lines = []
+      for i in range(1, rows + 1):
+          spaces = " " * (rows - i)
+          stars = "*" * (2 * i - 1)
+          lines.append(spaces + stars)
+      return "\n".join(lines)
+
+  try:
+      rows = int(args.get("rows", 0))
+      if rows <= 0:
+          demisto.results("Error: 'rows' must be a positive integer greater than 0.")
+      else:
+          pyramid = build_pyramid(rows)
+          demisto.results(pyramid)
+  except ValueError:
+      demisto.results("Error: 'rows' must be a valid integer.")
+scripttarget: 0
+subtype: python3
+tags: []
+type: python
