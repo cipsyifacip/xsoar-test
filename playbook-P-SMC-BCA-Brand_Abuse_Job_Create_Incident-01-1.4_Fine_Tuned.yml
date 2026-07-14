@@ -1,0 +1,1660 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+description: "Playbook Utama yang digunakan untuk Job membuat tiket Brand Abuse yang
+  berasal dari Third Party CTI (Netcraft, Group IB, CTM360) yang akan berjalan setiap
+  8 jam sekali dan sudah memiliki automation untuk filter link duplicate antar CTI
+  namun yang akan diutamakan adalah link dengan date time tercepat atau mengambil
+  Link yang berasal dari Netcraft terlebih dahulu.\n\nBerikut detail list struktur
+  yang digunakan di playbook ini :\nAlert Source :\n- Netcraft\n- Group IB\n- CTM360\n\nAutomation
+  / Integration (Instance) :\n***Need to Push in this version***\n- Group IB SMC\n
+  \    *smc-gib-get-phishing (Group IB SMC_instance)\n- Netcraft V2\n     *netcraft-takedown-list
+  (Netcraft V2_instance_SMC) \n- CTM360 SMC\n     *get-ctm-cbs-incidents (CTM360 SMC_instance_1)\n-
+  smc-cti-dedup-and-create-alerts\n\nCustom Context Name / Variable :\n- time.TimeNow
+  (get ISO DateTime Now)\n- timeeighthoursago.TimeNow (get ISO DateTime 8 hours ago)\n-
+  dateto (variable untuk menampung format time.TimeNow menyesuaikan kebutuhan API
+  GIB)\n- datefrom (variable untuk menampung format timeeighthoursago.TimeNow menyesuaikan
+  kebutuhan API GIB)\n- datetimeto (variable untuk menampung format time.TimeNow menyesuaikan
+  kebutuhan API CTM360)\n- datetimefrom (variable untuk menampung format timeeighthoursago.TimeNow
+  menyesuaikan kebutuhan API CTM360)\n- datetimenetcraftto (variable untuk menampung
+  format time.TimeNow menyesuaikan kebutuhan API Netcraft)*\n- datetimenetcraftfrom
+  (variable untuk menampung format timeeighthoursago.TimeNow menyesuaikan kebutuhan
+  API Netcraft)*\n- CyberBlindSpot (Context Name yang akan muncul jika terdapat return
+  data dari API CTM360)\n- GroupIB (Context Name yang akan muncul jika terdapat return
+  data dari API GIB)\n- Netcraft (Context Name yang akan muncul jika terdapat return
+  data dari API Netcraft)\n\n\n\n\n"
+id: efe78fd9-05e9-4c87-88dd-06c2dd0a0eed
+inputs: []
+name: P-SMC-BCA-Brand Abuse Job Create Incident-01-1.4_Fine_Tuned
+outputs: []
+sourceplaybookid: cf2087d5-4a97-416e-88fd-130c07d0f0c4
+starttaskid: "0"
+tags:
+- AFW
+- ESC
+- FHY
+- SMC
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: e5651725-e16d-4277-89cd-694bcfd91ab1
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: e5651725-e16d-4277-89cd-694bcfd91ab1
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 90
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "8"
+      - "9"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 8c4052d2-c70b-4f58-88f1-aca14ab0aeff
+      iscommand: false
+      name: Set Time
+      type: title
+      version: -1
+    taskid: 8c4052d2-c70b-4f58-88f1-aca14ab0aeff
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 220
+        }
+      }
+  "2":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "32"
+      - "30"
+      '#none#':
+      - "3"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      date_from:
+        simple: ${datetimenetcraftfrom}
+      date_to:
+        simple: ${datetimenetcraftto}
+      limit:
+        simple: "1000"
+      retry-count:
+        simple: "0"
+      using:
+        simple: Netcraft V2_instance_SMC
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Netcraft V2
+      description: |
+        Get a list of takedown objects.
+        Netcraft has a limit of 1,000,000 objects returned within a 24 hour period (moving time window) per email address.
+      id: 42070cdd-e20b-4c67-81e9-2949f466837a
+      iscommand: true
+      name: Get Data From Netcraft (Last 4 Hours)
+      script: Netcraft V2|||netcraft-takedown-list
+      type: regular
+      version: -1
+    taskid: 42070cdd-e20b-4c67-81e9-2949f466837a
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 3490
+        }
+      }
+  "3":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "33"
+      - "4"
+      '#none#':
+      - "30"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      data:
+        simple: ${Netcraft}
+      execution-timeout:
+        simple: "18000"
+      incident_id:
+        simple: ${incident.id}
+      retry-count:
+        simple: "0"
+      source:
+        simple: Netcraft
+      time_check_netcraft_to:
+        simple: ${datetimenetcraftfrom}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 022c6845-c73e-41ec-830c-a4e1520d9036
+      iscommand: false
+      name: Remove Duplicate and Generate New Alert
+      script: f80b02e8-ee74-414b-846c-aa4a5ee17588
+      type: regular
+      version: -1
+    taskid: 022c6845-c73e-41ec-830c-a4e1520d9036
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 3670
+        }
+      }
+  "4":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "35"
+      - "32"
+      '#none#':
+      - "5"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      date_from:
+        simple: ${datetimefrom}
+      date_to:
+        simple: ${datetimeto}
+      retry-count:
+        simple: "3"
+      retry-interval:
+        simple: "60"
+      using:
+        simple: CTM360 SMC_instance_1
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: CTM360 SMC
+      id: f155ce55-6d63-436a-85e6-3fb0e4cb3620
+      iscommand: true
+      name: Get Data From CTM360 (Last 4 Hours)
+      script: CTM360 SMC|||get-ctm-cbs-incidents
+      type: regular
+      version: -1
+    taskid: f155ce55-6d63-436a-85e6-3fb0e4cb3620
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 4000
+        }
+      }
+  "5":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "33"
+      - "27"
+      '#none#':
+      - "35"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      data:
+        simple: ${CyberBlindspot.incident_list}
+      execution-timeout:
+        simple: "18000"
+      incident_id:
+        simple: ${incident.id}
+      retry-count:
+        simple: "0"
+      source:
+        simple: CTM360
+      time_check_netcraft_to:
+        simple: ${datetimenetcraftfrom}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: d52c9e1a-a496-41a7-8a86-63cfe14f2e8a
+      iscommand: false
+      name: Remove Duplicate and Generate New Alert
+      script: f80b02e8-ee74-414b-846c-aa4a5ee17588
+      type: regular
+      version: -1
+    taskid: d52c9e1a-a496-41a7-8a86-63cfe14f2e8a
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 4180
+        }
+      }
+  "6":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "32"
+      - "29"
+      '#none#':
+      - "7"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      date_from:
+        simple: ${datefrom}
+      date_to:
+        simple: ${dateto}
+      query:
+        simple: 'brand: "Bank Central Asia"'
+      retry-count:
+        simple: "0"
+      using:
+        simple: Group IB SMC_instance
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Group IB SMC
+      id: 82bf21a0-bffe-4aa8-8784-ea8908d49165
+      iscommand: true
+      name: Get Data From GIB (Last 4 Hours)
+      script: Group IB SMC|||smc-gib-get-phishing
+      type: regular
+      version: -1
+    taskid: 82bf21a0-bffe-4aa8-8784-ea8908d49165
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 1940
+        }
+      }
+  "7":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "33"
+      - "23"
+      '#none#':
+      - "29"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      data:
+        simple: ${GroupIB.items}
+      execution-timeout:
+        simple: "3600"
+      incident_id:
+        simple: ${incident.id}
+      retry-count:
+        simple: "0"
+      source:
+        simple: GIB
+      time_check_netcraft_to:
+        simple: ${datetimenetcraftfrom}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 52d4f39c-c3fe-462d-86d1-d7d3c4eafbf9
+      iscommand: false
+      name: Remove Duplicate and Generate New Alert
+      script: f80b02e8-ee74-414b-846c-aa4a5ee17588
+      type: regular
+      version: -1
+    taskid: 52d4f39c-c3fe-462d-86d1-d7d3c4eafbf9
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 2125
+        }
+      }
+  "8":
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "14"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      contextKey:
+        simple: time.
+      dateFormat:
+        simple: ISO
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: |
+        Retrieves the current date and time.
+      id: bd463672-3bc8-4f8b-8224-9820d63c993e
+      iscommand: false
+      name: Set time now
+      script: GetTime
+      type: regular
+      version: -1
+    taskid: bd463672-3bc8-4f8b-8224-9820d63c993e
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 430,
+          "y": 365
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "14"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      contextKey:
+        simple: pasttime.
+      dateFormat:
+        simple: ISO
+      hoursAgo:
+        simple: "4"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: |
+        Retrieves the current date and time.
+      id: eb379767-a6bc-4e19-806e-27a5053e5994
+      iscommand: false
+      name: Set time 4 hours ago
+      script: GetTime
+      type: regular
+      version: -1
+    taskid: eb379767-a6bc-4e19-806e-27a5053e5994
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 880,
+          "y": 365
+        }
+      }
+  "10":
+    continueonerrortype: ""
+    id: "10"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "28"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "false"
+      key:
+        simple: datetimeto
+      value:
+        complex:
+          accessor: TimeNow
+          root: time
+          transformers:
+          - args:
+              key: {}
+              time_zone: {}
+            operator: TimeComponents
+          - args:
+              dt:
+                value:
+                  simple: |
+                    .=val.day_2_digit + "-" + val.month_2_digit + "-" + val.year_4_digit + " " + val.hour_2_digit_24_clock + ":" + val.minute_2_digit
+            operator: DT
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: ab15d8f1-fa7e-4d77-8e9a-206d3df085f1
+      iscommand: false
+      name: Transform time now to format time
+      script: Set
+      type: regular
+      version: -1
+    taskid: ab15d8f1-fa7e-4d77-8e9a-206d3df085f1
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 420,
+          "y": 1620
+        }
+      }
+  "11":
+    continueonerrortype: ""
+    id: "11"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "28"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "false"
+      key:
+        simple: datetimefrom
+      value:
+        complex:
+          accessor: TimeNow
+          root: pasttime
+          transformers:
+          - args:
+              key: {}
+              time_zone: {}
+            operator: TimeComponents
+          - args:
+              dt:
+                value:
+                  simple: |
+                    .=val.day_2_digit + "-" + val.month_2_digit + "-" + val.year_4_digit + " " + val.hour_2_digit_24_clock + ":" + val.minute_2_digit
+            operator: DT
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: cb0ab55e-99f2-462f-8719-8b7a7904c1ed
+      iscommand: false
+      name: Transform time 4 hours ago to format time
+      script: Set
+      type: regular
+      version: -1
+    taskid: cb0ab55e-99f2-462f-8719-8b7a7904c1ed
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 1620
+        }
+      }
+  "12":
+    continueonerrortype: ""
+    id: "12"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "19"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "false"
+      key:
+        simple: dateto
+      value:
+        complex:
+          accessor: TimeNow
+          root: time
+          transformers:
+          - args:
+              key: {}
+              time_zone: {}
+            operator: TimeComponents
+          - args:
+              dt:
+                value:
+                  simple: |
+                    .=val.year_4_digit + "-" + val.month_2_digit + "-" + val.day_2_digit
+            operator: DT
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 86ec9304-e0a0-4f85-8329-7bd733fc34a8
+      iscommand: false
+      name: Transform time now to format time
+      script: Set
+      type: regular
+      version: -1
+    taskid: 86ec9304-e0a0-4f85-8329-7bd733fc34a8
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 430,
+          "y": 680
+        }
+      }
+  "13":
+    continueonerrortype: ""
+    id: "13"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "19"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "false"
+      key:
+        simple: datefrom
+      value:
+        complex:
+          accessor: TimeNow
+          root: pasttime
+          transformers:
+          - args:
+              key: {}
+              time_zone: {}
+            operator: TimeComponents
+          - args:
+              dt:
+                value:
+                  simple: ".=val.year_4_digit + \"-\" + val.month_2_digit + \"-\"
+                    + val.day_2_digit \n"
+            operator: DT
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: c7793269-a332-49b8-8b2b-43ca7cc7e17c
+      iscommand: false
+      name: Transform time 4 hours ago to format time
+      script: Set
+      type: regular
+      version: -1
+    taskid: c7793269-a332-49b8-8b2b-43ca7cc7e17c
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 880,
+          "y": 680
+        }
+      }
+  "14":
+    continueonerrortype: ""
+    id: "14"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "12"
+      - "13"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 82185323-8d5f-436e-891e-5628f5e5b0ae
+      iscommand: false
+      name: Time GIB
+      type: title
+      version: -1
+    taskid: 82185323-8d5f-436e-891e-5628f5e5b0ae
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 540
+        }
+      }
+  "15":
+    continueonerrortype: ""
+    id: "15"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "10"
+      - "11"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 48378cc3-7f4d-4c5a-82ae-aa7ac800cc4e
+      iscommand: false
+      name: Time CTM360
+      type: title
+      version: -1
+    taskid: 48378cc3-7f4d-4c5a-82ae-aa7ac800cc4e
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 1480
+        }
+      }
+  "16":
+    continueonerrortype: ""
+    id: "16"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "17"
+      - "18"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: ea9c5198-55c0-4bf1-8b44-ae8045c421d4
+      iscommand: false
+      name: Time Netcraft
+      type: title
+      version: -1
+    taskid: ea9c5198-55c0-4bf1-8b44-ae8045c421d4
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 1160
+        }
+      }
+  "17":
+    continueonerrortype: ""
+    id: "17"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "15"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "false"
+      key:
+        simple: datetimenetcraftto
+      retry-count:
+        simple: "3"
+      retry-interval:
+        simple: "5"
+      value:
+        complex:
+          accessor: TimeNow
+          root: time
+          transformers:
+          - args:
+              key: {}
+              time_zone: {}
+            operator: TimeComponents
+          - args:
+              dt:
+                value:
+                  simple: |
+                    .=val.year_4_digit + "-" + val.month_2_digit + "-" + val.day_2_digit + " " + val.hour_2_digit_24_clock + ":" + val.minute_2_digit + ":" + val.second_2_digit
+            operator: DT
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 5ec813d9-9ddc-4daf-8cbc-e1b376dd6c92
+      iscommand: false
+      name: Transform time now to format time
+      script: Set
+      type: regular
+      version: -1
+    taskid: 5ec813d9-9ddc-4daf-8cbc-e1b376dd6c92
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 420,
+          "y": 1300
+        }
+      }
+  "18":
+    continueonerrortype: ""
+    id: "18"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "15"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "false"
+      key:
+        simple: datetimenetcraftfrom
+      retry-count:
+        simple: "3"
+      value:
+        complex:
+          accessor: TimeNow
+          root: pasttime
+          transformers:
+          - args:
+              key: {}
+              time_zone: {}
+            operator: TimeComponents
+          - args:
+              dt:
+                value:
+                  simple: |
+                    .=val.year_4_digit + "-" + val.month_2_digit + "-" + val.day_2_digit + " " + val.hour_2_digit_24_clock + ":" + val.minute_2_digit + ":" + val.second_2_digit
+            operator: DT
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 1e3772e4-b7f7-4fa9-896f-1286cc026c8b
+      iscommand: false
+      name: Transform time 4 hours ago to format time
+      script: Set
+      type: regular
+      version: -1
+    taskid: 1e3772e4-b7f7-4fa9-896f-1286cc026c8b
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 880,
+          "y": 1300
+        }
+      }
+  "19":
+    continueonerrortype: ""
+    id: "19"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "20"
+      - "21"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 68f385bd-e8ce-434e-82ca-7e506fd2645f
+      iscommand: false
+      name: Time Continental HALO
+      type: title
+      version: -1
+    taskid: 68f385bd-e8ce-434e-82ca-7e506fd2645f
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 850
+        }
+      }
+  "20":
+    continueonerrortype: ""
+    id: "20"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "16"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "false"
+      key:
+        simple: timecontinentalto
+      value:
+        complex:
+          accessor: TimeNow
+          root: time
+          transformers:
+          - args:
+              key: {}
+              time_zone:
+                value:
+                  simple: "+07:00"
+            operator: TimeComponents
+          - args:
+              dt:
+                value:
+                  simple: .=val.year_4_digit + "-" +  val.month_2_digit + "-" + val.day_2_digit  +
+                    " " + val.hour_2_digit_24_clock + ":" + val.minute_2_digit + ":"
+                    + val.second_2_digit
+            operator: DT
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 94b9a188-5cb7-4d57-8c8f-726dd69bb30d
+      iscommand: false
+      name: Transform time now to format time UTC+7
+      script: Set
+      type: regular
+      version: -1
+    taskid: 94b9a188-5cb7-4d57-8c8f-726dd69bb30d
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 430,
+          "y": 990
+        }
+      }
+  "21":
+    continueonerrortype: ""
+    id: "21"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "16"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      append:
+        simple: "false"
+      key:
+        simple: timecontinentalfrom
+      value:
+        complex:
+          accessor: TimeNow
+          root: pasttime
+          transformers:
+          - args:
+              key: {}
+              time_zone:
+                value:
+                  simple: "+07:00"
+            operator: TimeComponents
+          - args:
+              dt:
+                value:
+                  simple: .=val.year_4_digit + "-" +  val.month_2_digit + "-" + val.day_2_digit  +
+                    " " + val.hour_2_digit_24_clock + ":" + val.minute_2_digit + ":"
+                    + val.second_2_digit
+            operator: DT
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: f6b04d5f-067e-4685-8161-933085676616
+      iscommand: false
+      name: Transform time 4 hours ago to format time UTC+7
+      script: Set
+      type: regular
+      version: -1
+    taskid: f6b04d5f-067e-4685-8161-933085676616
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 880,
+          "y": 990
+        }
+      }
+  "22":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "22"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "32"
+      - "36"
+      '#none#':
+      - "25"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      datetimefrom:
+        simple: ${timecontinentalfrom}
+      datetimeto:
+        simple: ${timecontinentalto}
+      status:
+        simple: Active
+      using:
+        simple: BCA Continental Brand Abuse_instance_SMC
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: BCA Continental Brand Abuse
+      id: 05d1f8ba-0f42-4ce4-846d-c89f58d22779
+      iscommand: true
+      name: Get Data From Continental HALO Socmed (Last 4 Hours)
+      script: BCA Continental Brand Abuse|||continental-get-halo-social-media
+      type: regular
+      version: -1
+    taskid: 05d1f8ba-0f42-4ce4-846d-c89f58d22779
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 2980
+        }
+      }
+  "23":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "23"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "32"
+      - "34"
+      '#none#':
+      - "24"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      datetimefrom:
+        simple: ${timecontinentalfrom}
+      datetimeto:
+        simple: ${timecontinentalto}
+      status:
+        simple: Active
+      using:
+        simple: BCA Continental Brand Abuse_instance_SMC
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: BCA Continental Brand Abuse
+      id: 040d3459-21fe-4538-8b8a-ef289f46d216
+      iscommand: true
+      name: Get Data From Continental HALO WebApps(Last 4 Hours)
+      script: BCA Continental Brand Abuse|||continental-get-halo-webapps
+      type: regular
+      version: -1
+    taskid: 040d3459-21fe-4538-8b8a-ef289f46d216
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 2465
+        }
+      }
+  "24":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "24"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "33"
+      - "22"
+      '#none#':
+      - "34"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      data:
+        simple: ${ContinentalWebapps}
+      execution-timeout:
+        simple: "3600"
+      incident_id:
+        simple: ${incident.id}
+      retry-count:
+        simple: "2"
+      retry-interval:
+        simple: "30"
+      source:
+        simple: HALOWEB
+      time_check_netcraft_to:
+        simple: ${datetimenetcraftfrom}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 156b9f56-2928-493a-85b1-cdc0ac1d5c5a
+      iscommand: false
+      name: Remove Duplicate and Generate New Alert
+      script: f80b02e8-ee74-414b-846c-aa4a5ee17588
+      type: regular
+      version: -1
+    taskid: 156b9f56-2928-493a-85b1-cdc0ac1d5c5a
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 2650
+        }
+      }
+  "25":
+    continueonerror: true
+    continueonerrortype: errorPath
+    id: "25"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#error#':
+      - "33"
+      - "2"
+      '#none#':
+      - "36"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      data:
+        simple: ${ContinentalSocmed}
+      execution-timeout:
+        simple: "3600"
+      incident_id:
+        simple: ${incident.id}
+      retry-count:
+        simple: "2"
+      retry-interval:
+        simple: "30"
+      source:
+        simple: HALOSOCMED
+      time_check_netcraft_to:
+        simple: ${datetimenetcraftfrom}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: d718910e-8abe-4c7e-81a7-da85bb92bbd5
+      iscommand: false
+      name: Remove Duplicate and Generate New Alert
+      script: f80b02e8-ee74-414b-846c-aa4a5ee17588
+      type: regular
+      version: -1
+    taskid: d718910e-8abe-4c7e-81a7-da85bb92bbd5
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 3160
+        }
+      }
+  "26":
+    continueonerrortype: ""
+    id: "26"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "31"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.close.inv
+      id: 8ccbcfb7-88a6-4cff-8975-e3e1a58a82d8
+      iscommand: true
+      name: Close
+      script: Builtin|||closeInvestigation
+      type: regular
+      version: -1
+    taskid: 8ccbcfb7-88a6-4cff-8975-e3e1a58a82d8
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 5075
+        }
+      }
+  "27":
+    continueonerrortype: ""
+    id: "27"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "37"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      htmlBody:
+        simple: "<html>\n<body style=\"font-family: Calibri, sans-serif;\">\n \nTotal
+          Data pada Job tanggal ${incident.occurred}\n<br><br>\n \nNetcraft Total
+          URL = ${DedupCreateAlertNetcraft.total_urls_processed} <br>\nNetcraft Total
+          URL After Dedup = ${DedupCreateAlertNetcraft.urls_for_new_incidents} <br>\nCTM360
+          Total URL = ${DedupCreateAlertCTM360.total_urls_processed} <br>\nCTM360
+          Total URL After Dedup = ${DedupCreateAlertCTM360.urls_for_new_incidents}
+          <br>\nGIB Total URL = ${DedupCreateAlertGIB.total_urls_processed} <br>\nGIB
+          Total URL After Dedup = ${DedupCreateAlertGIB.urls_for_new_incidents} <br>\nContinental
+          WebApps Total URL = ${DedupCreateAlertHALOWEB.total_urls_processed} <br>\nContinental
+          WebApps Total URL After Dedup = ${DedupCreateAlertHALOWEB.urls_for_new_incidents}
+          <br>\nContinental Socmed Total URL = ${DedupCreateAlertHALOSOCMED.total_urls_processed}
+          <br>\nContinental Socmed Total URL After Dedup = ${DedupCreateAlertHALOSOCMED.urls_for_new_incidents}
+          <br>\n<br>\n \n</html>"
+      subject:
+        simple: Report Count Data Brand Abuse ${incident.id} - ${incident.name}
+      to:
+        simple: muhammad_wicaksono@bca.co.id, filipus_handiyanto@bca.co.id, shane_wibowo@bca.co.id,
+          nadya_malik@bca.co.id
+      using:
+        simple: SKES SMC Sender
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Send an email.
+      id: eabb0645-820b-4e73-8130-8698f47c877e
+      iscommand: true
+      name: Send Email Report Count Data Brand Abuse
+      script: '|||send-mail'
+      type: regular
+      version: -1
+    taskid: eabb0645-820b-4e73-8130-8698f47c877e
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 4750
+        }
+      }
+  "28":
+    continueonerrortype: ""
+    id: "28"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 16281766-5049-442d-84c6-38c1f4e4b48c
+      iscommand: false
+      name: Process Get Data GIB
+      type: title
+      version: -1
+    taskid: 16281766-5049-442d-84c6-38c1f4e4b48c
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 1800
+        }
+      }
+  "29":
+    continueonerrortype: ""
+    id: "29"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "23"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: f9a33e5e-1684-47a9-85ef-fb99e2089a58
+      iscommand: false
+      name: Process Get Data Halo
+      type: title
+      version: -1
+    taskid: f9a33e5e-1684-47a9-85ef-fb99e2089a58
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 2310
+        }
+      }
+  "30":
+    continueonerrortype: ""
+    id: "30"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "4"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 004182dd-2c3c-4715-892c-49d201361bc7
+      iscommand: false
+      name: Process Get Data CTM360
+      type: title
+      version: -1
+    taskid: 004182dd-2c3c-4715-892c-49d201361bc7
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 3850
+        }
+      }
+  "31":
+    continueonerrortype: ""
+    id: "31"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: bd0b7dcf-3e6c-4031-8600-455c91923b50
+      iscommand: false
+      name: End
+      type: title
+      version: -1
+    taskid: bd0b7dcf-3e6c-4031-8600-455c91923b50
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 5250
+        }
+      }
+  "32":
+    continueonerrortype: ""
+    id: "32"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "35"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      cc:
+        simple: bca_smc@bca.co.id
+      htmlBody:
+        simple: "<html>\n<body style=\"font-family: Calibri, sans-serif;\">\n\nDear
+          Brand Abuse PIC,<br><br>\n\nTolong Cek Job Error Brand Abuse dengan detail
+          :  ${incident.id} - ${incident.name} <br> \nError Automation Get Data From
+          API CTI\n<br><br>\n\nDetail Time dalam job tersebut : <br>\nDate From =
+          ${datefrom} <br>\nDate To = ${dateto} <br>\nDate Time From = ${datetimefrom}
+          <br>\nDate Time To = ${datetimeto} <br>\nDate Time Netcraft From = ${datetimenetcraftfrom}
+          <br>\nDate Time Netcraft To= ${datetimenetcraftto} <br>\nTime Continental
+          From = ${timecontinentalfrom} <br>\nTime Continental To = ${timecontinentalto}<br><br>\n\nBest
+          Regards,<br>\nSecurity Monitoring Center (SMC)<br>\nIT Security Group (ISG)-B<br>\nPT
+          Bank Central Asia Tbk.<br>\nWisma Asia 2 Lt. 8, Jl. Brigjen Katamso No.
+          1, Jakarta 11420 Indonesia <br>\n☏ Hotline: 1500500 ext. 6<br>\n✉ bca_smc@bca.co.id<br>\n</html>"
+      subject:
+        simple: Error Get API Data ${incident.id} - ${incident.name}
+      to:
+        simple: muhammad_wicaksono@bca.co.id, filipus_handiyanto@bca.co.id, nadya_malik@bca.co.id
+      using:
+        simple: SKES SMC Sender
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Send an email.
+      id: a5983377-2370-4c2b-8a98-19e72d055faf
+      iscommand: true
+      name: Send Email to Brand Abuse PIC (API Data)
+      script: '|||send-mail'
+      type: regular
+      version: -1
+    taskid: a5983377-2370-4c2b-8a98-19e72d055faf
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 260,
+          "y": 4420
+        }
+      }
+  "33":
+    continueonerrortype: ""
+    id: "33"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "35"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      cc:
+        simple: bca_smc@bca.co.id
+      htmlBody:
+        simple: "<html>\n<body style=\"font-family: Calibri, sans-serif;\">\n\nDear
+          Brand Abuse PIC,<br><br>\n\nTolong Cek Job Error Brand Abuse dengan detail
+          :  ${incident.id} - ${incident.name} <br> \nError Automation smc-cti-dedup-and-create-alerts\n<br><br>\n\nDetail
+          Time dalam job tersebut : <br>\nDate From = ${datefrom} <br>\nDate To =
+          ${dateto} <br>\nDate Time From = ${datetimefrom} <br>\nDate Time To = ${datetimeto}
+          <br>\nDate Time Netcraft From = ${datetimenetcraftfrom} <br>\nDate Time
+          Netcraft To= ${datetimenetcraftto} <br>\nTime Continental From = ${timecontinentalfrom}
+          <br>\nTime Continental To = ${timecontinentalto}<br><br>\n\nBest Regards,<br>\nSecurity
+          Monitoring Center (SMC)<br>\nIT Security Group (ISG)-B<br>\nPT Bank Central
+          Asia Tbk.<br>\nWisma Asia 2 Lt. 8, Jl. Brigjen Katamso No. 1, Jakarta 11420
+          Indonesia <br>\n☏ Hotline: 1500500 ext. 6<br>\n✉ bca_smc@bca.co.id<br>\n</html>"
+      subject:
+        simple: Error Job Automation Dedup ${incident.id} - ${incident.name}
+      to:
+        simple: muhammad_wicaksono@bca.co.id, filipus_handiyanto@bca.co.id, nadya_malik@bca.co.id
+      using:
+        simple: SKES SMC Sender
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Send an email.
+      id: 1460e49b-2fb4-4a8e-8a7d-771368b0bd1a
+      iscommand: true
+      name: Send Email to Brand Abuse PIC (Automation Dedup)
+      script: '|||send-mail'
+      type: regular
+      version: -1
+    taskid: 1460e49b-2fb4-4a8e-8a7d-771368b0bd1a
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1270,
+          "y": 4410
+        }
+      }
+  "34":
+    continueonerrortype: ""
+    id: "34"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "22"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 7d81953f-fe6a-418d-88f1-eb8942876937
+      iscommand: false
+      name: Process Get Data Halo Socmed
+      type: title
+      version: -1
+    taskid: 7d81953f-fe6a-418d-88f1-eb8942876937
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 2830
+        }
+      }
+  "35":
+    continueonerrortype: ""
+    id: "35"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "27"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 7edd4e8d-771a-4422-8712-6ec14391c47a
+      iscommand: false
+      name: Send Mail Report and Close
+      type: title
+      version: -1
+    taskid: 7edd4e8d-771a-4422-8712-6ec14391c47a
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 4600
+        }
+      }
+  "36":
+    continueonerrortype: ""
+    id: "36"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: c9a825ea-0c91-45b7-8fac-7eb342c939d0
+      iscommand: false
+      name: Process Get Data Netcraft
+      type: title
+      version: -1
+    taskid: c9a825ea-0c91-45b7-8fac-7eb342c939d0
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 3340
+        }
+      }
+  "37":
+    continueonerrortype: ""
+    id: "37"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "26"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      all:
+        simple: "yes"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: "Delete field from context.\n\nThis automation runs using the default
+        Limited User role, unless you explicitly change the permissions.\nFor more
+        information, see the section about permissions here:\n- For Cortex XSOAR 6
+        see https://docs-cortex.paloaltonetworks.com/r/Cortex-XSOAR/6.x/Cortex-XSOAR-Playbook-Design-Guide/Automations
+        \n- For Cortex XSOAR 8 Cloud see https://docs-cortex.paloaltonetworks.com/r/Cortex-XSOAR/8/Cortex-XSOAR-Cloud-Documentation/Create-a-script\n-
+        For Cortex XSOAR 8.7 On-prem see https://docs-cortex.paloaltonetworks.com/r/Cortex-XSOAR/8.7/Cortex-XSOAR-On-prem-Documentation/Create-a-script"
+      id: 664b0d10-5dc8-4a79-84b9-ef4e7b282bbb
+      iscommand: false
+      name: Delete Context
+      script: DeleteContext
+      type: regular
+      version: -1
+    taskid: 664b0d10-5dc8-4a79-84b9-ef4e7b282bbb
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 4910
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 5225,
+        "width": 1390,
+        "x": 260,
+        "y": 90
+      }
+    }
+  }
