@@ -1,0 +1,77 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "55a24801-3650-463d-89d4-0c1d8a079c42",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {},
+	"locked": false,
+	"logicalVersion": 4,
+	"mapping": {
+		"dbot_classification_incident_type_all": {
+			"dontMapEventToLabels": true,
+			"internalMapping": {
+				"Coordinates Geolocation": {
+					"simple": "Coordinates"
+				},
+				"Country": {
+					"simple": "dstcountry"
+				},
+				"Country Count": {
+					"simple": "country_count"
+				},
+				"Destination Country": {
+					"simple": "dstcountry"
+				},
+				"First Seen": {
+					"simple": "Previous Sign In Date Time"
+				},
+				"Last Seen": {
+					"simple": "Sign In Date Time"
+				},
+				"Previous Coordinate Geolocation": {
+					"simple": "Previous Coordinates"
+				},
+				"Previous Country": {
+					"simple": "Previous Country"
+				},
+				"Previous Source IP": {
+					"simple": "Previous Source IP"
+				},
+				"Source IP": {
+					"simple": "srcip"
+				},
+				"Time Span": {
+					"simple": "time_diff_min"
+				},
+				"Travel Map Link": {
+					"simple": "Travel Map Link"
+				},
+				"severity": {
+					"simple": "severity"
+				}
+			}
+		}
+	},
+	"name": "Impossible Traveler Splunk Mapper",
+	"nameRaw": "Impossible Traveler Splunk Mapper",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {},
+	"type": "mapping-incoming",
+	"unclassifiedCases": null,
+	"version": -1
+}
