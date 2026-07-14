@@ -1,0 +1,28 @@
+{
+	"allRead": true,
+	"allReadWrite": true,
+	"cacheVersn": 0,
+	"data": "1,3",
+	"definitionId": "",
+	"description": "",
+	"detached": false,
+	"fromServerVersion": "",
+	"id": "mazayalists",
+	"itemVersion": "",
+	"locked": false,
+	"name": "mazayalists",
+	"nameLocked": false,
+	"packID": "",
+	"packName": "",
+	"previousAllRead": true,
+	"previousAllReadWrite": true,
+	"propagationLabels": [
+		"all"
+	],
+	"system": false,
+	"tags": null,
+	"toServerVersion": "",
+	"truncated": false,
+	"type": "plain_text",
+	"version": -1
+}
