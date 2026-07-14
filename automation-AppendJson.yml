@@ -1,0 +1,59 @@
+args:
+- description: The list to which we will add the items.
+  isArray: true
+  name: value
+- auto: PREDEFINED
+  defaultValue: "true"
+  description: the key name
+  name: key
+  predefined:
+  - "true"
+  - "false"
+  required: true
+- description: the key value
+  name: key_value
+  required: true
+comment: Append item(s) to the end of the json
+commonfields:
+  id: ed28eee1-9dc1-41b6-89c8-0b37b627a36a
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.7444307
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: AppendJson
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  register_module_line('AppendJson', 'start', __line__())
+
+  def main():
+      args = demisto.args()
+
+      dict_obj = args.get('value')[0] # value of context register as list
+      dict_obj[args.get('key')] = args.get('key_value')
+
+      return_results(dict_obj)
+
+  if __name__ in ("__main__", "__builtin__", "builtins"):
+      main()
+
+  register_module_line('AppendJson', 'end', __line__())
+scripttarget: 0
+subtype: python3
+tags:
+- transformer
+- general
+type: python
