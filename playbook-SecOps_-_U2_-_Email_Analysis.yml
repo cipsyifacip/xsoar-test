@@ -1,0 +1,880 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 54eda183-035e-4832-8e7a-e53724c21e71
+inputs: []
+name: SecOps - U2 - Email Analysis
+outputs: []
+sourceplaybookid: 77513dd0-452b-4fcf-87f6-c0c0a2ea7e5c
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 5dd87c56-05b9-413c-8f23-c6785058ae6e
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 5dd87c56-05b9-413c-8f23-c6785058ae6e
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 162.5,
+          "y": 65
+        }
+      }
+  "1":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: incident.filesha256
+          operator: isNotEmpty
+          right:
+            value: {}
+      label: "yes"
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "12"
+      "yes":
+      - "9"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 6e0e0e8c-b762-46b2-82e6-a9c60b89f252
+      iscommand: false
+      name: Contain filehash?
+      type: condition
+      version: -1
+    taskid: 6e0e0e8c-b762-46b2-82e6-a9c60b89f252
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 162.5,
+          "y": 225
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "5"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      file:
+        simple: ${incident.filesha256}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Anomali ThreatStream v3
+      description: Checks the reputation of the given hash of the file.
+      id: a00574ff-fa0f-4c04-8426-4e39d8b61d05
+      iscommand: true
+      name: Check - Anomali
+      script: Anomali ThreatStream v3|||file
+      type: regular
+      version: -1
+    taskid: a00574ff-fa0f-4c04-8426-4e39d8b61d05
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -230,
+          "y": 540
+        }
+      }
+  "5":
+    continueonerrortype: ""
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      file:
+        simple: ${incident.filesha256}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the file reputation of the specified hash.
+      id: 918a06b9-6238-4ae3-8cd1-545771dfa1e4
+      iscommand: true
+      name: Check - Virus Total
+      script: VirusTotal (API v3)|||file
+      type: regular
+      version: -1
+    taskid: 918a06b9-6238-4ae3-8cd1-545771dfa1e4
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -230,
+          "y": 700
+        }
+      }
+  "6":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore.Score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "3"
+      label: "yes"
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "12"
+      "yes":
+      - "7"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: fb6102d0-1ac4-40ef-8883-3c7908498a0c
+      iscommand: false
+      name: file hash is Malicious?
+      type: condition
+      version: -1
+    taskid: fb6102d0-1ac4-40ef-8883-3c7908498a0c
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": -50,
+          "y": 880
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body:
+        simple: |-
+          Dear Team,<br><br>
+
+          This Domain (${result.domain}) requires manual analysis regarding on the threat intelligence verdicts below:<br><br>
+
+          - Anomali ThreatStream: ${DbotReputation.AnomaliThreatStream}<br>
+          - SOC Radar: ${DbotReputation.SOCRadar}<br>
+          - VirusTotal: ${DbotReputation.VirusTotal}<br><br>
+
+          Please provide your manual action by selecting one of the options below, or respond manually through XSOAR if needed.<br><br>
+
+          Thank you for your attention and support<br><br>
+
+          Best regards,  <br>
+          SecOps Team. <br><br>
+
+          Select an option to complete the investigation:
+      cc: null
+      format: ""
+      methods:
+      - email
+      replyOptions:
+      - Quarantine
+      - "No"
+      subject:
+        simple: finding Malicious URL from TMES
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to:
+        simple: amin.ishaq@dinamikasolusi.com
+    nexttasks:
+      "No":
+      - "10"
+      Quarantine:
+      - "11"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      using:
+        simple: Mail Sender (New)_instance_1
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 51aefe7a-95c4-4bb5-8b6c-e25795639b8d
+      iscommand: false
+      name: Quarantine Email
+      type: condition
+      version: -1
+    taskid: 51aefe7a-95c4-4bb5-8b6c-e25795639b8d
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 285,
+          "y": 2935
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 55097005-ef5f-44d2-8b7c-2ca16518e27c
+      iscommand: false
+      name: Check Reputation File hash
+      type: title
+      version: -1
+    taskid: 55097005-ef5f-44d2-8b7c-2ca16518e27c
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 400
+        }
+      }
+  "10":
+    continueonerrortype: ""
+    id: "10"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: bc42d85f-6c06-4502-8816-676e1f4c2a5e
+      iscommand: false
+      name: End of Playbook
+      type: title
+      version: -1
+    taskid: bc42d85f-6c06-4502-8816-676e1f4c2a5e
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 510,
+          "y": 3520
+        }
+      }
+  "11":
+    continueonerrortype: ""
+    id: "11"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "26"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      listData:
+        simple: ${incident.domainname}
+      listName:
+        simple: blacklist_domain_sender
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.list.add
+      id: bb6021f2-1f81-4034-8de4-763d263f56c2
+      iscommand: true
+      name: Update Blacklist Domain Sender
+      script: Builtin|||addToList
+      type: regular
+      version: -1
+    taskid: bb6021f2-1f81-4034-8de4-763d263f56c2
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -25,
+          "y": 3110
+        }
+      }
+  "12":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: incident.emailattachmenturl
+          operator: isNotEmpty
+          right:
+            value: {}
+      label: "yes"
+    continueonerrortype: ""
+    id: "12"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "19"
+      "yes":
+      - "13"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: b7be1541-00dd-43d6-829d-af220ccfa284
+      iscommand: false
+      name: Contain embed link?
+      type: condition
+      version: -1
+    taskid: b7be1541-00dd-43d6-829d-af220ccfa284
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 650,
+          "y": 1050
+        }
+      }
+  "13":
+    continueonerrortype: ""
+    id: "13"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "14"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 22f67342-d9c4-4fe9-86fb-cf92840d52d0
+      iscommand: false
+      name: Check Reputation Embed Link
+      type: title
+      version: -1
+    taskid: 22f67342-d9c4-4fe9-86fb-cf92840d52d0
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 270,
+          "y": 1250
+        }
+      }
+  "14":
+    continueonerrortype: ""
+    id: "14"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "16"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      url:
+        simple: ${incident.emailattachmenturl}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Anomali ThreatStream v3
+      description: Checks the reputation of the given URL.
+      id: a9cc7d74-4aa9-455a-8a5f-b1fe2f4ddf79
+      iscommand: true
+      name: Check - Anomali
+      script: Anomali ThreatStream v3|||url
+      type: regular
+      version: -1
+    taskid: a9cc7d74-4aa9-455a-8a5f-b1fe2f4ddf79
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 270,
+          "y": 1380
+        }
+      }
+  "16":
+    continueonerrortype: ""
+    id: "16"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "17"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      url:
+        simple: ${incident.emailattachmenturl}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the reputation of a URL.
+      id: e0b87783-0a0e-41c9-8a74-22f07b0ac33c
+      iscommand: true
+      name: Check - Virus Total
+      script: VirusTotal (API v3)|||url
+      type: regular
+      version: -1
+    taskid: e0b87783-0a0e-41c9-8a74-22f07b0ac33c
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 270,
+          "y": 1555
+        }
+      }
+  "17":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore.Score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "3"
+      label: "yes"
+    continueonerrortype: ""
+    id: "17"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "19"
+      "yes":
+      - "7"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: a7ab8631-9596-4b7b-8108-7bd655ed2486
+      iscommand: false
+      name: Embed Link is Malicious?
+      type: condition
+      version: -1
+    taskid: a7ab8631-9596-4b7b-8108-7bd655ed2486
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 270,
+          "y": 1720
+        }
+      }
+  "19":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: incident.domainname
+          operator: isNotEmpty
+          right:
+            value: {}
+      label: "yes"
+    continueonerrortype: ""
+    id: "19"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "24"
+      "yes":
+      - "23"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 3de96488-f763-42bb-8be6-3e06969f3a38
+      iscommand: false
+      name: Contain Domain?
+      type: condition
+      version: -1
+    taskid: 3de96488-f763-42bb-8be6-3e06969f3a38
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 632.5,
+          "y": 1915
+        }
+      }
+  "20":
+    continueonerrortype: ""
+    id: "20"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "21"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      domain:
+        simple: ${incident.domainname}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Anomali ThreatStream v3
+      description: Checks the reputation of the given domain name.
+      id: edd7e459-626e-4691-87d1-1b2777191801
+      iscommand: true
+      name: Check - Anomali
+      script: Anomali ThreatStream v3|||domain
+      type: regular
+      version: -1
+    taskid: edd7e459-626e-4691-87d1-1b2777191801
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 520,
+          "y": 2235
+        }
+      }
+  "21":
+    continueonerrortype: ""
+    id: "21"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "22"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      domain:
+        simple: ${incident.domainname}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: SOCRadar IOC Radar
+      description: Check Domain reputation (when information is available, returns
+        a JSON with details). Uses all configured Threat Intelligence feeds.
+      id: eadc3a5a-2f66-4c44-8bf9-9d0972268b82
+      iscommand: true
+      name: Check - SOC Radar
+      script: SOCRadar IOC Radar|||domain
+      type: regular
+      version: -1
+    taskid: eadc3a5a-2f66-4c44-8bf9-9d0972268b82
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 520,
+          "y": 2410
+        }
+      }
+  "22":
+    continueonerrortype: ""
+    id: "22"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "25"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      domain:
+        simple: ${incident.domainname}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the reputation of a domain.
+      id: 5ed889fb-414f-4174-8ac0-dbe80fe7cc90
+      iscommand: true
+      name: Check - Virus Total
+      script: VirusTotal (API v3)|||domain
+      type: regular
+      version: -1
+    taskid: 5ed889fb-414f-4174-8ac0-dbe80fe7cc90
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 520,
+          "y": 2585
+        }
+      }
+  "23":
+    continueonerrortype: ""
+    id: "23"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "20"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: e8a6a2ca-e194-4f13-84d2-f52189c09c5b
+      iscommand: false
+      name: Check Reputation Domain
+      type: title
+      version: -1
+    taskid: e8a6a2ca-e194-4f13-84d2-f52189c09c5b
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 520,
+          "y": 2090
+        }
+      }
+  "24":
+    continueonerrortype: ""
+    id: "24"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "10"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      id:
+        complex:
+          accessor: id
+          root: incident
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.close.inv
+      id: 67029832-fa31-40c5-8541-c267e4c0cc1e
+      iscommand: true
+      name: Close Incident - No Information
+      script: Builtin|||closeInvestigation
+      type: regular
+      version: -1
+    taskid: 67029832-fa31-40c5-8541-c267e4c0cc1e
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 755,
+          "y": 3110
+        }
+      }
+  "25":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore.Score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "3"
+      label: "yes"
+    continueonerrortype: ""
+    id: "25"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "10"
+      "yes":
+      - "7"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 145fa45a-b32e-4b46-88c0-afc1142b2a4c
+      iscommand: false
+      name: Domain is Malicious?
+      type: condition
+      version: -1
+    taskid: 145fa45a-b32e-4b46-88c0-afc1142b2a4c
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 520,
+          "y": 2760
+        }
+      }
+  "26":
+    continueonerrortype: ""
+    id: "26"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "10"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      mailbox:
+        simple: ${incident.mailbox}
+      message_delivery_time:
+        simple: ${incident.messagedeliverytime}
+      message_id:
+        simple: ${incident.messageid}
+      product_id:
+        simple: ${incident.productid}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Trend Micro Vision One
+      description: Moves a message from a mailbox to the quarantine folder.
+      id: 0958a7a5-0e8a-414c-8d37-f6e66bcb24ac
+      iscommand: true
+      name: Action Resolve
+      script: Trend Micro Vision One|||trendmicro-visionone-quarantine-email-message
+      type: regular
+      version: -1
+    taskid: 0958a7a5-0e8a-414c-8d37-f6e66bcb24ac
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -25,
+          "y": 3290
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {
+      "12_13_yes": 0.57,
+      "12_19_#default#": 0.12,
+      "17_19_#default#": 0.57,
+      "17_7_yes": 0.1,
+      "6_12_#default#": 0.22,
+      "6_7_yes": 0.15,
+      "7_10_No": 0.2
+    },
+    "paper": {
+      "dimensions": {
+        "height": 3520,
+        "width": 1365,
+        "x": -230,
+        "y": 65
+      }
+    }
+  }

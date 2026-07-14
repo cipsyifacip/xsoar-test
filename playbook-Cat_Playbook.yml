@@ -1,0 +1,183 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 4a0bf048-fe87-4c6d-8788-e477abdd9d14
+inputs: []
+name: Cat Playbook
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: e7e1a7bd-44cb-4f31-8030-515c09dbc8d5
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: e7e1a7bd-44cb-4f31-8030-515c09dbc8d5
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      text:
+        simple: ${incident.sourceip}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Cat
+      id: 46af1a0d-0024-4830-80b1-a957257a99d4
+      iscommand: true
+      name: cataas-cat-says
+      script: Cat|||cataas-cat-says
+      type: regular
+      version: -1
+    taskid: 46af1a0d-0024-4830-80b1-a957257a99d4
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Cat
+      id: ce15f1b8-6b79-459c-8298-06a7869df718
+      iscommand: true
+      name: cataas-get-cat
+      script: Cat|||cataas-get-cat
+      type: regular
+      version: -1
+    taskid: ce15f1b8-6b79-459c-8298-06a7869df718
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 410
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "4"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Cat
+      id: 923af682-fae6-4260-87d7-a9f349e6bbb4
+      iscommand: true
+      name: cataas-get-cat-gif
+      script: Cat|||cataas-get-cat-gif
+      type: regular
+      version: -1
+    taskid: 923af682-fae6-4260-87d7-a9f349e6bbb4
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 590
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 95d474bd-addc-405c-8eef-b2e2f5902838
+      iscommand: false
+      name: STOP
+      type: title
+      version: -1
+    taskid: 95d474bd-addc-405c-8eef-b2e2f5902838
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 770
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 785,
+        "width": 380,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }

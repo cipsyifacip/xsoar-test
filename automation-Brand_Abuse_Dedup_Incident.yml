@@ -1,0 +1,96 @@
+commonfields:
+  id: b6ac38f5-a70c-4ab0-85fd-ae590237f31b
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels: []
+    toServerVersion: ""
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: Brand_Abuse_Dedup_Incident
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  incident = demisto.incident() or {}
+  cf = incident.get("CustomFields", {}) or {}
+
+  #brandabuse_source = cf.get("brandabusesource") or incident.get("brandabusesource")
+  brandabuse_url = cf.get("brandabuseattackurl") or incident.get("brandabuseattackurl")
+  fromdate = "30 days ago"
+
+
+  #if not brandabuse_source:
+  #    demisto.debug("brandabusesource is empty")
+  #    demisto.results(True)
+
+
+  #name_value = "Brand Abuse from {}".format(brandabuse_source)
+  #query = 'name:"{}" AND brandabusesource:"{}" AND brandabuseurl:"{}"'.format(name_value, brandabuse_source, brandabuse_url)
+
+  name_value = "Brand Abuse from DSIS - KS:"
+  query = 'name:"{}" AND brandabuseattackurl:"{}"'.format(name_value, brandabuse_url)
+  #query = 'brandabuseattackurl:"{}"'.format(brandabuse_url)
+
+  demisto.debug("NAME VALUE: {}".format(name_value))
+  demisto.debug("QUERY: {}".format(query))
+
+  res = demisto.executeCommand("SearchIncidentsV2", {
+      "query": query,
+      "fromdate": fromdate,
+      "limit": 1
+  })
+
+  if is_error(res):
+      raise DemistoException(get_error(res))
+
+  demisto.debug("RAW RES: {}".format(res))
+
+  entry = res[0] if res else {}
+
+  # Try several possible locations of returned incidents
+  contents = entry.get("Contents")
+  context = entry.get("EntryContext", {}) or {}
+
+  demisto.debug("CONTENTS TYPE: {}".format(type(contents)))
+  demisto.debug("ENTRY CONTEXT: {}".format(context))
+
+  total = 0
+
+  # Case 1: Contents is a list
+  if isinstance(contents, list):
+      total = len(contents)
+
+  # Case 2: Contents is a dict
+  elif isinstance(contents, dict):
+      if "total" in contents:
+          total = int(contents.get("total", 0) or 0)
+      elif "data" in contents and isinstance(contents.get("data"), list):
+          total = len(contents.get("data"))
+
+  # Case 3: SearchIncidentsV2 often stores results in EntryContext
+  elif isinstance(context, dict):
+      found_incidents = context.get("foundIncidents")
+      if isinstance(found_incidents, list):
+          total = len(found_incidents)
+
+  demisto.debug("TOTAL FOUND: {}".format(total))
+
+  if total > 0:
+      demisto.debug("Duplicate found by name")
+      demisto.results(False)
+  else:
+      demisto.debug("No duplicate found by name")
+      demisto.results(True)
+scripttarget: 0
+subtype: python3
+tags:
+- preProcessing
+type: python

@@ -1,0 +1,28 @@
+{
+	"allRead": true,
+	"allReadWrite": true,
+	"cacheVersn": 0,
+	"data": "[123,123,12,3,1,3,132,344,3]",
+	"definitionId": "",
+	"description": "",
+	"detached": false,
+	"fromServerVersion": "",
+	"id": "test_list",
+	"itemVersion": "",
+	"locked": false,
+	"name": "test_list",
+	"nameLocked": false,
+	"packID": "",
+	"packName": "",
+	"previousAllRead": true,
+	"previousAllReadWrite": true,
+	"propagationLabels": [
+		"all"
+	],
+	"system": false,
+	"tags": null,
+	"toServerVersion": "",
+	"truncated": false,
+	"type": "json",
+	"version": -1
+}

@@ -1,0 +1,85 @@
+commonfields:
+  id: a5dc9986-a4c2-49cf-835e-3d0dfe06875a
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.12.5490952
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: Debug1
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import json
+
+  def deep_dive_task_10():
+      # 1. Search for the specific playbook we saw earlier
+      body = {
+          "query": "name:\"SecOps - U1 - IP Reputation Check\"",
+          "page": 0,
+          "size": 1
+      }
+
+      res = demisto.executeCommand("core-api-post", {"uri": "/playbook/search", "body": json.dumps(body)})
+
+      if isError(res[0]):
+          return_error("API Error: " + str(res[0]))
+
+      # Handle API response wrappers
+      api_response = res[0].get('Contents', {}).get('response', {})
+      if not api_response:
+          api_response = res[0].get('Contents', {})
+
+      playbooks = api_response.get('playbooks', [])
+      if not playbooks:
+          return_results("Could not find the playbook 'SecOps - U1 - IP Reputation Check'")
+          return
+
+      # 2. Extract Task 10
+      pb = playbooks[0]
+      tasks = pb.get('tasks', {})
+
+      # Look for Task 10 specifically
+      task_10_wrapper = tasks.get('10')
+
+      if not task_10_wrapper:
+          return_results("Task 10 not found in this playbook. (Tasks may have renumbered).")
+          return
+
+      task_inner = task_10_wrapper.get('task', {})
+
+      # 3. Print ALL keys and values for inspection
+      debug_output = "### Deep Dive: Task 10 Keys\n"
+      debug_output += "These are the actual fields available to use:\n\n"
+
+      for key, value in task_inner.items():
+          # Truncate very long values for readability
+          val_str = str(value)
+          if len(val_str) > 100:
+              val_str = val_str[:100] + "... (truncated)"
+
+          debug_output += f"* **{key}**: `{val_str}`\n"
+
+      return_results({
+          'ContentsFormat': formats['markdown'],
+          'Type': entryTypes['note'],
+          'Contents': debug_output
+      })
+
+  if __name__ in ("__main__", "__builtin__", "builtins"):
+      deep_dive_task_10()
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

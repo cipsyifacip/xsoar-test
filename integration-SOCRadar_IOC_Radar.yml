@@ -1,0 +1,453 @@
+category: Data Enrichment & Threat Intelligence
+commonfields:
+  id: SOCRadar IOC Radar
+  version: -1
+configuration:
+- additionalinfo: Reliability of the source providing the intelligence data.
+  defaultvalue: C - Fairly reliable
+  display: Source Reliability
+  name: integrationReliability
+  options:
+  - A+ - 3rd party enrichment
+  - A - Completely reliable
+  - B - Usually reliable
+  - C - Fairly reliable
+  - D - Not usually reliable
+  - E - Unreliable
+  - F - Reliability cannot be judged
+  required: true
+  section: Collect
+  type: 15
+- defaultvalue: https://socradar.io
+  display: Base URL
+  name: base_url
+  required: true
+  section: Connect
+  type: 0
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+description: Use the SOCRadar IOC Radar web crawl to get data about an IP address.
+detaileddescription: Use the SOCRadar IOC Radar web crawl to get data about an IP
+  address.
+display: SOCRadar IOC Radar
+image: data:image/png;base64,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
+name: SOCRadar IOC Radar
+script:
+  commands:
+  - arguments:
+    - description: IP address to query, e.g., 1.1.1.1.
+      isArray: true
+      name: ip
+      required: true
+    description: Check IP reputation (when information is available, returns a JSON
+      with details). Uses all configured Threat Intelligence feeds.
+    name: ip
+    outputs:
+    - contextPath: IPinfo.IP.Address
+      description: The IP address.
+      type: String
+    - contextPath: IPinfo.IP.Hostname
+      description: The IP hostname.
+      type: String
+    - contextPath: IPinfo.IP.ASN
+      description: The IP ASN.
+      type: String
+    - contextPath: IPinfo.IP.ASOwner
+      description: The IP AS owner.
+      type: String
+    - contextPath: IPinfo.IP.Organization.Name
+      description: The IP organization name (Only available in some IPinfo.io plans).
+      type: String
+    - contextPath: IPinfo.IP.Organization.Type
+      description: The IP organization type (Only available in some IPinfo.io plans).
+      type: String
+    - contextPath: IPinfo.IP.Geo.Location
+      description: The IP geographic location (coordinates as lat:lon).
+      type: String
+    - contextPath: IPinfo.IP.Geo.Country
+      description: The IP country.
+      type: String
+    - contextPath: IPinfo.IP.Geo.Description
+      description: The IP location as <City, Region, Postal Code, Country>.
+      type: String
+    - contextPath: IPinfo.IP.Registrar.Abuse.Address
+      description: The physical address registered for receiving abuse reports for
+        the IP. (Only available in some IPinfo.io plans).
+      type: String
+    - contextPath: IPinfo.IP.Registrar.Abuse.Country
+      description: The country where abuse reports are received for the IP. (Only
+        available in some IPinfo.io plans).
+      type: String
+    - contextPath: IPinfo.IP.Registrar.Abuse.Email
+      description: The email address for abuse reports provided by the IP. (Only available
+        in some IPinfo.io plans).
+      type: String
+    - contextPath: IPinfo.IP.Registrar.Abuse.Name
+      description: The name of the abuse report handler received for the IP. (Only
+        available in some IPinfo.io plans).
+      type: String
+    - contextPath: IPinfo.IP.Registrar.Abuse.Network
+      description: The IP range relevant for abuse inquiries provided for the IP.
+        (Only available in some IPinfo.io plans).
+      type: String
+    - contextPath: IP.Address
+      description: The IP address.
+      type: String
+    - contextPath: IP.Hostname
+      description: The IP hostname.
+      type: String
+    - contextPath: IP.ASN
+      description: The IP ASN.
+      type: String
+    - contextPath: IP.Tags
+      description: Tags related the IP use (hosting, proxy, tor, vpn).
+      type: String
+    - contextPath: IP.FeedRelatedIndicators.value
+      description: Names of indicators associated with the IP.
+      type: String
+    - contextPath: IP.FeedRelatedIndicators.type
+      description: Types of indicators associated with the IP.
+      type: String
+    - contextPath: IP.Relationships.EntityA
+      description: The source of the relationship.
+      type: string
+    - contextPath: IP.Relationships.EntityB
+      description: The destination of the relationship.
+      type: string
+    - contextPath: IP.Relationships.Relationship
+      description: The name of the relationship.
+      type: string
+    - contextPath: IP.Relationships.EntityAType
+      description: The type of the source of the relationship.
+      type: string
+    - contextPath: IP.Relationships.EntityBType
+      description: The type of the destination of the relationship.
+      type: string
+    - contextPath: IP.Geo.Location
+      description: The IP geographic location (coordinates as lat:lon).
+      type: String
+    - contextPath: IP.Geo.Country
+      description: The IP country.
+      type: String
+    - contextPath: IP.Geo.Description
+      description: The IP location as <City, Region, Postal Code, Country>.
+      type: String
+    - contextPath: IP.Organization.Name
+      description: The organization of the IP.
+      type: String
+    - contextPath: IP.Organization.Type
+      description: The organization type of the IP.
+      type: String
+    - contextPath: DBotScore.Indicator
+      description: The indicator that was tested.
+      type: String
+    - contextPath: DBotScore.Score
+      description: The actual score.
+      type: Number
+    - contextPath: DBotScore.Reliability
+      description: How reliable the score is (for example, "C - fairly reliable").
+      type: String
+    - contextPath: DBotScore.Type
+      description: The indicator type.
+      type: String
+    - contextPath: DBotScore.Vendor
+      description: The vendor used to calculate the score.
+      type: String
+  - arguments:
+    - default: true
+      description: Domain address to query, e.g., google.com.
+      isArray: true
+      name: domain
+      required: true
+    description: Check Domain reputation (when information is available, returns a
+      JSON with details). Uses all configured Threat Intelligence feeds.
+    name: domain
+  dockerimage: demisto/python3:3.12.8.3296088
+  runonce: false
+  script: |
+    register_module_line('SOCRadar IOC Radar', 'start', __line__())
+    CONSTANT_PACK_VERSION = '1.0.0'
+    demisto.debug('pack id = SOCRadar IOC Radar, pack version = 1.0.0')
+
+    #tes
+    #tes 2
+    import urllib.request
+    import traceback
+    from typing import Any
+
+    BRAND_NAME = "SOCRadar IOC Radar"  # matches context output path for faster caching
+
+    RE_VERDICT = r'class="(critical|high|medium|low)\s+subtitle"'
+    RE_NOT_FOUND = r'<p class="title"[^>]*>(.*?)</p>'
+    RE_PERCENTAGE = r'<span class="percentage"[^>]*>(.*?)</span>'
+    RE_SIGNAL = r'<span class="value text-bold"[^>]*>(.*?)</span>'
+    RE_COUNTRY = r'<div class="country-item"[^>]*><span[^>]*>(.*?)</span></div>'
+    RE_AS = r'<div class="as-info"[^>]*>(.*?)</div>'
+
+    class Client():
+        def __init__(self, base_url: str, reliability: str):
+            self.base_url = base_url
+            self.reliability = reliability
+            self.headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                'Accept': 'application/json, text/plain, */*',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Referer': self.base_url,
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            }
+
+        def get_rep(self, ip: str) -> dict[str, Any]:
+            return self.http_request(ip)
+
+        def http_request(self, ip: str) -> dict[str, Any]:
+            url_suffix = f'/labs/app/ioc-radar/{ip}'
+            req = urllib.request.Request(self.base_url+url_suffix, headers=self.headers)
+            with urllib.request.urlopen(req) as response:
+                response_decode = response.read().decode('utf-8')
+            return response_decode
+
+
+    def test_module(client: Client) -> str:
+        """Tests SOCRadar by sending a query on 8.8.8.8"""
+        client.get_rep("8.8.8.8")
+        return "ok"  # on any failure, an exception is raised
+
+    def dbot_scoring_ip(ip, verdict, risk_score, as_owner, country, signal_str, reliability, unknown):
+        score = None
+        """Dbot Scoring for indicator extraction"""
+        if isinstance(verdict, str):
+            if verdict == 'critical':
+                score = Common.DBotScore.BAD
+            elif verdict == 'high':
+                score = Common.DBotScore.BAD
+            elif verdict == 'medium':
+                score = Common.DBotScore.SUSPICIOUS
+        if not score:
+            if unknown:
+                score = Common.DBotScore.NONE # Result with N/A result
+            else:
+                score = Common.DBotScore.GOOD  # Result with class low
+
+        entry_context = {
+            'IPAddress': ip,
+            'ASOwner': as_owner,
+            'RiskPercentage': risk_score,
+            'SignalStrength': signal_str,
+            'Verdict': verdict,
+            'Geo': {'Country': country},
+        }
+        outputs_key_field = 'Address'
+
+        dbot_score = Common.DBotScore(
+            indicator=ip,
+            indicator_type=DBotScoreType.IP,
+            reliability=reliability,
+            integration_name=BRAND_NAME,
+            score=score,
+        )
+
+        indicator = Common.IP(
+            ip=ip,
+            dbot_score=dbot_score,
+            geo_country=country,
+        )
+
+        results = CommandResults(
+            raw_response={
+                'IPAddress' : ip,
+                'SignalStrength': signal_str,
+                'RiskPercentage': risk_score,
+                'Verdict': verdict,
+                'ASOwner' : as_owner,
+                'Country' : country,
+            },
+            outputs_prefix='SOCRadarIOCRadar.IP',
+            outputs=entry_context,
+            outputs_key_field=outputs_key_field,
+            indicator=indicator,
+        )
+
+        return results
+
+    def dbot_scoring_domain(domain, verdict, risk_score, as_owner, country, signal_str, reliability, unknown):
+        score = None
+        if isinstance(verdict, str):
+            if verdict == 'critical':
+                score = Common.DBotScore.BAD
+            elif verdict == 'high':
+                score = Common.DBotScore.BAD
+            elif verdict == 'medium':
+                score = Common.DBotScore.SUSPICIOUS
+
+        if not score:
+            if unknown:
+                score = Common.DBotScore.NONE # Result with N/A result
+            else:
+                score = Common.DBotScore.GOOD  # Result with class low
+
+        entry_context = {
+            'DomainAddress': domain,
+            'ASOwner': as_owner,
+            'RiskPercentage': risk_score,
+            'SignalStrength': signal_str,
+            'Verdict': verdict,
+            'Geo': {'Country': country},
+        }
+        outputs_key_field = 'Address'
+
+        dbot_score = Common.DBotScore(
+            indicator=domain,
+            indicator_type=DBotScoreType.DOMAIN,
+            reliability=reliability,
+            integration_name=BRAND_NAME,
+            score=score,
+        )
+
+        indicator = Common.Domain(
+            domain=domain,
+            dbot_score=dbot_score,
+            geo_country=country,
+        )
+
+        results = CommandResults(
+            raw_response={
+                'Domain' : domain,
+                'SignalStrength': signal_str,
+                'RiskPercentage': risk_score,
+                'Verdict': verdict,
+                'ASOwner' : as_owner,
+                'Country' : country,
+            },
+            outputs_prefix='SOCRadarIOCRadar.Domain',
+            outputs=entry_context,
+            outputs_key_field=outputs_key_field,
+            indicator=indicator,
+        )
+
+        return results
+
+    def parse_results(ioc: str, raw_result: dict[str, Any], reliability: str, cat: str) -> List[CommandResults]:
+        unknown = False
+        match_not_found = None
+        match_signal_str = None
+        match_percent = None
+        match_country = None
+        match_as = None
+        match_verdict = None
+
+        match_not_found = re.search(RE_NOT_FOUND, raw_result)
+
+        if match_not_found :
+            raw_result = raw_result
+            unknown = True
+
+        match_signal_str  = re.search(RE_SIGNAL, raw_result)
+        if match_signal_str:
+            match_signal_str = match_signal_str.group(1)
+
+
+        try:
+            match_percent = re.search(RE_PERCENTAGE, raw_result).group(1).rstrip('%')
+            risk_percent = float(match_percent)
+        except:
+            demisto.info('Result is N/A or Undefined')
+            if match_percent:
+                risk_percent = match_percent
+            else:
+                risk_percent = None
+            unknown = True
+
+        match_country = re.search(RE_COUNTRY, raw_result)
+        if match_country:
+            match_country = match_country.group(1)
+
+        match_as = re.search(RE_AS, raw_result)
+        if match_as:
+            match_as = match_as.group(1)
+
+        match_verdict = re.search(RE_VERDICT, raw_result)
+        if match_verdict:
+            match_verdict = match_verdict.group(1).lower()
+
+        match cat:
+            case 'ip':
+                return dbot_scoring_ip(ioc, match_verdict, risk_percent, match_as, match_country, match_signal_str, reliability, unknown)
+            case 'domain':
+                return dbot_scoring_domain(ioc, match_verdict, risk_percent, match_as, match_country, match_signal_str, reliability, unknown)
+
+
+    def getrep_ip_command(client: Client, ip: str, cat: str) -> List[List[CommandResults]]:
+        ip_lists = argToList(ip)
+        ip_results = []
+
+        for ip in ip_lists:
+            response = client.get_rep(ip)
+            ip_results.append(parse_results(ip, response, client.reliability, cat))
+
+        return ip_results
+
+    def getrep_domain_command(client: Client, domain: str, cat: str) -> List[List[CommandResults]]:
+        domain_lists = argToList(domain)
+        domain_results = []
+
+        for domain in domain_lists:
+            response = client.get_rep(domain)
+            domain_results.append(parse_results(domain, response, client.reliability, cat))
+
+        return domain_results
+
+    def main() -> None:
+        """main function, parses params and runs command functions"""
+
+        params = demisto.params()
+        args = demisto.args()
+        command = demisto.command()
+
+        proxy = params.get("proxy") or False
+        insecure = params.get("insecure") or False
+        base_url = params.get("base_url") or "https://socradar.io"
+        reliability = params.get("integrationReliability")
+
+        demisto.debug(f"Command being called is {command}")
+
+        try:
+            client = Client(base_url=base_url, reliability=reliability)
+
+            if command == "test-module":
+                return_results(test_module(client))
+
+            elif command == "ip":
+                args['cat'] = 'ip'
+                ip_command = getrep_ip_command(client, **args)
+                return_results(ip_command)
+
+            elif command == "domain":
+                args['cat'] = 'domain'
+                domain_command = getrep_domain_command(client, **args)
+                return_results(domain_command)
+            else:
+                raise NotImplementedError(f"command {command} is not supported")
+
+        # Log exceptions and return errors
+        except Exception as e:
+            demisto.error(traceback.format_exc())  # print the traceback
+            return_error(f"Failed to execute {command} command.\nError:\n{e!s}")
+
+
+    if __name__ in ("__main__", "__builtin__", "builtins"):
+        main()
+
+    register_module_line('SOCRadar IOC Radar', 'end', __line__())
+  subtype: python3
+  type: python
+sourcemoduleid: ipinfo_v2

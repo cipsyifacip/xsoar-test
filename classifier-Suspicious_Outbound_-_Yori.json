@@ -1,0 +1,105 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "57cfd3ff-eb0e-4c7a-8f37-c9bcedb3a391",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {},
+	"locked": false,
+	"logicalVersion": 5,
+	"mapping": {
+		"dbot_classification_incident_type_all": {
+			"dontMapEventToLabels": true,
+			"internalMapping": {
+				"App": {
+					"simple": "app"
+				},
+				"Count": {
+					"simple": "count"
+				},
+				"Destination IP": {
+					"simple": "dstip"
+				},
+				"First Seen": {
+					"simple": "first_seen"
+				},
+				"Last Seen": {
+					"simple": "last_seen"
+				},
+				"Log Source": {
+					"simple": "mirror_tags.[0]"
+				},
+				"Policy Actions": {
+					"simple": "action"
+				},
+				"Source IP": {
+					"simple": "srcip"
+				},
+				"Tags": {
+					"simple": "mirror_instance"
+				},
+				"Total Bytes": {
+					"simple": "total_bytes"
+				},
+				"details": {
+					"complex": {
+						"filters": [],
+						"root": "_raw",
+						"transformers": [
+							{
+								"args": {
+									"error_if_no_match": {
+										"isContext": false
+									},
+									"ignore_case": {
+										"isContext": false
+									},
+									"multi_line": {
+										"isContext": false
+									},
+									"period_matches_newline": {
+										"isContext": false
+									},
+									"regex": {
+										"isContext": false,
+										"value": {
+											"simple": "^([A-Z][a-zA-Z ]+?)(?=\\s+from)"
+										}
+									},
+									"unpack_matches": {
+										"isContext": false
+									}
+								},
+								"operator": "RegexExtractAll"
+							}
+						]
+					}
+				},
+				"severity": {
+					"simple": "severity"
+				}
+			}
+		}
+	},
+	"name": "Suspicious Outbound - Yori",
+	"nameRaw": "Suspicious Outbound - Yori",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {},
+	"type": "mapping-incoming",
+	"unclassifiedCases": null,
+	"version": -1
+}

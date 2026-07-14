@@ -1,0 +1,105 @@
+args:
+- name: file_id
+  required: true
+commonfields:
+  id: 783b0aa4-4de3-4a34-8225-9bad673df5b5
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: docker.io/demisto/python3:3.12.12.5490952
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: ParsePDF
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import re
+  import sys
+
+  def create_markdown(filename, data):
+      md = f"### Extraction Results for {filename}\n"
+      md += "| Category | Found |\n"
+      md += "|---|---|\n"
+      md += f"| IPs | {', '.join(data.get('IP', []))} |\n"
+      md += f"| Emails | {', '.join(data.get('Email', []))} |\n"
+      md += f"| URLs | {', '.join(data.get('URL', []))} |\n"
+      return md
+
+  def main():
+      try:
+          args = demisto.args()
+          entry_id = args.get('file_id')
+
+          if not entry_id:
+              demisto.results({
+                  "Type": 11,
+                  "Contents": "Error: You must provide an 'entry_id'.",
+                  "ContentsFormat": "text"
+              })
+              sys.exit(0)
+
+          res = demisto.getFilePath(entry_id)
+          file_path = res['path']
+          file_name = res['name']
+
+
+          with open(file_path, 'rb') as f:
+              raw_data = f.read()
+
+
+          text_content = raw_data.decode('latin-1', errors='ignore')
+
+
+          ip_list = list(set(re.findall(r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b', text_content)))
+
+          email_list = list(set(re.findall(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', text_content)))
+
+          url_list = list(set(re.findall(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[^\s]*', text_content)))
+
+          results = {
+              "IP": ip_list,
+              "Email": email_list,
+              "URL": url_list
+          }
+
+          entry = {
+              "Type": 1,
+              "ContentsFormat": "json",
+              "Contents": results,
+              "HumanReadable": create_markdown(file_name, results),
+              "EntryContext": {
+                  "PDFParser": {
+                      "Filename": file_name,
+                      "IP": results['IP'],
+                      "URL": results['URL'],
+                      "Email": results['Email']
+                  }
+              }
+          }
+
+          demisto.results(entry)
+
+      except Exception as e:
+          demisto.results({
+              "Type": 11,
+              "Contents": f"Script failed: {str(e)}",
+              "ContentsFormat": "text"
+          })
+
+  if __name__ in ('__main__', '__builtin__', 'builtins'):
+      main()
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

@@ -1,0 +1,125 @@
+commonfields:
+  id: 434fd3ac-fc0b-4f68-8416-a42fe1fc1332
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.7444307
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: HighVolumeTrafficHandler
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  """
+  High Volume Traffic Incident Handler
+  Automates response for DNS tunneling and high volume traffic incidents
+  """
+
+  import demistomock as demisto
+  from CommonServerPython import *
+  from CommonServerUserPython import *
+
+  def main():
+      # Get incident data
+      incident = demisto.incident()
+      incident_id = incident.get('id')
+
+      # Extract custom fields from incident
+      src_ip = incident.get('CustomFields', {}).get('sourceip', 'Unknown')
+      dst_ip = incident.get('CustomFields', {}).get('destinationip', 'Unknown')
+      app = incident.get('CustomFields', {}).get('application', 'Unknown')
+      severity = incident.get('severity', 2)
+      bytes_transferred = incident.get('CustomFields', {}).get('bytes', 0)
+
+      # Add initial comment to war room
+      demisto.executeCommand('addComment', {
+          'id': incident_id,
+          'comment': f'[Automation] Processing incident: {src_ip} → {dst_ip} | App: {app} | Bytes: {bytes_transferred}'
+      })
+
+      # Step 1: Enrich IP addresses
+      if dst_ip != 'Unknown':
+          demisto.executeCommand('addComment', {
+              'id': incident_id,
+              'comment': f'[Automation] Enriching destination IP: {dst_ip}'
+          })
+
+          # Check VirusTotal (if configured)
+          vt_result = demisto.executeCommand('vt-private-get-url-report', {'url': dst_ip})
+          if vt_result and vt_result[0].get('Contents'):
+              demisto.executeCommand('addComment', {
+                  'id': incident_id,
+                  'comment': f'[VirusTotal] Results for {dst_ip}: {str(vt_result[0].get("Contents"))[:500]}'
+              })
+
+      # Step 2: Check if this is DNS tunneling
+      if app == 'dns' and int(bytes_transferred) > 10000000:
+          demisto.executeCommand('addComment', {
+              'id': incident_id,
+              'comment': f'[Alert] DNS TUNNELING DETECTED! {src_ip} sent {bytes_transferred} bytes via DNS to {dst_ip}'
+          })
+
+          # Auto escalate severity to Critical (4)
+          if severity < 4:
+              demisto.executeCommand('setIncident', {
+                  'id': incident_id,
+                  'severity': '4'  # Critical
+              })
+
+      # Step 3: Check for data exfiltration
+      elif int(bytes_transferred) > 50000000:  # 50MB
+          demisto.executeCommand('addComment', {
+              'id': incident_id,
+              'comment': f'[Alert] DATA EXFILTRATION! {src_ip} transferred {bytes_transferred} bytes'
+          })
+
+          # Escalate to High (3) if not already
+          if severity < 3:
+              demisto.executeCommand('setIncident', {
+                  'id': incident_id,
+                  'severity': '3'
+              })
+
+      # Step 4: Add investigation tasks to checklist
+      tasks = [
+          f'Investigate source IP: {src_ip}',
+          f'Investigate destination IP: {dst_ip}',
+          'Review firewall logs for additional activity',
+          'Check if destination IP is malicious',
+          'Contain affected host if malicious'
+      ]
+
+      for task in tasks:
+          demisto.executeCommand('addComment', {
+              'id': incident_id,
+              'comment': f'[Task] {task}'
+          })
+
+      # Step 5: Close comment (if low severity and known false positive)
+      if severity <= 1 and app in ['icmp', 'ntp', 'snmp']:
+          demisto.executeCommand('addComment', {
+              'id': incident_id,
+              'comment': '[Automation] Low severity known protocol. Closing as false positive.'
+          })
+          demisto.executeCommand('closeInvestigation', {
+              'id': incident_id,
+              'closeReason': 'False Positive'
+          })
+
+  if __name__ == '__main__':
+      main()
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

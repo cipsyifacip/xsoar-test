@@ -1,0 +1,94 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "8f27a63e-a962-4e21-8660-a313905f05f4",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {},
+	"locked": false,
+	"logicalVersion": 6,
+	"mapping": {
+		"Repeated Deny / Timeout - Rainier": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"First Seen": {
+					"simple": "first_seen"
+				},
+				"Last Seen": {
+					"simple": "last_seen"
+				}
+			}
+		},
+		"dbot_classification_incident_type_all": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"Count": {
+					"simple": "count"
+				},
+				"Destination IP": {
+					"simple": "dstip"
+				},
+				"Destination Port": {
+					"simple": "port_list"
+				},
+				"Duration": {
+					"simple": "duration_min"
+				},
+				"First Seen": {
+					"simple": "first_seen"
+				},
+				"Last Seen": {
+					"simple": "last_seen"
+				},
+				"Source IP": {
+					"simple": "srcip"
+				},
+				"Tags": {
+					"complex": {
+						"accessor": "[0]",
+						"filters": [],
+						"root": "mirror_tags",
+						"transformers": []
+					}
+				},
+				"Unique Ports": {
+					"simple": "unique_ports"
+				},
+				"dbotMirrorDirection": {
+					"simple": "mirror_direction"
+				},
+				"dbotMirrorInstance": {
+					"simple": "mirror_instance"
+				},
+				"severity": {
+					"complex": {
+						"filters": [],
+						"root": "severity",
+						"transformers": []
+					}
+				}
+			}
+		}
+	},
+	"name": "Rain_Mapping",
+	"nameRaw": "Rain_Mapping",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {},
+	"type": "mapping-incoming",
+	"unclassifiedCases": null,
+	"version": -1
+}

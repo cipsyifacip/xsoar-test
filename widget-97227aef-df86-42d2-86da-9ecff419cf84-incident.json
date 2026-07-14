@@ -1,0 +1,6004 @@
+{
+	"Cache": null,
+	"cacheVersn": 0,
+	"category": "",
+	"dataType": "incidents",
+	"dateRange": {
+		"fromDate": "0001-01-01T00:00:00Z",
+		"fromDateLicense": "0001-01-01T00:00:00Z",
+		"period": {
+			"by": "",
+			"byFrom": "days",
+			"byTo": "",
+			"field": "",
+			"fromValue": 30,
+			"toValue": null
+		},
+		"toDate": "0001-01-01T00:00:00Z"
+	},
+	"definitionId": "",
+	"fromServerVersion": "",
+	"id": "97227aef-df86-42d2-86da-9ecff419cf84",
+	"isPredefined": false,
+	"itemVersion": "",
+	"name": "incident",
+	"packID": "",
+	"packName": "",
+	"params": {
+		"tableColumns": [
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "id",
+				"width": 110
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "name",
+				"width": 300
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "severity",
+				"width": 80
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "status",
+				"width": 80
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "owner",
+				"width": 160
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "roles",
+				"width": 160
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "playbookId",
+				"width": 150
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "occurred",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"isDefault": true,
+				"key": "dueDate",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "created",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "modified",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "closed",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "details",
+				"width": 300
+			},
+			{
+				"displayed": true,
+				"key": "labels",
+				"width": 70
+			},
+			{
+				"displayed": true,
+				"key": "attachment",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"key": "closeReason",
+				"width": 300
+			},
+			{
+				"displayed": true,
+				"key": "closeNotes",
+				"width": 300
+			},
+			{
+				"displayed": true,
+				"key": "closingUserId",
+				"width": 160
+			},
+			{
+				"displayed": true,
+				"key": "openDuration",
+				"width": 300
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "reminder",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "phase",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "runStatus",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "category",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "sourceBrand",
+				"width": 150
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "sourceInstance",
+				"width": 250
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "droppedCount",
+				"width": 250
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "linkedCount",
+				"width": 250
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "dbotCreatedBy",
+				"width": 160
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "feedBased",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "dbotMirrorInstance",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "dbotMirrorDirection",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "dbotMirrorTags",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "dbotMirrorId",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "dbotMirrorLastSync",
+				"width": 100
+			},
+			{
+				"displayed": true,
+				"isDefault": false,
+				"key": "xsoarReadOnlyRoles",
+				"width": 170
+			},
+			{
+				"displayed": true,
+				"key": "ASN",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ASN Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Account Groups",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Account ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Account Member Of",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Account Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Account Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Account information breached",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Acknowledged",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Acknowledged By Username",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Acquisition Hire",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Additional Data",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Additional Email Addresses",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Additional Indicators",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Affected Data Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Affected Hosts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Affected Individuals Contact Information",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Affected Users",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Affected data",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Agent ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Agent Version",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Agents ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Acknowledgement",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Action",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Attack Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Closing User",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Malicious",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Rules",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Type ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert Type UUID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alert tags",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Alerts and related info",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Analysis Report",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "App",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "App message",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Appliance ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Appliance Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Application Id",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Application Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Application Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Approval Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Approver",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Approximate number of affected data subjects",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Asset ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Asset Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Asset Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Assigned User",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Assignment Group",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attachment Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attachment Extension",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attachment Hash",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attachment ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attachment Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attachment size",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attachment type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attack Mode",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attack Patterns",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Attorney General Notification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Audit Logs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Birthday",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Block Indicators Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Blocked Action",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse Alert Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse Attack Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse Attack URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse Date Submitted",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse ID CTI",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse IP Addr",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse Opened Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse Registrar",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Brand Abuse Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Breach Confirmation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Bugtraq",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CMD",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CMD line",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot BC Breach Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot BC Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot BC Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot BC Executive Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot BC Password",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot BC Username",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Brand",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot CC CVV",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot CC Card Number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot CC Expiry Month",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot CC Expiry Year",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Class",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Confirmation Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Course of Action",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot First Seen",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Incident Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Last Seen",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Computer Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Date Compromised",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Hostname",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Malware Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Masked Password",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Operating System",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Password",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Software",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Source URI",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Sources",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Stealer Family",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML URL Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML User",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML User Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot ML Website",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Module",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Remarks",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Risks",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Screenshots",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Severity",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Subject",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Ticket ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 CyberBlindspot Timestamp",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 HackerView Asset Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 HackerView Potential Attack Types",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 HackerView Potential Impact",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CTM360 HackerView Technologies",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVE",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVE ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVE List",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVE Published",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVSS",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVSS Availability Requirement",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVSS Collateral Damage Potential",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVSS Confidentiality Requirement",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "CVSS Integrity Requirement",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Caller",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Campaign Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Categories",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Category Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Changed",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Check ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Child Process",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "City",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Classification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Classifications",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Clicked URLs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Close Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Closing Reason",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Closing User",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cloud Account ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cloud Instance ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cloud Operation Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cloud Region List",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cloud Resource List",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cloud Service",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cluster UUID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Command Line",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Command Line Verdict",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Comment",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Company Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Company City",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Company Country",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Company Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Company Postal Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Company has Insurance for the Breach",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Compliance Notes",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Consumer Reporting Agencies Notification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Contact Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Contact Email address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Contact Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Contact Telephone number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Containment SLA",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Coordinates",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Coordinates Geolocation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cost Center",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Cost Center Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Country",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Country Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Country Code Number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Country Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Country Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Country where business has its main establishment",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Country where the breach took place",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Created Date Failed Incidents",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Created Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Critical Assets",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Custom Query Results",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "DBotPrediction",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "DBotPredictionProbability",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "DBotTextSuggestionHighlighted",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "DNS Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "DPO E-mail Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "DPO Notification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Data Encryption Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Date/time of the breach",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Department",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Description - Asset",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Dest",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Dest Hostname",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Dest NT Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Dest OS",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination Country",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination Geolocation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination Hostname",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination IPV6",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination IPs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination MAC Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination Network",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination Networks",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Destination Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detected Endpoints",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detected External Hosts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detected External IPs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detected IPs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detected Internal Hosts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detected Internal IPs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detected User",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detected Users",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detection End Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detection ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detection SLA",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detection URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Detection Update Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device External IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device External IPs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Hash",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Id",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Internal IPs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Local IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device MAC Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Model",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device OS Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device OS Version",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device OU",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Device Username",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Display Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Domain Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Domain Registrar Abuse Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Domain Squatting Result",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Domain Updated Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Dst Ports",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Dsts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Duration",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "E-mail Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Authenticity Check",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email BCC",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Body",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Body Format",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Body HTML",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email CC",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Classification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Client Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Delete From Brand",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Delete Reason",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Delete Result",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Delete Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email From",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email HTML",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email HTML Image",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Headers",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email In Reply To",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Internal Message ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Keywords",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Keywords Found",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Labels",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Latest Message",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Message ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Received",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Recipients Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Reply To",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Return Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Sender IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Sent Successfully",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Size",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email Subject",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email To",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email To Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Email URL Clicked",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "EmailCampaignCanvas",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "EmailCampaignMutualIndicators",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "EmailCampaignSnippets",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "EmailCampaignSummary",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Employee Display Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Employee Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Employee Manager Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "End Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Endpoint",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Endpoint Isolation Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Endpoints Details",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Error Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Error Message",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Escalation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Event Action",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Event Descriptions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Event ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Event Names",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Event Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Events",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Exposure Level",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Addresses",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Category ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Category Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Confidence",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External End Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Last Updated Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Link",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Severity",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Start Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Sub Category ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External Sub Category Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "External System ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Failed Logon Events",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Failed Logon Events Timeframe",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Access Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Creation Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Hash",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File MD5",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Names",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Paths",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Relationships",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File SHA1",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File SHA256",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Size",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "File Upload",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Financial information breached",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "First Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "First Seen",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Follow Up",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Full Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GDPR Notify Authorities",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Admiralty Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Affected Software Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Bulletin Family",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB CNC",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB CNC Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB CNC Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB CNC URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB CPE Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB CVSS Score",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB CVSS Vector",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB CVV",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Card Issuer",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Card Number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Card Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Card Valid Thru",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Compromised Account",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Compromised Events Information Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Compromised Events Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Compromised Login",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Country Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Country Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Credibility",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Expertises",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Forums Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Malware",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Regions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Sectors",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Threat Actor Aliases",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Threat Actor Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Threat Actor Report Authors",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Threat Actor Reports Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Threat Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Cybercriminal Threat Title",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Date Begin",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Date End",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Date Registration",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Duration",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Protocol",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Request Body",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Request Body Hash",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Request Data Link",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Request Headers Body",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Request Headers Hash",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target ASN",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target City",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target Country Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target Country Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target Provider",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target Region",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Target URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DDOS Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Approve State",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Approved",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Brand",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Company",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Created",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Current Status Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Detected",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP First Active",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP First Detected",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP First Solved",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Found",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP HTML Images",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Images",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Link",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Scores Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Tags",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Title",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Typosquatting Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB DRP Violation URI",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Data Hash",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Add",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Compromised",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Created",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Created At",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Expired",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date First Compromised",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date First Seen",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Incident",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Last Compromised",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Last Seen",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Modified",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Published",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date Updated At",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Date of Detection",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Deface Contacts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Deface Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Deface Site URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Deface Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Downloaded From",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Downloaded From Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Drop Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Drop Email Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Email Domains",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Emails",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Extended CVSS Base",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Extended CVSS Exploitability",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Extended CVSS Impact",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Extended CVSS Overall",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Extended CVSS Temporal",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Extended Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Favicon",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB GIT Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB HTML",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Has Exploit",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Href",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Inject Dump",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Inject MD5",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Is Tailored",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Leak Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Leak Published",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Leaked Data",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Leaked File Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Link List",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Link List Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Aliases",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware CNC Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Categories",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware File hash",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Langs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Platforms",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Regions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Short Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Source Countries",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Malware Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Matches",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Matches Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Merged Cvss",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Mirror Link",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Name Servers",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminal Forums Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Expertises",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Malware",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Regions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Sectors",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Actor Aliases",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Actor CVE",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Actor Country",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Actor Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Actor Goals",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Actor Labels",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Actor Reports Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Actor Roles",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Countries",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Expertises",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Langs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Regions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Report Number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Sectors",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Nation-State Cybercriminals Threat Title",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB OSI Git Repository Files Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Organization BIC",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Organization BSB",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Organization CLABE",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Organization IBAN",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Organization Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Organization SWIFT",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Parsed Login Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Parsed Login IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Password",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Passwords",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Payment System",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Person",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Brand",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Date Added",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Date Blocked",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Date Detected",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Date Updated",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Domain Expiration Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Domain Puny",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing IP Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Kit Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Kit Emails",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Kit Hash",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Kit Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Kit Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Kit Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Objectives",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Registrar",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Sources",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Phishing URLs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Portal Link",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Provider Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Proxy Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Proxy Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Proxy Sources",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Proxy Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Related Indicators Data",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Reliability",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Report Number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Reporter",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Repository",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Revisions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Scanner Categories",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Scanner Sources",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Screenshot",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Service Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Service IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Service URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Severity",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Socks Proxy Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target ASN",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target Brand",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target City",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target Domain Provider",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target Provider",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Target Region",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Threat Actor Country",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Threat Actor ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Threat Actor Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Threat Actor is APT",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Threat Actors Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Threat Level",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Title",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Update Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Upload Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB VPN Names",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB VPN Sources",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Victim IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "GIB Vulnerability Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Generic Export Indicators Service Action",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Generic Export Indicators Service Indicators List",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Generic Export Indicators Service Tag",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Generic Export Indicators Service Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Given Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Group ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Actionable Items",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Auto Extraction based Incident Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Docker Containers",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Docker Containers Stats",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Docker Images",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Docker Paused",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Docker Running",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Docker Stop",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Docker Version",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Enabled Instances",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check File System Directories",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Incidents Large Number Of Entries",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Installed Packs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Investigations With Large Input / Output",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Large Files",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Large Investigations",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Log Since",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Log Until",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Number Of Dropped Incidents",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Number Of Engines",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Number of investigations bigger than 1MB",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Number of investigations input / output bigger than 1MB",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Panics",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Permitted Users",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Restart Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Risky Indexed Fields",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Top Used Playbooks",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Total Outdated Packs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Total Packs Installed",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Used Users",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Workers Busy",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health Check Workers Total",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Health insurance breached",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Hello World ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Hello World Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Hello World Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "HelloWorld OnPrem",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "High Level Categories",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "High Risky Hosts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "High Risky Users",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Host Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Hostnames",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Hunt Results Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ID - Asset",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "IP Address - Asset",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "IP Blocked Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "IP Reputation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Identity Table",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Identity Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Incident Duration",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Incident Link",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "IncomingMirrorError",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Individuals Notification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Infected Hosts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Integrations Categories",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Integrations Failed Categories",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Integrations Test Grid",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Internal Addresses",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Investigation Stage",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Is Active",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Is VPN IP Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Is the Data Subject to DPIA",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Isolated",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Item Owner",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Item Owner Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Attachments",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Comment",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Component",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Due Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Estimate",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Issue Key",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Issue Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Labels",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Priority",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Project",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Reporter Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Reporter Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Subtask",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Summary",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Jira Transitions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "JiraV3 Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Job Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Job Family",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Job Function",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Last Mirrored Time Stamp",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Last Modified By",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Last Modified On",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Last Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Last Seen",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Last Update Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "LastMirroredInTime",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Leadership",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Likely Impact",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "List Of Rules - Event",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Location",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Location - Asset",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Location Region",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Log Source",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Log Source Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Log Source Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Login Attempt Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Low Level Categories Events",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "MAC Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "MAC Address - Asset",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "MD5",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "MITRE Tactic ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "MITRE Tactic Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "MITRE Technique ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "MITRE Technique Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Macro Source Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Malicious Behavior",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Malicious Cause (If the cause is a malicious attack)",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Malicious URL Clicked",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Malicious URL Viewed",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Malware Detailed Investigation Summary",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Malware Family",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Malware Investigation Summary",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Malware Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Management Notification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Manager Email Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Manager Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Measures to Mitigate",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Media Notification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Medical Information breached",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Message",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Mobile Device Model",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Mobile Phone",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Notable - ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Notable Drilldown",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Notable Owner",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Notable Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Notable Urgency",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Number Of Found Related Alerts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Number Of Log Sources",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Number of Entries ID Errors",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Number of Failed Incidents",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Number of Related Incidents",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Number of similar files",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "OS",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "OS Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "OS Version",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Objective",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Operation Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Operation Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Org Level 1",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Org Level 2",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Org Level 3",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Org Unit",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Other PII data breached",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "OutgoingMirrorError",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "PID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "PII Data Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent CMD line",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process CMD",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process File Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process IDs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process MD5",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Parent Process SHA256",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Part of Campaign",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Password Changed Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Password Expiration Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Password Reset Successfully",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Payload",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Personal Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Phishing BCL Score",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Phishing PCL Score",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Phishing Reporter Email Headers",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Phishing SCL Score",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Phishing Sub-type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Phone Number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Playbook Names With Failed Tasks",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Playbook Tasks Errors",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Playbooks Failed Commands",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Playbooks With Failed Tasks",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy Actions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy Deleted",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy Details",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy Recommendation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy Remediable",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy Severity",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Policy URI",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Possible Cause of the Breach",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Post Nat Destination IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Post Nat Destination Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Post Nat Source IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Post Nat Source Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Postal Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Pre Nat Destination Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Pre Nat Source IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Pre Nat Source Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Previous Coordinate Geolocation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Previous Coordinates",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Previous Country",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Previous Location",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Previous Sign In Date Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Previous Source IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Prisma Cloud - Findings Results",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Prisma Cloud - IAM Results",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Prisma Cloud Dismissal Note",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Prisma Cloud ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Prisma Cloud Reason",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Prisma Cloud Rules",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Prisma Cloud Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Prisma Cloud Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process CMD",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process Creation Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process MD5",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process Names",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process Path",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process Paths",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Process SHA256",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Project ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Protocol",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Protocol - Event",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Protocol names",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Protocols",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Quarantined",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "RRN",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Rating",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Raw Event",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Referenced Resource ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Referenced Resource Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Region",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Region ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Registration Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Registry Hive",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Registry Key",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Registry Value",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Registry Value Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Related Alerts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Related Campaign",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Related Endpoints",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Related Report",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Remediation SLA",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "RemovedFromCampaigns",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Rendered HTML",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Report Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Reported Email CC",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Reported Email From",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Reported Email Message ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Reported Email Origin",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Reported Email Subject",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Reported Email To",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Reporter Email Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Resident Notification Option",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Residents Email Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Resolved",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Resource API Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Resource Cloud Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Resource ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Resource Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Resource Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Resource URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Risk Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Risk Rating",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Risk Score",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Rule Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SHA1",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SHA256",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SHA512",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SKU Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SKU TIER",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SOCRadar Incident Assets",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SOCRadar Incident Content",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SOCRadar Incident ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SOCRadar Incident Main Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SOCRadar Incident Sub Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SOCRadar Mitigation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SOCRadar Related Assets",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SOCRadar Related Entities",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "SSDeep",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Scenario",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Secretary Notification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Sector of Affected Party",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Selected Indicators",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Sensor IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Sensor Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Assigned To",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Assignment Group",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Attack Vector",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Business Impact",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Caller",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Caller ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Closed By",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Closed Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Due Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Escalation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Impact",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Notify",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Opened Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Priority",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Resolution Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Resolution Notes",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Resolved Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow SIR Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow SIR State",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Severity",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow State",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Ticket ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Ticket Number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ServiceNow Urgency",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Sign In Date Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Signature",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Similar incidents Dbot",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Size - number of employees",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Size - turnover",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Create time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Created By",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source External IPs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Geolocation",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Hostname",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source IPV6",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source IPs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Id",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source MAC Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Network",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Networks",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Port",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Priority",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Updated by",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Urgency",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Source Username",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Comments",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Dest Risk Object Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Dest Risk Score",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Disposition",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Drilldown",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Notable Reviewer",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Notes",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Security Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Sensitivity",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Splunk Urgency",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Src",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Src Hostname",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Src NT Domain",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Src OS",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Src Ports",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Src User",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Srcs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Start Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "State",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "State CISO Notification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "State where the breach took place",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Status Reason",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Street Address",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "String Similarity Results",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Sub Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription Assigned By",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription Created By",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription Created On",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription Updated By",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subscription Updated On",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Subtype",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Successful Asset Enrichment",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Successful Drilldown Enrichment",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Successful Identity Enrichment",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Successful Login",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Surname",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Suspicious Executions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Suspicious Executions Found",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Switch ID - Asset",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Switch Port ID - Asset",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "System Default",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "TIMER TEST",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Tactic",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Tactic ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Tags",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Target",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Target Firewall Version",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Team name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Technical Owner",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Technical Owner Contact",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Technical User",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Technique",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Technique ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Telephone no.",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Tenant Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Terminated Action",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "TestField",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Threat Actor",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Threat Family Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Threat Hunting Detected Hostnames",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Threat Hunting Detected IP",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Threat Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Ticket Acknowledged Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Ticket Closed Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Ticket Number",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Ticket Opened Date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Time Span",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Time to Assignment",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Timezone",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Title",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Tool Usage Found",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Tools",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Total Bytes",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Total Failed Instances",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Total Good Instances",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Total Instances",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Total Malicious URLs Clicks",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Traffic Direction",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Travel Map Link",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Account Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Desktop Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Detail",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Email Address Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Impact Scope",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Impacted Entities",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Impacted Entities JSON",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Indicators",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Indicators JSON",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Investigation Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Matched Rules JSON",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Priority Score",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Server Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Workbench ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Trend Micro Vision One XDR Workbench Link",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Triage SLA",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Triggered Security Profile",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "URL SSL Verification",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "URLs",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "UUID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Unassigned Incidents",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Unique Ports",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Unique biometric data breached",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Unique identification number breached",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Use Case Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Agent",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Anomaly Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Block Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Creation Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Disabled Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Engagement Response",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Groups",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Id",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User Risk Level",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "User SID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Username",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Usernames",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Users",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Users Details",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "VPC ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Vendor ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Vendor Product",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Verdict",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Verification Method",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Verification Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Vulnerability Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Vulnerable Product",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Where is data hosted",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Work Phone",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Alert Category",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Alert Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Alert Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Alert Search Results",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Alerts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Assigned User Email",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Assigned User Pretty Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Description",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Detection Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Disconnected endpoints",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR File Artifacts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR File Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR File SHA256",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR High Severity Alert Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Host Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Incident ID",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Investigation results",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Low Severity Alert Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR MITRE Tactics",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR MITRE Techniques",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Medium Severity Alert Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Modification Time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Network Artifacts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Notes",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Resolve Comment",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Risky Host Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Risky Hosts",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Risky User Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Risky Users",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Similar Incidents",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Starred",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Status v2",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR URL",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR User Count",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR Users",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR device control violations",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XDR manual severity",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Architecture",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Build",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR CPU",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Content Version",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Customer Name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR DR",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Dev-Prod",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Dev-Prod Mode",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Elastic Search",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR License",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR License Valid Till",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Memory",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Multi-Repo",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Multi-Tenant",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Number Of DB Partitions",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR OS",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Server Configuration",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Telemetry Status",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "XSOAR Version",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk CC'd",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Collaborators",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Custom Fields",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Followers",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Forum Id",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Organization",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Problem Id",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Recipient",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Requester",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zendesk Ticket Type",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "Zip Code",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "app channel name",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "emailattachmenturl",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "enrichmentinformations",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "failed incidents created date",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "ip",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "mailbox",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "message_delivery_time",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "message_id",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "product_id",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "sAMAccountName",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "similarIncident",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "similarIncidents",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "summarySocRadar",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "summaryThreatstream",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "summaryVirusTotal",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "summarythreatintel",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "test",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "testerrr",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "testing_timer/sla",
+				"width": 200
+			},
+			{
+				"displayed": true,
+				"key": "userAccountControl",
+				"width": 200
+			}
+		]
+	},
+	"propagationLabels": [
+		"all"
+	],
+	"query": "",
+	"toServerVersion": "",
+	"version": -1,
+	"widgetType": "table"
+}

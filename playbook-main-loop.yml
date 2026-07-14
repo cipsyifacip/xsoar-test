@@ -1,0 +1,101 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: cd3340c3-8762-4f9f-8a7c-bfeeaa856cc6
+inputs:
+- description: ""
+  key: user
+  playbookInputQuery: null
+  required: false
+  value: {}
+name: main-loop
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 9e2024dc-354b-4528-8d7b-262c38729a7e
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 9e2024dc-354b-4528-8d7b-262c38729a7e
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      listData:
+        complex:
+          accessor: Name
+          root: user
+      listName:
+        simple: sample_list
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: Add data to a list
+      id: f488a66c-72d6-40d6-824b-d5466b77cd49
+      iscommand: true
+      name: addToList
+      script: Builtin|||addToList
+      type: regular
+      version: -1
+    taskid: f488a66c-72d6-40d6-824b-d5466b77cd49
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 275,
+        "width": 380,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }

@@ -1,0 +1,58 @@
+args:
+- name: firstemaildate
+  required: true
+- name: maximumemaildate
+  required: true
+commonfields:
+  id: 6939822f-6149-47cb-8fe5-e358fa573641
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.8428455
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: automation30day_with_input
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import datetime
+  import calendar
+  from datetime import timedelta
+  import pytz
+
+  args = demisto.args()
+  firstemaildate = args.get("firstemaildate")
+  maximumemaildate = args.get("maximumemaildate")
+
+  timezone = 'Asia/Jakarta'
+
+  today = datetime.datetime.strptime(firstemaildate, '%d/%m/%Y')
+  today_convert = today.strftime('%d/%m/%Y')
+
+  print("Tanggal hari ini adalah: " + today_convert)
+  print("Tanggal maksimum reminder adalah: " + maximumemaildate)
+
+  print(type(today_convert))
+  print(type(maximumemaildate))
+
+  if today_convert >= maximumemaildate:
+      print("breakloop: yes")
+      demisto.executeCommand("setIncident", {"breakloop":"yes"})
+  else:
+      print("breakloop: No")
+      demisto.executeCommand("setIncident", {"breakloop":"no"})
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

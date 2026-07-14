@@ -1,0 +1,90 @@
+args:
+- name: text
+  type: textArea
+commonfields:
+  id: 89023697-3f5c-40d3-8695-2036b7fc6b80
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.10404775
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: formating_timer
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |
+  """Base Script for Cortex XSOAR (aka Demisto)
+  This is an empty script with some basic structure according
+  to the code conventions.
+  MAKE SURE YOU REVIEW/REPLACE ALL THE COMMENTS MARKED AS "TODO"
+  Developer Documentation: https://xsoar.pan.dev/docs/welcome
+  Code Conventions: https://xsoar.pan.dev/docs/integrations/code-conventions
+  Linting: https://xsoar.pan.dev/docs/integrations/linting
+  """
+
+  import re
+
+  def extract_timer_duration(text: str):
+      if not text:
+          return None
+      match = re.search(r'Ended:\s*(.+?)\s*\(', text)
+      return match.group(1).strip() if match else None
+
+
+  def parse_duration_to_seconds(duration_str: str) -> int:
+      if not duration_str:
+          return 0
+      pattern = r'(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)\s*sec)?'
+      m = re.match(pattern, duration_str.strip())
+      if not m:
+          return 0
+      days, hours, minutes, seconds = (int(x) if x else 0 for x in m.groups())
+      return days * 86400 + hours * 3600 + minutes * 60 + seconds
+
+
+  def main():
+      args = demisto.args()
+      raw_text = args.get('text')
+
+      # fallback to incident field if no argument passed
+      if not raw_text:
+          incident = demisto.incident()
+          custom_fields = incident.get('CustomFields', {}) or {}
+          raw_value = custom_fields.get('timertest')  # replace with your field name
+          raw_text = raw_value if isinstance(raw_value, str) else str(raw_value) if raw_value else None
+
+      if not raw_text:
+          return_error("No timer text provided and no value found in incident field.")
+
+      duration_str = extract_timer_duration(raw_text)
+      total_seconds = parse_duration_to_seconds(duration_str) if duration_str else 0
+
+      outputs = {
+          'DurationRaw': duration_str,
+          'DurationSeconds': total_seconds
+      }
+
+      return_results(CommandResults(
+          outputs_prefix='TimerDuration',
+          outputs=outputs,
+          readable_output=f"Extracted Duration: **{duration_str}** ({total_seconds} seconds)"
+      ))
+
+
+  if __name__ in ('__main__', '__builtin__', 'builtins'):
+      main()
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

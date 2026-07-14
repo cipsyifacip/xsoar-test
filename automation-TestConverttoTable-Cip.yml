@@ -1,0 +1,27 @@
+commonfields:
+  id: 238e63b2-cb95-4186-806a-13b1f5e23552
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.10404775
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: TestConverttoTable-Cip
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: return_results("Processing Finished")
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

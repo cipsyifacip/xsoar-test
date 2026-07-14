@@ -1,0 +1,118 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 10244fbf-c33d-41ee-8af4-1a9235a60688
+inputs: []
+name: FilterIncident
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 73e72ef0-d26f-420b-8aa1-46c83c23309d
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 73e72ef0-d26f-420b-8aa1-46c83c23309d
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: a628168c-d73f-4dd5-875d-f0cc9a903768
+      iscommand: false
+      name: IncidentFilter
+      script: 06aa814a-3c19-4bcf-813c-dcaa4807d33b
+      type: regular
+      version: -1
+    taskid: a628168c-d73f-4dd5-875d-f0cc9a903768
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: e0f1131b-1d0a-463d-8dbb-a5c1eb7dc8a5
+      iscommand: false
+      name: STOP
+      type: title
+      version: -1
+    taskid: e0f1131b-1d0a-463d-8dbb-a5c1eb7dc8a5
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 410
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 425,
+        "width": 380,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }

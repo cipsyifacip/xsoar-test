@@ -1,0 +1,528 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 58c12cbe-0e5e-43a9-82bb-d71ac91723a7
+inputs: []
+name: Lab-Ivan-Netcraft
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "11"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: bcd65af8-fdba-42e7-874a-5f3f79b7d16e
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: bcd65af8-fdba-42e7-874a-5f3f79b7d16e
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 695,
+          "y": 50
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "3"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: time
+      stringify:
+        simple: "true"
+      value:
+        simple: 2023-09-19 00:36:25 UTC
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: a461446e-b624-44e6-8c50-e8934fb5e88d
+      iscommand: false
+      name: Set input time to iso format
+      script: Set
+      type: regular
+      version: -1
+    taskid: a461446e-b624-44e6-8c50-e8934fb5e88d
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 195
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: isotime
+      stringify:
+        simple: "true"
+      value:
+        complex:
+          root: ${time}
+          transformers:
+          - args:
+              add_utc_timezone:
+                value:
+                  simple: "false"
+              dayfirst:
+                value:
+                  simple: "false"
+              fuzzy:
+                value:
+                  simple: "true"
+              yearfirst:
+                value:
+                  simple: "true"
+            operator: DateStringToISOFormat
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: fd3fd2fb-0f6e-4a05-86fe-2703563f54a5
+      iscommand: false
+      name: Set time to iso format
+      script: Set
+      type: regular
+      version: -1
+    taskid: fd3fd2fb-0f6e-4a05-86fe-2703563f54a5
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 370
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "5"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: url
+      stringify:
+        simple: "true"
+      value:
+        simple: https://example.com/my%20file.txt/
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 895631f4-6fad-4afd-8e81-7d0426992bc2
+      iscommand: false
+      name: Set test input strip_rstrip and unquote
+      script: Set
+      type: regular
+      version: -1
+    taskid: 895631f4-6fad-4afd-8e81-7d0426992bc2
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 695,
+          "y": 195
+        }
+      }
+  "5":
+    continueonerrortype: ""
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: url_modify_strip_rstrip
+      stringify:
+        simple: "true"
+      value:
+        complex:
+          root: ${url}
+          transformers:
+          - args:
+              chars:
+                value:
+                  simple: /
+            operator: StripChars
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: feb8c53b-8673-499f-8e18-d400c4c1137e
+      iscommand: false
+      name: Set strip and rstrip
+      script: Set
+      type: regular
+      version: -1
+    taskid: feb8c53b-8673-499f-8e18-d400c4c1137e
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 370
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: url_modify_unquote
+      stringify:
+        simple: "true"
+      value:
+        complex:
+          root: ${url_modify_strip_rstrip}
+          transformers:
+          - args:
+              chars:
+                value:
+                  simple: /
+            operator: StripChars
+          - operator: URLDecode
+          - operator: ca62455e-b19f-45a7-8160-f48e8a1db648
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 136b3416-cd7a-4374-8b0b-75074d426088
+      iscommand: false
+      name: Set strip and rstrip
+      script: Set
+      type: regular
+      version: -1
+    taskid: 136b3416-cd7a-4374-8b0b-75074d426088
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 545
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "13"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: url_modify_strip_rstrip
+      stringify:
+        simple: "true"
+      value:
+        complex:
+          root: ${url}
+          transformers:
+          - args:
+              chars:
+                value:
+                  simple: /
+            operator: StripChars
+          - operator: URLDecode
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 5d1a8538-a238-4a7d-89b2-591780759163
+      iscommand: false
+      name: Set strip and rstrip
+      script: Set
+      type: regular
+      version: -1
+    taskid: 5d1a8538-a238-4a7d-89b2-591780759163
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 910,
+          "y": 370
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "10"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: url_social_standardize
+      stringify:
+        simple: "true"
+      value:
+        simple: https://www.google.com:443/search?q=python#results
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 1318f74a-1916-4ed9-8915-07c2cd0849d1
+      iscommand: false
+      name: Set standardize social url
+      script: Set
+      type: regular
+      version: -1
+    taskid: 1318f74a-1916-4ed9-8915-07c2cd0849d1
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1340,
+          "y": 195
+        }
+      }
+  "10":
+    continueonerrortype: ""
+    id: "10"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: url_social_standardize
+      stringify:
+        simple: "true"
+      value:
+        complex:
+          root: ${url_social_standardize}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: b8f68147-8fb9-4191-8068-729bac5341a4
+      iscommand: false
+      name: Set strip and rstrip
+      script: Set
+      type: regular
+      version: -1
+    taskid: b8f68147-8fb9-4191-8068-729bac5341a4
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1340,
+          "y": 370
+        }
+      }
+  "11":
+    continueonerrortype: ""
+    id: "11"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "12"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: test_inlist
+      stringify:
+        simple: "true"
+      value:
+        simple: FAKE_SHOP
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 4479212f-d047-43b7-858a-9c40dfd44d6f
+      iscommand: false
+      name: set value for test in list
+      script: Set
+      type: regular
+      version: -1
+    taskid: 4479212f-d047-43b7-858a-9c40dfd44d6f
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1860,
+          "y": 195
+        }
+      }
+  "12":
+    continueonerrortype: ""
+    id: "12"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: result_inlist
+      stringify:
+        simple: "true"
+      value:
+        complex:
+          root: ${test_inlist}
+          transformers:
+          - operator: toLowerCase
+          - operator: 90d117b1-c401-47f7-83f0-866a4d92e470
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: f67476e1-94be-4689-8cca-490736be0cfe
+      iscommand: false
+      name: set value for test in list
+      script: Set
+      type: regular
+      version: -1
+    taskid: f67476e1-94be-4689-8cca-490736be0cfe
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1860,
+          "y": 370
+        }
+      }
+  "13":
+    continueonerrortype: ""
+    id: "13"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: url_modify_unquote
+      stringify:
+        simple: "true"
+      value:
+        complex:
+          root: ${url_modify_strip_rstrip}
+          transformers:
+          - args:
+              chars:
+                value:
+                  simple: /
+            operator: StripChars
+          - operator: URLDecode
+          - operator: 8d6f4fd3-5d87-4272-891c-955ad258f6a2
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 40dabe62-3fa9-4ea4-825d-8871849e9447
+      iscommand: false
+      name: Set strip and rstrip
+      script: Set
+      type: regular
+      version: -1
+    taskid: 40dabe62-3fa9-4ea4-825d-8871849e9447
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 910,
+          "y": 535
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 590,
+        "width": 2190,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }

@@ -1,0 +1,341 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "b418a64c-d3fa-464d-8e78-4cc0bb8871fa",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {},
+	"locked": false,
+	"logicalVersion": 24,
+	"mapping": {
+		"Splunk - API Check": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"API URI": {
+					"simple": "result.uri"
+				},
+				"API URL": {
+					"simple": "result.payload"
+				},
+				"CVE ID": {
+					"simple": "result.sig_cves"
+				},
+				"Description": {
+					"simple": "result.sig_names"
+				},
+				"Destination Hostname": {
+					"simple": "result.host_url"
+				},
+				"Payload": {
+					"simple": "result.payload"
+				},
+				"Rule Name": {
+					"simple": "result.policy_name"
+				},
+				"Source IP": {
+					"simple": "result.ip_client"
+				},
+				"URLs": {
+					"simple": "result.uri"
+				}
+			}
+		},
+		"Splunk - Domain Reputation Check": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"App": {
+					"simple": "result.Tunneled_app"
+				},
+				"Domain Name": {
+					"complex": {
+						"accessor": "dest_domain",
+						"filters": [],
+						"root": "result",
+						"transformers": [
+							{
+								"args": {
+									"flags": {
+										"isContext": false
+									},
+									"groups": {
+										"isContext": false,
+										"value": {
+											"simple": "0"
+										}
+									},
+									"keys": {
+										"isContext": false
+									},
+									"regex": {
+										"isContext": false,
+										"value": {
+											"simple": "(?:https?:\\/\\/)?(?:www\\.)?([^\\/:]+)"
+										}
+									}
+								},
+								"operator": "RegexGroups"
+							},
+							{
+								"args": {
+									"limit": {
+										"isContext": false
+									},
+									"replaceWith": {
+										"isContext": false
+									},
+									"toReplace": {
+										"isContext": false,
+										"value": {
+											"simple": "\""
+										}
+									}
+								},
+								"operator": "replace"
+							}
+						]
+					}
+				},
+				"Protocol": {
+					"simple": "result.IP_Protocol"
+				},
+				"Source Port": {
+					"simple": "result.NAT_Source_Port"
+				}
+			}
+		},
+		"Splunk - Email Filtering": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"Destination Email Address ": {
+					"complex": {
+						"accessor": "duser",
+						"filters": [],
+						"root": "result",
+						"transformers": []
+					}
+				},
+				"Email Attachment URL ": {
+					"complex": {
+						"accessor": "cs6",
+						"filters": [],
+						"root": "result",
+						"transformers": [
+							{
+								"args": {
+									"error_if_no_match": {
+										"isContext": false
+									},
+									"ignore_case": {
+										"isContext": false
+									},
+									"multi_line": {
+										"isContext": false
+									},
+									"period_matches_newline": {
+										"isContext": false
+									},
+									"regex": {
+										"isContext": false,
+										"value": {
+											"simple": "\"([^\"]*)\""
+										}
+									},
+									"unpack_matches": {
+										"isContext": false
+									}
+								},
+								"operator": "RegexExtractAll"
+							}
+						]
+					}
+				},
+				"Email Message IDs ": {
+					"complex": {
+						"accessor": "cs3",
+						"filters": [],
+						"root": "result",
+						"transformers": []
+					}
+				},
+				"File SHA256": {
+					"complex": {
+						"accessor": "sha256",
+						"filters": [],
+						"root": "result",
+						"transformers": []
+					}
+				},
+				"Mail Uuid": {
+					"complex": {
+						"accessor": "cs1",
+						"filters": [],
+						"root": "result",
+						"transformers": []
+					}
+				},
+				"Source Email Address": {
+					"complex": {
+						"accessor": "suser",
+						"filters": [],
+						"root": "result",
+						"transformers": []
+					}
+				},
+				"severity": {
+					"complex": {
+						"accessor": "priority",
+						"filters": [],
+						"root": "result",
+						"transformers": []
+					}
+				}
+			}
+		},
+		"Splunk - IP Reputation Check": {
+			"dontMapEventToLabels": true,
+			"internalMapping": {
+				"Additional Data": {
+					"simple": "_raw"
+				},
+				"Country": {
+					"complex": {
+						"filters": [],
+						"root": "country",
+						"transformers": []
+					}
+				},
+				"Source IP": {
+					"complex": {
+						"filters": [],
+						"root": "source_ip_address",
+						"transformers": []
+					}
+				},
+				"occurred": {
+					"simple": "time"
+				}
+			}
+		},
+		"dbot_classification_incident_type_all": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"Destination Email Address ": {
+					"complex": {
+						"accessor": "duser",
+						"filters": [],
+						"root": "result",
+						"transformers": []
+					}
+				},
+				"Destination IP": {
+					"complex": {
+						"filters": [],
+						"root": "destination_ip_address",
+						"transformers": []
+					}
+				},
+				"Domain Name": {
+					"complex": {
+						"accessor": "suser",
+						"filters": [],
+						"root": "result",
+						"transformers": [
+							{
+								"args": {
+									"limit": {
+										"isContext": false
+									},
+									"replaceWith": {
+										"isContext": false
+									},
+									"toReplace": {
+										"isContext": false,
+										"value": {
+											"simple": "\\="
+										}
+									}
+								},
+								"operator": "replace"
+							},
+							{
+								"args": {
+									"error_if_no_match": {
+										"isContext": false
+									},
+									"ignore_case": {
+										"isContext": false
+									},
+									"multi_line": {
+										"isContext": false
+									},
+									"period_matches_newline": {
+										"isContext": false
+									},
+									"regex": {
+										"isContext": false,
+										"value": {
+											"simple": "(?\u003c=@)[^\u003e]+"
+										}
+									},
+									"unpack_matches": {
+										"isContext": false
+									}
+								},
+								"operator": "RegexExtractAll"
+							}
+						]
+					}
+				},
+				"Email Message IDs ": {
+					"complex": {
+						"accessor": "cs3",
+						"filters": [],
+						"root": "result",
+						"transformers": []
+					}
+				},
+				"File Hash": {
+					"complex": {
+						"accessor": "cs4",
+						"filters": [],
+						"root": "result",
+						"transformers": [
+							{
+								"args": {
+									"expression": {
+										"isContext": false,
+										"value": {
+											"simple": "[].sha256"
+										}
+									}
+								},
+								"operator": "jmespath"
+							}
+						]
+					}
+				}
+			}
+		}
+	},
+	"name": "Splunk - Mapper - SecOps",
+	"nameRaw": "Splunk - Mapper - SecOps",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {},
+	"type": "mapping-incoming",
+	"unclassifiedCases": null,
+	"version": -1
+}

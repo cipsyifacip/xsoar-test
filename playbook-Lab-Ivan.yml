@@ -1,0 +1,251 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: db6f47b3-4f3b-41ff-8584-e7683047597f
+inputs:
+- description: ""
+  key: testdata
+  playbookInputQuery: null
+  required: false
+  value:
+    simple: ${JSON.data}
+name: Lab-Ivan
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: f387fa33-f4b2-42a9-8b57-f3096fba9c04
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: f387fa33-f4b2-42a9-8b57-f3096fba9c04
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 65
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      entryID:
+        simple: 12@8a995003-7ffb-49d8-8847-289878ee04e7
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Loads a JSON file from the war room to context.
+      id: ce673a68-1ca5-4e26-8182-9e2f7a264047
+      iscommand: false
+      name: LoadJSONFileToContext
+      script: LoadJSONFileToContext
+      type: regular
+      version: -1
+    taskid: ce673a68-1ca5-4e26-8182-9e2f7a264047
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 400
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    loop:
+      exitCondition: ""
+      forEach: true
+      iscommand: false
+      max: 100
+      wait: 5
+    note: false
+    quietmode: 2
+    scriptarguments:
+      domain:
+        simple: ${array}
+    separatecontext: true
+    skipunavailable: false
+    task:
+      brand: ""
+      id: e4ec99ce-3e09-40c6-8505-f73ab0db86c9
+      iscommand: false
+      name: Lab-Ivan-SearchIndicator
+      playbookId: d8608fd6-29c4-4c3e-8cce-7964f98f3339
+      type: playbook
+      version: -1
+    taskid: e4ec99ce-3e09-40c6-8505-f73ab0db86c9
+    timertriggers: []
+    type: playbook
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 50
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "8"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      arrayData:
+        simple: ${JSON.0},${JSON.1},${JSON.2},${JSON.3},${JSON.4},${JSON.5},${JSON.10}
+      contextKey:
+        simple: array
+      separator:
+        simple: ','
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: 'Will create an array object in context from given string input '
+      id: 08f7d295-3308-48c5-8b76-8ef7604cf0af
+      iscommand: false
+      name: CreateArray
+      script: CreateArray
+      type: regular
+      version: -1
+    taskid: 08f7d295-3308-48c5-8b76-8ef7604cf0af
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 575
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      all:
+        simple: "yes"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: "Delete field from context.\n\nThis automation runs using the default
+        Limited User role, unless you explicitly change the permissions.\nFor more
+        information, see the section about permissions here:\n- For Cortex XSOAR 6
+        see https://docs-cortex.paloaltonetworks.com/r/Cortex-XSOAR/6.x/Cortex-XSOAR-Playbook-Design-Guide/Automations
+        \n- For Cortex XSOAR 8 Cloud see https://docs-cortex.paloaltonetworks.com/r/Cortex-XSOAR/8/Cortex-XSOAR-Cloud-Documentation/Create-a-script\n-
+        For Cortex XSOAR 8.7 On-prem see https://docs-cortex.paloaltonetworks.com/r/Cortex-XSOAR/8.7/Cortex-XSOAR-On-prem-Documentation/Create-a-script"
+      id: 334d43c3-f839-4852-8df9-953f1fe2d916
+      iscommand: false
+      name: DeleteContext
+      script: DeleteContext
+      type: regular
+      version: -1
+    taskid: 334d43c3-f839-4852-8df9-953f1fe2d916
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 225
+        }
+      }
+  "8":
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    loop:
+      exitCondition: ""
+      forEach: true
+      iscommand: false
+      max: 0
+      wait: 1
+    note: false
+    quietmode: 1
+    scriptarguments:
+      domain:
+        simple: ${array}
+    separatecontext: true
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 0feaef22-6847-4f8e-8902-54b4cd1b6300
+      iscommand: false
+      name: Lab-Ivan-SearchIndicator_Improvement
+      playbookId: 48d75400-f09e-40c3-88c7-212545f914a3
+      type: playbook
+      version: -1
+    taskid: 0feaef22-6847-4f8e-8902-54b4cd1b6300
+    timertriggers: []
+    type: playbook
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 750
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 795,
+        "width": 810,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }

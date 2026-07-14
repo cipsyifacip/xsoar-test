@@ -1,0 +1,241 @@
+category: Data Enrichment
+commonfields:
+  id: MockIncidentAPI
+  version: -1
+configuration:
+- defaultvalue: http://YOUR_API_IP:8000
+  display: Server URL
+  name: url
+  required: true
+  type: 0
+- defaultvalue: "100"
+  display: Maximum incidents to fetch
+  name: max_fetch
+  required: false
+  type: 0
+- display: Trust any certificate
+  name: insecure
+  required: false
+  type: 8
+- display: Use system proxy
+  name: proxy
+  required: false
+  type: 8
+- display: Fetch incidents
+  name: isFetch
+  required: false
+  type: 8
+- defaultvalue: "1"
+  display: Incidents Fetch Interval
+  name: incidentFetchInterval
+  required: false
+  type: 19
+- display: Fetch indicators
+  name: feed
+  required: false
+  type: 8
+- additionalinfo: Indicators from this integration instance will be marked with this
+    verdict
+  display: Indicator Verdict
+  name: feedReputation
+  options:
+  - Unknown
+  - None
+  - Benign
+  - Good
+  - Suspicious
+  - Malicious
+  - Bad
+  required: false
+  type: 18
+- additionalinfo: Reliability of the source providing the intelligence data
+  defaultvalue: F - Reliability cannot be judged
+  display: Source Reliability
+  name: feedReliability
+  options:
+  - A - Completely reliable
+  - B - Usually reliable
+  - C - Fairly reliable
+  - D - Not usually reliable
+  - E - Unreliable
+  - F - Reliability cannot be judged
+  required: true
+  type: 15
+- defaultvalue: indicatorType
+  display: ""
+  name: feedExpirationPolicy
+  options:
+  - never
+  - interval
+  - indicatorType
+  - suddenDeath
+  required: false
+  type: 17
+- defaultvalue: "20160"
+  display: ""
+  name: feedExpirationInterval
+  required: false
+  type: 1
+- defaultvalue: "240"
+  display: Feed Fetch Interval
+  name: feedFetchInterval
+  required: false
+  type: 19
+- additionalinfo: When selected, the exclusion list is ignored for indicators from
+    this feed. This means that if an indicator from this feed is on the exclusion
+    list, the indicator might still be added to the system.
+  display: Bypass exclusion list
+  name: feedBypassExclusionList
+  required: false
+  type: 8
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+description: Fetch incidents from custom mock incident API
+display: Mock Incident API
+image: data:image/jpeg;base64,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
+name: MockIncidentAPI
+script:
+  dockerimage: docker.io/demisto/python3:3.12.13.8428455
+  feed: true
+  isFetchSamples: true
+  isfetch: true
+  runonce: false
+  script: |2-
+
+
+
+    DEFAULT_FETCH_LIMIT = 100
+
+
+    class Client(BaseClient):
+
+        def get_incidents(self, limit):
+            return self._http_request(
+                method='GET',
+                url_suffix=f'/incidents?limit={limit}'
+            )
+
+
+    def test_module(client):
+        response = client.get_incidents(1)
+
+        if response.get("success") is True:
+            return "ok"
+
+        return "Failed to connect to API"
+
+
+    def fetch_incidents(client, last_run, max_fetch):
+        demisto.debug("Running fetch-incidents")
+
+        incidents = []
+
+        response = client.get_incidents(max_fetch)
+
+        data = response.get("incidents", [])
+
+        last_incident_id = last_run.get("last_incident_id", 0)
+
+        max_id = last_incident_id
+
+        for item in data:
+
+            incident_id = item.get("id")
+
+            if incident_id <= last_incident_id:
+                continue
+
+            occurred = item.get("occurred")
+
+            incident = {
+                "name": item.get("name", f"Incident {incident_id}"),
+                "occurred": occurred,
+                "rawJSON": json.dumps(item),
+                "type": item.get("type", "Unclassified"),
+                "severity": map_severity(item.get("severity"))
+            }
+
+            incidents.append(incident)
+
+            if incident_id > max_id:
+                max_id = incident_id
+
+        next_run = {
+            "last_incident_id": max_id
+        }
+
+        return next_run, incidents
+
+
+    def map_severity(severity):
+        mapping = {
+            "Low": 1,
+            "Medium": 2,
+            "High": 3,
+            "Critical": 4
+        }
+
+        return mapping.get(severity, 0)
+
+
+    def main():
+        params = demisto.params()
+
+        url = params.get("url")
+        verify = not params.get("insecure", False)
+        proxy = params.get("proxy", False)
+
+        max_fetch = int(params.get("max_fetch", DEFAULT_FETCH_LIMIT))
+
+        headers = {
+            "Accept": "application/json"
+        }
+
+        client = Client(
+            base_url=url,
+            verify=verify,
+            proxy=proxy,
+            headers=headers
+        )
+
+        command = demisto.command()
+
+        demisto.debug(f"Command being called is {command}")
+
+        try:
+
+            if command == "test-module":
+                result = test_module(client)
+                return_results(result)
+
+            elif command == "fetch-incidents":
+
+                next_run, incidents = fetch_incidents(
+                    client=client,
+                    last_run=demisto.getLastRun(),
+                    max_fetch=max_fetch
+                )
+
+                demisto.setLastRun(next_run)
+
+                demisto.incidents(incidents)
+
+        except Exception as e:
+            err = traceback.format_exc()
+            demisto.error(err)
+            return_error(f"Failed to execute command. Error: {str(e)}")
+
+
+    if __name__ in ("__main__", "__builtin__", "builtins"):
+        main()
+  subtype: python3
+  type: python

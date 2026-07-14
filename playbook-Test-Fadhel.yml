@@ -1,0 +1,90 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: b8da183e-9f80-4f12-8c15-948a131e490d
+inputs: []
+name: Test-Fadhel
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 299f250b-7fbb-4901-8d69-fae1dacf2c15
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 299f250b-7fbb-4901-8d69-fae1dacf2c15
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      id:
+        simple: "100"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: SplunkPy
+      description: Gets data from a notable event. This method does not update the
+        current incident, and should be used for debugging purposes.
+      id: a736a65c-d949-46b0-8391-96b29fcae4b3
+      iscommand: true
+      name: get-remote-data
+      script: SplunkPy|||get-remote-data
+      type: regular
+      version: -1
+    taskid: a736a65c-d949-46b0-8391-96b29fcae4b3
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 275,
+        "width": 380,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }

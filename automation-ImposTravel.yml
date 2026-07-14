@@ -1,0 +1,132 @@
+args:
+- auto: PREDEFINED
+  name: Duration
+- name: Coor
+- name: PrevCoor
+commonfields:
+  id: eb370bca-d7c5-45a9-88b7-2d657841b907
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.7444307
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: ImposTravel
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import math
+
+  def haversine(coord1: str, coord2: str) -> float:
+      """
+      Hitung jarak antara dua koordinat (format: 'lat,lon') dalam km
+      menggunakan Haversine formula.
+      """
+      lat1, lon1 = map(float, coord1.split(","))
+      lat2, lon2 = map(float, coord2.split(","))
+
+      R = 6371  # radius bumi dalam km
+
+      d_lat = math.radians(lat2 - lat1)
+      d_lon = math.radians(lon2 - lon1)
+
+      a = (math.sin(d_lat / 2) ** 2
+           + math.cos(math.radians(lat1))
+           * math.cos(math.radians(lat2))
+           * math.sin(d_lon / 2) ** 2)
+
+      c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+      return R * c
+
+
+  def calculate_velocity(duration_min: float, coord: str, prev_coord: str) -> dict:
+      """
+      Hitung travel velocity dalam km/jam.
+
+      Args:
+          duration_min : selisih waktu login dalam menit (time_diff_min dari Splunk)
+          coord        : koordinat login terbaru, format 'lat,lon'
+          prev_coord   : koordinat login sebelumnya, format 'lat,lon'
+
+      Returns:
+          dict berisi distance_km, duration_min, velocity_kmh, verdict, severity
+      """
+      VELOCITY_THRESHOLD = 800  # km/jam — batas fisik kendaraan komersial
+
+      distance_km = haversine(prev_coord, coord)
+      duration_h  = duration_min / 60
+      velocity    = distance_km / duration_h if duration_h > 0 else float("inf")
+
+      if velocity > VELOCITY_THRESHOLD:
+          verdict  = "Impossible Travel — True Positive"
+          severity = "high" if duration_min < 30 else ("medium" if duration_min < 60 else "low")
+      else:
+          verdict  = "Possible VPN/Proxy — Needs Further Investigation"
+          severity = "low"
+
+      return {
+          "distance_km"  : round(distance_km, 2),
+          "duration_min" : round(duration_min, 2),
+          "velocity_kmh" : round(velocity, 2),
+          "verdict"      : verdict,
+          "severity"     : severity,
+      }
+
+
+  # ── XSOAR entry point ────────────────────────────────────────────────────────
+  # XSOAR mengisi dict `demisto.args()` dari argument yang sudah lo define:
+  #   - Duration  : time_diff_min (string/float)
+  #   - Coor      : koordinat terbaru, contoh "35.6,139.6"
+  #   - PrevCoor  : koordinat sebelumnya, contoh "-33.8,151.2"
+
+  args = demisto.args()
+
+  # =====================================================================
+  # INPUT — ganti value di sini kalau mau test manual,
+  # atau biarkan apa adanya supaya XSOAR yang isi otomatis dari args
+  # =====================================================================
+  duration  = float(args.get("Duration", 0))   # <-- INPUT 1: Duration (menit)
+  coor      = args.get("Coor", "").strip()      # <-- INPUT 2: Coor "lat,lon" terbaru
+  prev_coor = args.get("PrevCoor", "").strip()  # <-- INPUT 3: PrevCoor "lat,lon" sebelumnya
+  # =====================================================================
+
+  result = calculate_velocity(duration, coor, prev_coor)
+
+  # Kembalikan hasil ke war room
+  readable = (
+      f"## Travel Velocity Result\n\n"
+      f"| Field | Value |\n"
+      f"|---|---|\n"
+      f"| Distance | {result['distance_km']} km |\n"
+      f"| Duration | {result['duration_min']} min |\n"
+      f"| Velocity | {result['velocity_kmh']} km/h |\n"
+      f"| Verdict | {result['verdict']} |\n"
+      f"| Severity | {result['severity']} |\n"
+  )
+
+  return_results(CommandResults(
+      readable_output=readable,
+      outputs_prefix="ImpossibleTraveler.Velocity",
+      outputs={
+          "DistanceKm"  : result["distance_km"],
+          "DurationMin" : result["duration_min"],
+          "VelocityKmh" : result["velocity_kmh"],
+          "Verdict"     : result["verdict"],
+          "Severity"    : result["severity"],
+      }
+  ))
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

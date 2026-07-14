@@ -1,0 +1,39 @@
+{
+	"autorun": false,
+	"cacheVersn": 0,
+	"closureScript": "",
+	"color": "#B287FE",
+	"days": 0,
+	"daysR": 0,
+	"default": false,
+	"definitionId": "",
+	"detached": false,
+	"disabled": false,
+	"extractSettings": {
+		"fieldCliNameToExtractSettings": {},
+		"mode": "Specific"
+	},
+	"fromServerVersion": "",
+	"hours": 0,
+	"hoursR": 0,
+	"id": "SMC Lab",
+	"itemVersion": "",
+	"layout": "e18c8cfa-2b77-418f-8e8c-f435de258986",
+	"locked": false,
+	"name": "SMC Lab",
+	"onChangeRepAlg": 0,
+	"packID": "",
+	"packName": "",
+	"playbookId": "6b4b0439-9850-42d0-84e4-e39ccd8ac266",
+	"preProcessingScript": "",
+	"propagationLabels": [
+		"all"
+	],
+	"readonly": false,
+	"reputationCalc": 0,
+	"system": false,
+	"toServerVersion": "",
+	"version": -1,
+	"weeks": 0,
+	"weeksR": 0
+}

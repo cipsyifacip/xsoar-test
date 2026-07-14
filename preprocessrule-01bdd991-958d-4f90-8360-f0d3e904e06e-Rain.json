@@ -1,0 +1,108 @@
+{
+	"action": "link",
+	"cacheVersn": 0,
+	"definitionId": "",
+	"enabled": false,
+	"existingEventsFilters": [
+		[
+			{
+				"left": {
+					"isContext": true,
+					"value": {
+						"simple": "count"
+					}
+				},
+				"operator": "greaterThan",
+				"right": {
+					"isContext": false,
+					"value": {
+						"simple": "50"
+					}
+				},
+				"type": "number"
+			}
+		]
+	],
+	"fromServerVersion": "",
+	"id": "01bdd991-958d-4f90-8360-f0d3e904e06e",
+	"index": 0,
+	"itemVersion": "",
+	"linkTo": "oldest",
+	"locked": false,
+	"name": "Rain",
+	"newEventFilters": [
+		[
+			{
+				"left": {
+					"isContext": true,
+					"value": {
+						"simple": "count"
+					}
+				},
+				"operator": "greaterThan",
+				"right": {
+					"isContext": false,
+					"value": {
+						"simple": "50"
+					}
+				},
+				"type": "number"
+			}
+		]
+	],
+	"packID": "",
+	"packName": "",
+	"period": {
+		"by": "days",
+		"fromValue": 14
+	},
+	"propagationLabels": [
+		"all"
+	],
+	"readyExistingEventsFilters": [
+		[
+			{
+				"left": {
+					"isContext": true,
+					"value": {
+						"simple": "count"
+					}
+				},
+				"operator": "greaterThan",
+				"right": {
+					"isContext": false,
+					"value": {
+						"simple": "50"
+					}
+				},
+				"type": "number"
+			}
+		]
+	],
+	"readyNewEventFilters": [
+		[
+			{
+				"left": {
+					"isContext": true,
+					"value": {
+						"simple": "count"
+					}
+				},
+				"operator": "greaterThan",
+				"right": {
+					"isContext": false,
+					"value": {
+						"simple": "50"
+					}
+				},
+				"type": "number"
+			}
+		]
+	],
+	"scriptID": "",
+	"scriptName": "",
+	"searchClosed": false,
+	"system": false,
+	"toServerVersion": "",
+	"version": -1
+}

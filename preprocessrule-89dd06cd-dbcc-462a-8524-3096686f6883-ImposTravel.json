@@ -1,0 +1,104 @@
+{
+	"action": "linkAndClose",
+	"cacheVersn": 0,
+	"definitionId": "",
+	"enabled": false,
+	"existingEventsFilters": [
+		[
+			{
+				"left": {
+					"isContext": true,
+					"value": {
+						"simple": "sourceip"
+					}
+				},
+				"operator": "isEqualString",
+				"right": {
+					"isContext": true,
+					"value": {
+						"simple": "incident.sourceip"
+					}
+				},
+				"type": "shortText"
+			}
+		]
+	],
+	"fromServerVersion": "",
+	"id": "89dd06cd-dbcc-462a-8524-3096686f6883",
+	"index": 1,
+	"itemVersion": "",
+	"linkTo": "oldest",
+	"locked": false,
+	"name": "ImposTravel",
+	"newEventFilters": [
+		[
+			{
+				"left": {
+					"isContext": true,
+					"value": {
+						"simple": "sourceip"
+					}
+				},
+				"operator": "isNotEmpty",
+				"right": {
+					"isContext": false,
+					"value": {}
+				},
+				"type": "shortText"
+			}
+		]
+	],
+	"packID": "",
+	"packName": "",
+	"period": {
+		"by": "days",
+		"fromValue": 2
+	},
+	"propagationLabels": [
+		"all"
+	],
+	"readyExistingEventsFilters": [
+		[
+			{
+				"left": {
+					"isContext": true,
+					"value": {
+						"simple": "sourceip"
+					}
+				},
+				"operator": "isEqualString",
+				"right": {
+					"isContext": true,
+					"value": {
+						"simple": "${incident.sourceip}"
+					}
+				},
+				"type": "shortText"
+			}
+		]
+	],
+	"readyNewEventFilters": [
+		[
+			{
+				"left": {
+					"isContext": true,
+					"value": {
+						"simple": "sourceip"
+					}
+				},
+				"operator": "isNotEmpty",
+				"right": {
+					"isContext": false,
+					"value": {}
+				},
+				"type": "shortText"
+			}
+		]
+	],
+	"scriptID": "",
+	"scriptName": "",
+	"searchClosed": false,
+	"system": false,
+	"toServerVersion": "",
+	"version": -1
+}

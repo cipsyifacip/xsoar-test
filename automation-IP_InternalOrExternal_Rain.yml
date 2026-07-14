@@ -1,0 +1,218 @@
+args:
+- description: input IP Address
+  name: ip
+  required: true
+commonfields:
+  id: c00ad9d7-badf-443c-8ccc-97aa502abdc4
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.7444307
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: IP_InternalOrExternal_Rain
+outputs:
+- contextPath: IPClassifier.Classification
+  description: Internal / External
+  type: string
+- contextPath: IPClassifier.IsInternal
+  description: true = Internal, false = external
+  type: boolean
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import ipaddress
+
+  # ============================================================
+  # Script: Classify IP - Internal or External
+  # Platform: Cortex XSOAR Automation Script
+  # Description: Memisahkan IP internal (RFC 1918 + loopback +
+  #              link-local + CGNAT) dari IP eksternal/publik.
+  # Input Args:
+  #   ip (str) - Satu IP address, atau beberapa IP dipisah koma
+  # Output:
+  #   classification (str) - "Internal" atau "External"
+  #   details (list) - Detail per IP jika input lebih dari satu
+  # ============================================================
+
+  INTERNAL_RANGES = [
+      # RFC 1918 - Private Networks
+      ipaddress.ip_network("10.0.0.0/8"),
+      ipaddress.ip_network("172.16.0.0/12"),
+      ipaddress.ip_network("192.168.0.0/16"),
+      # Loopback
+      ipaddress.ip_network("127.0.0.0/8"),
+      # Link-Local
+      ipaddress.ip_network("169.254.0.0/16"),
+      # CGNAT (Carrier-Grade NAT)
+      ipaddress.ip_network("100.64.0.0/10"),
+      # IPv6 Loopback
+      ipaddress.ip_network("::1/128"),
+      # IPv6 Link-Local
+      ipaddress.ip_network("fe80::/10"),
+      # IPv6 Unique Local
+      ipaddress.ip_network("fc00::/7"),
+  ]
+
+
+  def is_internal(ip_str: str) -> tuple[bool, str]:
+      """
+      Periksa apakah IP termasuk internal.
+      Returns:
+          (bool, str): (True jika internal, alasan/range yang cocok)
+      """
+      ip_str = ip_str.strip()
+      try:
+          ip_obj = ipaddress.ip_address(ip_str)
+      except ValueError:
+          return False, f"Invalid IP: {ip_str}"
+
+      for network in INTERNAL_RANGES:
+          if ip_obj in network:
+              return True, str(network)
+
+      return False, "Public/External"
+
+
+  def classify_single(ip_str: str) -> dict:
+      """Klasifikasi satu IP address."""
+      internal, reason = is_internal(ip_str.strip())
+      return {
+          "ip": ip_str.strip(),
+          "classification": "Internal" if internal else "External",
+          "matched_range": reason if internal else None,
+      }
+
+
+  def main():
+      # -------------------------------------------------------
+      # Ambil input dari XSOAR argument
+      # -------------------------------------------------------
+      raw_input = demisto.args().get("ip", "")
+
+      if not raw_input:
+          return_error("Argument 'ip' tidak boleh kosong.")
+          return
+
+      # Support input multi-IP dipisah koma
+      ip_list = [x.strip() for x in raw_input.split(",") if x.strip()]
+
+      results = []
+      invalid_ips = []
+
+      for ip in ip_list:
+          try:
+              ipaddress.ip_address(ip)
+              result = classify_single(ip)
+              results.append(result)
+          except ValueError:
+              invalid_ips.append(ip)
+
+      if invalid_ips:
+          demisto.debug(f"IP tidak valid diabaikan: {invalid_ips}")
+
+      if not results:
+          return_error(f"Tidak ada IP valid yang dapat diproses. Input: {raw_input}")
+          return
+
+      # -------------------------------------------------------
+      # Tentukan output utama
+      # -------------------------------------------------------
+      if len(results) == 1:
+          # Single IP: output langsung "Internal" atau "External"
+          classification = results[0]["classification"]
+          matched = results[0].get("matched_range", "")
+
+          human_readable = (
+              f"### IP Classification Result\n"
+              f"| IP | Classification | Matched Range |\n"
+              f"|---|---|---|\n"
+              f"| {results[0]['ip']} | **{classification}** | {matched or '-'} |"
+          )
+
+          context = {
+              "IPClassification": {
+                  "IP": results[0]["ip"],
+                  "Classification": classification,
+                  "MatchedRange": matched,
+                  "IsInternal": classification == "Internal",
+              }
+          }
+
+      else:
+          # Multi IP: ringkasan semua
+          internal_ips = [r["ip"] for r in results if r["classification"] == "Internal"]
+          external_ips = [r["ip"] for r in results if r["classification"] == "External"]
+
+          # Output utama: majority classification, atau "Mixed" jika campuran
+          if internal_ips and not external_ips:
+              classification = "Internal"
+          elif external_ips and not internal_ips:
+              classification = "External"
+          else:
+              classification = "Mixed"
+
+          table_rows = "\n".join(
+              [
+                  f"| {r['ip']} | **{r['classification']}** | {r.get('matched_range') or '-'} |"
+                  for r in results
+              ]
+          )
+
+          human_readable = (
+              f"### IP Classification Results ({len(results)} IPs)\n"
+              f"- Internal: {len(internal_ips)} IP(s)\n"
+              f"- External: {len(external_ips)} IP(s)\n\n"
+              f"| IP | Classification | Matched Range |\n"
+              f"|---|---|---|\n"
+              f"{table_rows}"
+          )
+
+          context = {
+              "IPClassification": {
+                  "Summary": classification,
+                  "InternalIPs": internal_ips,
+                  "ExternalIPs": external_ips,
+                  "TotalProcessed": len(results),
+                  "Details": results,
+              }
+          }
+
+      # -------------------------------------------------------
+      # Set output ke XSOAR
+      # -------------------------------------------------------
+      return_results(
+          CommandResults(
+              outputs_prefix="IPClassifier",
+              outputs_key_field="IP",
+              outputs=context,
+              readable_output=human_readable,
+              raw_response=results,
+          )
+      )
+
+      # Set context key sederhana untuk dipakai di playbook condition
+      # Contoh: ${IPClassifier.Classification} == "Internal"
+      demisto.setContext("IPClassifier.Classification", classification)
+
+
+  # -------------------------------------------------------
+  # Entry point XSOAR
+  # -------------------------------------------------------
+  if __name__ in ("__builtin__", "builtins", "__main__"):
+      main()
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

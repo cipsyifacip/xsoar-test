@@ -1,0 +1,1690 @@
+args:
+- description: data yang didapat dari API Netcraft
+  isArray: true
+  name: data
+- auto: PREDEFINED
+  name: source
+  predefined:
+  - Netcraft
+  - CTM360
+  - GIB
+  - HALOWEB
+  - HALOSOCMED
+  required: true
+- name: time_check_netcraft_to
+- description: Incident id yang menjalankan automation ini
+  name: incident_id
+  required: true
+commonfields:
+  id: f80b02e8-ee74-414b-846c-aa4a5ee17588
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.9.7.24076
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: smc-cti-dedup-and-create-alerts
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |+
+  from typing import Dict, Any, Optional, Union
+  import traceback
+  import tldextract
+  import re
+  from urllib.parse import urlparse, parse_qsl
+  import requests
+  import dateparser
+  import datetime
+
+  ''' STANDALONE FUNCTION '''
+  def extract_domain(url):
+      # Extract Domain from url.
+      # Function yang digunakan untuk breakdown fullpath url diambil hanya domain nya saja.
+      # contoh : https://test.co.id/halo/halo menjadi test.co.id.
+      try:
+          extracted = tldextract.extract(url)
+          domain = extracted.domain + "." + extracted.suffix
+          return domain
+      except:
+          return url
+
+  def trim_trailing_slash(url: str) -> str:
+      if not url or not isinstance(url, str):
+          return url
+      return url.strip().rstrip('/')
+
+  def cek_judol(attackurl):
+      is_judol = False
+
+      if not attackurl:
+          return is_judol
+
+      command = "smc_check_keyword_lists"
+      args = {
+          'data_to_check': attackurl,
+          'list_name': 'JudiOnlineKeywords'
+      }
+
+      res = demisto.executeCommand(command, args)
+      # print('res', res)
+
+      result_value = None
+      if isinstance(res, list) and len(res) > 0:
+          if isinstance(res[0], dict) and 'Contents' in res[0]:
+              if isinstance(res[0]['Contents'], dict) and 'MatchFound' in res[0]['Contents']:
+                  is_judol = res[0]['Contents']['MatchFound']
+
+      return is_judol
+
+  def standardize_social_urls(url, preserve_path=True):
+      """
+      Standardize social media URLs while preserving path information
+
+      Args:
+          url (str): The URL to standardize
+          host_info (str, optional): Known host information (e.g., 'Facebook', 'Instagram')
+          preserve_path (bool): Whether to preserve the path portion of the URL
+
+      Returns:
+          str: Standardized URL
+      """
+      platform = None
+
+      # Parse the URL to extract components
+      try:
+          parsed_url = urlparse(url)
+          domain = parsed_url.netloc.lower()
+          path = parsed_url.path
+          query = parsed_url.query
+
+          # If not already determined by host_info, check the domain
+          if not platform:
+              if any(name in domain for name in ['facebook.com', 'fb.com', 'fb.me']):
+                  platform = 'facebook'
+              elif any(name in domain for name in ['instagram.com', 'ig.me']):
+                  platform = 'instagram'
+              elif any(name in domain for name in ['t.me', 'telegram.me', 'telegram.org']):
+                  platform = 'telegram'
+              elif any(name in domain for name in ['tiktok.com', 'tiktok', 'douyin.com']):
+                  platform = 'tiktok'
+              elif any(name in domain for name in ['whatsapp.com', 'wa.me']):
+                  platform = 'whatsapp'
+              elif any(name in domain for name in ['pinterest.', 'pin.it']):
+                  platform = 'pinterest'
+              elif any(name in domain for name in ['twitter.com', 'x.com', 't.co']):
+                  platform = 'x'
+              elif any(name in domain for name in ['linkedin.com', 'lnkd.in']):
+                  platform = 'linkedin'
+
+          # # Special handling for WhatsApp
+          if platform == 'whatsapp':
+              # Extract phone number from various WhatsApp URL formats
+              phone_number = None
+
+              # Format: wa.me/+1234567890 or wa.me/1234567890
+              if domain == 'wa.me' and path and path.strip('/'):
+                  phone_number = path.strip('/')
+
+              # Format: api.whatsapp.com/send?phone=1234567890
+              elif 'phone=' in query:
+                  query_params = dict(parse_qsl(query))
+                  phone_number = query_params.get('phone', '')
+
+              if phone_number:
+                  # Ensure phone number starts with + if it doesn't already
+                  if not phone_number.startswith('+') and not phone_number.startswith('phone='):
+                      # Check if it's a numeric string (not already containing 'phone=')
+                      if phone_number.replace('+', '').isdigit():
+                          phone_number = phone_number
+
+                  # Remove any 'phone=' prefix if it exists
+                  phone_number = phone_number.replace('phone=', '')
+
+                  # Return standardized WhatsApp URL
+                  return f"https://wa.me/{phone_number}"
+
+          # Standardize based on platform
+          if platform:
+              # Define standard base URLs for each platform
+              base_urls = {
+                  'facebook': "https://www.facebook.com",
+                  'instagram': "https://www.instagram.com",
+                  'telegram': "https://t.me",
+                  'tiktok': "https://www.tiktok.com",
+                  'whatsapp': "https://wa.me",
+                  'pinterest': "https://www.pinterest.com",
+                  'x': "https://x.com",
+                  'linkedin': "https://www.linkedin.com"
+              }
+
+              base_url = base_urls[platform]
+
+              # Build the standardized URL
+              if preserve_path:
+                  # Add query string if it exists
+                  if query:
+                      return f"{base_url}{path}?{query}"
+                  else:
+                      return f"{base_url}{path}"
+              else:
+                  return base_url
+          else:
+              # Not a recognized platform, return original URL
+              return url
+
+      except Exception as e:
+          print(f"Error processing URL {url}: {e}")
+          return url
+
+  def add_source(url, incident_type, incident_id, source, type_abuse):
+      # Add source to Continental entry
+      # incident_type = Source baru (CTM, Netcraft)
+      # incident_id = incident id source baru
+      # source = (Halo / ISG)
+      # type_abuse = (socmed/social media/webapp/webapps)
+      reference = requests.utils.unquote(url)
+      command = "continental-updatesource-abuse"
+
+      payload = {
+          "reference": reference,
+          "updated_by": "XSOAR",
+          "incident_type": incident_type,
+          "incident_id": incident_id,
+          "source": source,
+          "type": type_abuse,
+          "using":"BCA Continental Brand Abuse_instance_SMC"
+      }
+
+      res = demisto.executeCommand(command, payload)
+
+      if isError(res):
+          demisto.error(f"Failed to add new source for {url}: {get_error(res)}")
+
+      return
+
+  def sql_query(url):
+      # To run SQL Query command
+      url_for_query = requests.utils.unquote(url)
+      domain_query_part = f"`reference` = '{url_for_query}'"
+      queries = []
+
+      queries.append(f"SELECT `incident_type` FROM `abuse_socmed_halo` WHERE {domain_query_part}")
+      queries.append(f"SELECT `incident_type` FROM `abuse_socmed` WHERE {domain_query_part}")
+      queries.append(f"SELECT `incident_type` FROM `abuse_webapps_halo` WHERE {domain_query_part}")
+      queries.append(f"SELECT `incident_type` FROM `abuse_webapps` WHERE {domain_query_part}")
+
+      # Check in every table, if found, stop
+      for query in queries:
+          search_args = {
+              'query': query,
+              'using': "Generic SQL_pisgdapp"
+          }
+          res = demisto.executeCommand('sql-command', search_args)
+
+          if isError(res):
+              demisto.error(f"Error: {get_error(res)}")
+              continue
+
+          if res[0]['Contents']:
+              return res[0]['Contents'], query
+
+          # Check if the command executed successfully
+          # if isError(res):
+          #     demisto.error(f"Error: {get_error(res)}")
+          #     continue
+
+      # Extract Contents from the result
+      # if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0]:
+      #     return res[0]['Contents']
+      return [], ''
+
+  def check_urls_in_incidents(urls):
+      # Check all url in incidents XSOAR.
+      # Function yang digunakan untuk melakukan pengecekkan apakah url sudah ada di XSOAR incidents atau belum.
+      # urls merupakan kumpulan url (per job) yang nantinya akan dilooping per-batch untuk dicek.
+      # Jika belum, akan disimpan url nya sebagai array dengan value False dan lanjut ke step selanjutnya.
+      # Jika sudah, maka tidak akan lanjut ke step selanjutnya dengan value True dan berhenti sampai disini.
+      results = {}
+      if not urls:
+          return results
+
+      # Using batching system.
+      batch_size = 25
+
+      # Calculate total batches.
+      total_urls = len(urls)
+      total_batches = (total_urls + batch_size - 1) // batch_size
+
+      demisto.results(f"Starting batch processing for {total_urls} URLs with batch size {batch_size} ({total_batches} batches)")
+
+      # Process in batches.
+      for batch_num in range(total_batches):
+          start_idx = batch_num * batch_size
+          end_idx = min(start_idx + batch_size, total_urls)
+          current_batch = urls[start_idx:end_idx]
+
+          demisto.results(f"Processing incidents xsoar check, batch {batch_num+1}/{total_batches} with {len(current_batch)} URLs")
+
+          # Construct query XSOAR conditions for this batch.
+          url_conditions = []
+          for url in current_batch:
+              url_conditions.append(f'(attackurl:"{url}" OR otherurl:"{url}")')
+
+          # Join conditions with OR.
+          url_query_part = " OR ".join(url_conditions)
+
+          # Construct the complete query.
+          query = f'type:BCA_Brand_Abuse AND ({url_query_part})'
+
+          # Execute SearchIncidentsV2 command.
+          search_args = {
+              'query': query,
+              'size': len(current_batch) * 2,  # In case some URLs appear in multiple incidents
+              'sort': 'created',
+              'orderBy': 'desc',
+              'fromdate': '1 year ago'
+          }
+
+          try:
+              res = demisto.executeCommand('SearchIncidentsV2', search_args)
+
+              if isError(res):
+                  demisto.error(f"Error in batch {batch_num+1}: {get_error(res)}")
+                  # Initialize all URLs in this batch as not found (false).
+                  for url in current_batch:
+                      results[url] = False
+                  continue
+
+              # Extract incidents from result.
+              incidents = res[0]['Contents'][0]['Contents']['data']
+              demisto.results(f"Found {len(incidents)} incidents matching the query in batch {batch_num+1}")
+
+              # Initialize all URLs in this batch as not found (false).
+              for url in current_batch:
+                  results[url] = False
+
+              # Check if URLs are found in the returned incidents.
+              for incident in incidents:
+                  custom_fields = incident.get('CustomFields', {})
+                  attack_url = custom_fields.get('attackurl', '')
+                  other_urls = custom_fields.get('otherurl', '')
+
+                  # Check attack_url field.
+                  if attack_url and attack_url in current_batch:
+                      results[attack_url] = True
+
+                  # Check otherurl field (could be a list or string depending on field configuration).
+                  if isinstance(other_urls, str):
+                      # If it's a string, check if any URL in the batch is contained in it.
+                      for url in current_batch:
+                          if url in other_urls:
+                              results[url] = True
+                  elif isinstance(other_urls, list):
+                      # If it's a list, check each item.
+                      for url in current_batch:
+                          if url in other_urls:
+                              results[url] = True
+
+          except Exception as e:
+              demisto.error(f"Exception in batch {batch_num+1}: {str(e)}")
+              # Initialize any unprocessed URLs in this batch as not found.
+              for url in current_batch:
+                  if url not in results:
+                      results[url] = False
+
+      # Verify all URLs have been processed.
+      for url in urls:
+          if url not in results:
+              demisto.results(f"URL {url} was not processed in any batch, marking as not found")
+              results[url] = False
+
+      demisto.results(f"Finished processing {len(results)} URLs. Found {sum(results.values())} matches in incidents")
+      return results
+
+  def check_urls_in_third_party(urls, time):
+      # Function yang digunakan untuk melakukan pengecekkan apakah url sudah ada di list url third party (Netcraft) atau belum.
+      # urls merupakan kumpulan url (per job) yang nantinya akan dilooping per-batch untuk dicek.
+      # time merupakan variable untuk menampung tanggal yang akan digunakan sebagai date_to.
+      # Jika belum, akan disimpan url nya sebagai array dengan value False dan lanjut ke step selanjutnya.
+      # Jika sudah, maka tidak akan lanjut ke step selanjutnya dengan value True dan berhenti sampai disini.
+      """
+      Check if URLs exist in third-party platform one by one.
+      The third-party API returns URLs in a wildcard manner.
+
+      Args:
+          urls (list): List of URLs to check
+
+      Returns:
+          dict: Dictionary with URLs as keys and boolean values indicating existence
+      """
+      results = {}
+      if not urls:
+          return results
+
+      total_urls = len(urls)
+      demisto.results(f"Starting third-party check for {total_urls} URLs (one by one)")
+
+      # Process URLs one by one.
+      batchnum = 1
+      for index, url in enumerate(urls):
+          # logging every 25 data
+          if index % 25 == 0:
+              demisto.results(f"Processing third-party check every 25 data with total urls to check {total_urls}, batch {batchnum}")
+              batchnum += 1
+
+          try:
+              # Call the third-party check command for a single URL.
+              res = demisto.executeCommand("netcraft-takedown-list",{"url": url,"date_to":time,"date_from":"2020-01-01 00:00:00","using":"Netcraft V2_instance_SMC"})
+
+              if isError(res):
+                  demisto.error(f"Error checking URL {url} in third-party platform: {get_error(res)}")
+                  results[url] = False
+                  continue
+
+              # Process result from third-party check.
+              # Assuming the command returns a list of URLs that match via wildcard.
+              result_content = [entry["attack_url"] for item in res for entry in item.get("Contents", []) if "attack_url" in entry]
+              matched_urls = []
+
+              # Check the structure of result_content and extract matched URLs.
+              if isinstance(result_content, dict) and 'attack_url' in result_content:
+                  # If result contains a list of matched URLs.
+                  if isinstance(result_content['attack_url'], list):
+                      matched_urls = result_content['attack_url']
+                  elif isinstance(result_content['attack_url'], str):
+                      matched_urls = [result_content['attack_url']]
+              elif isinstance(result_content, list):
+                  # If result is directly a list of matched URLs.
+                  matched_urls = result_content
+
+              # Check if the exact URL exists in the matched URLs list.
+              exact_match_exists = url in matched_urls
+
+              # If there are wildcard matches but no exact match.
+              # we still consider it as not existing in third-party.
+              results[url] = exact_match_exists
+
+              if matched_urls and not exact_match_exists:
+                  demisto.results(f"URL {url} has wildcard matches in third-party but no exact match. Considering as not found.")
+              elif matched_urls:
+                  demisto.results(f"URL {url} has an exact match in third-party.")
+              else:
+                  demisto.results(f"URL {url} has no matches in third-party.")
+
+          except Exception as e:
+              demisto.error(f"Exception checking URL {url} in third-party platform: {str(e)}")
+              results[url] = False
+
+      demisto.results(f"Finished checking {total_urls} URLs in third-party platform. Found {sum(results.values())} exact matches")
+      return results
+
+  def create_incident_for_domain_group(domain, urls_data):
+      # Function yang digunakan untuk create alert/ticket di XSOAR.
+      # domain merupakan variable yang menyimpan domain yang akan dibuatkan alert/ticket.
+      # urls_data merupakan variable yang menyimpan seluruh data yang berasal dari CTI/HALO yang akan disimpan sebagai context data di alert/ticket XSOAR.
+      # encodedimage merupakan variable yang akan menyimpan base64 data khusus untuk HALO yang berasal dari conti.
+      """
+      Create an incident for a group of URLs with the same domain.
+
+      Args:
+          domain (str): The common domain
+          urls_data (list): List of dictionaries with URL data for this domain
+
+      Returns:
+          str: Incident ID if created successfully, None otherwise
+      """
+      try:
+          time.sleep(5)
+          encodedimage = ""
+          print(f"Create incident for {domain}")
+          source = demisto.args().get('source')
+          if not urls_data:
+              return None
+
+          # Select the first URL as the representative.
+          representative_item = urls_data[0]
+          representative_url = representative_item.get('url', '')
+
+
+          if not representative_url:
+              demisto.results(f"No valid representative URL found for domain {domain}")
+              return None
+
+          # Extract metadata for the representative URL.
+          current_url = representative_item.get('url', '')
+          metadata = representative_item.get('metadata', {})
+
+          # Collect all URLs in this domain group.
+          all_urls_in_group = [item.get('url', '') for item in urls_data if item.get('url')]
+
+          # Create the other URLs list (excluding the representative).
+          other_urls = [url for url in all_urls_in_group if url != representative_url]
+
+          if source == "Netcraft":
+              idcti = metadata.get("id")
+              # ctiurl = metadata.get("attack_url")
+              ctiurl = current_url
+              screenshoturl = metadata.get("screenshot_url")
+              encodedimage = ""
+              # encodedimage = convert_image_base64(source, screenshoturl, idcti)
+              attacktype = metadata.get("attack_type")
+              alertcategory = determine_alertcategory(attacktype)
+              ticket_title = "Brand Abuse from Netcraft : " + "[ " + idcti + " ]" + " - " + ctiurl
+              incident= {
+                  "name": ticket_title,
+                  "playbookId": "f166a8ce-a075-4457-8a29-438bb1cc2a21",
+                  # "playbookId": "2c703116-d3ef-498b-8a57-649189881cff", #Test-AFW
+                  "type": "BCA_Brand_Abuse",
+                  "customFields": {
+                      "otherurl": json.dumps(other_urls) if other_urls else "[]",
+                      "domainname": domain,
+                      "idcti":idcti,
+                      "attackurl":ctiurl,
+                      "attacktype":attacktype,
+                      "registrar":metadata.get("registrar"),
+                      "ipaddress":metadata.get("ip"),
+                      "alertsource":source,
+                      "screenshoturl":screenshoturl,
+                      "alertcategory":alertcategory,
+                      "datesubmitted":metadata.get("date_submitted"),
+                      "base64data":"data:image/png;base64,"+encodedimage
+                  },
+                  "severity": 3,
+                  "status": 1,
+                  "createInvestigation": True
+              }
+
+          elif source == "CTM360":
+              idcti = metadata.get("id")
+              # ctiurl = metadata.get("url")
+              ctiurl = current_url
+              screenshoturl = (metadata.get("screenshots", [])[0].get("filename") if metadata.get("screenshots") else None)
+              encodedimage = ""
+              # encodedimage = convert_image_base64(source, screenshoturl, idcti)
+              ticket_title = "Brand Abuse from CTM360 : " + "[ " + idcti + " ]" + " - " + ctiurl
+              attacktype = metadata.get("type")
+              alertcategory = determine_alertcategory(attacktype)
+              if attacktype == "Data Leakage":
+                  incident={}
+              else:
+                  incident= {
+                      "name": ticket_title,
+                      "playbookId": "f166a8ce-a075-4457-8a29-438bb1cc2a21",
+                      # "playbookId": "2c703116-d3ef-498b-8a57-649189881cff", #Test-AFW
+                      "type": "BCA_Brand_Abuse",
+                      "customFields": {
+                          "otherurl": json.dumps(other_urls) if other_urls else "[]",
+                          "domainname": domain,
+                          "idcti":idcti,
+                          "attackurl":ctiurl,
+                          "attacktype":attacktype,
+                          "registrar":metadata.get("registrar"),
+                          "ipaddress":metadata.get("ip"),
+                          "alertsource":source,
+                          "screenshoturl":screenshoturl,
+                          "alertcategory":alertcategory,
+                          "datesubmitted":metadata.get("created_date"),
+                          "base64data":"data:image/png;base64,"+encodedimage
+                      },
+                      "severity": 3,
+                      "status": 1,
+                      "createInvestigation": True
+                  }
+
+          elif source == "GIB":
+              idcti = metadata.get("id")
+              if "phishing" in metadata and len(metadata["phishing"]) > 0 and "url" in metadata["phishing"][0]:
+                  # ctiurl = metadata["phishing"][0]["url"]
+                  ctiurl = current_url
+              else:
+                  ctiurl = None
+
+              if "phishing" in metadata and len(metadata["phishing"]) > 0 and "domain" in metadata["phishing"][0]:
+                  registrar = metadata["phishing"][0]["domain"]["registrar"]
+              else:
+                  registrar = None
+
+              if "phishing" in metadata and len(metadata["phishing"]) > 0 and "ip" in metadata["phishing"][0]:
+                  ipaddress = metadata["phishing"][0]["ip"]["ip"]
+              else:
+                  ipaddress = None
+
+              # if "phishing" in metadata and len(metadata["phishing"]) > 0 and "screen" in metadata["phishing"][0]:
+              #     screenshoturl = metadata["phishing"][0]["screen"]["pageScreen"]["filename"]
+              # else:
+              #     screenshoturl = None
+
+              if metadata and 'phishing' in metadata and metadata_['phishing'] and 'screen' in metadata['phishing'][0] and 'pageScreen' in metadata['phishing'][0]['screen'] and 'filename' in metadata['phishing'][0]['screen']['pageScreen']:
+                  screenshoturl = metadata_gib["phishing"][0]["screen"]["pageScreen"]["filename"]
+              else:
+                  screenshoturl = None
+
+              if "phishing" in metadata and len(metadata["phishing"]) > 0 and "date" in metadata["phishing"][0]:
+                  datesubmitted = metadata["phishing"][0]["date"]["added"]
+              else:
+                  datesubmitted = None
+
+              ticket_title = "Brand Abuse from GIB : " + "[ " + idcti + " ]" + " - " + ctiurl
+              # encodedimage = convert_image_base64(source, screenshoturl, idcti)
+              encodedimage = ""
+              incident= {
+                  "name": ticket_title,
+                  "playbookId": "f166a8ce-a075-4457-8a29-438bb1cc2a21",
+                  # "playbookId": "2c703116-d3ef-498b-8a57-649189881cff", #Test-AFW
+                  "type": "BCA_Brand_Abuse",
+                  "customFields": {
+                      "otherurl": json.dumps(other_urls) if other_urls else "[]",
+                      "domainname": domain,
+                      "idcti":idcti,
+                      "attackurl":ctiurl,
+                      "attacktype":"phishing",
+                      "registrar":registrar,
+                      "ipaddress":ipaddress,
+                      "alertsource":source,
+                      "screenshoturl": screenshoturl,
+                      "alertcategory":"Phishing Web",
+                      "datesubmitted":datesubmitted,
+                      "base64data":"data:image/png;base64,"+encodedimage
+                  },
+                  "severity": 3,
+                  "status": 1,
+                  "createInvestigation": True
+              }
+
+          elif source == "HALOWEB":
+              # encoded_value = next(item['base64_data'] for item in encodedimage if item['url'] == representative_url)
+              encoded_value=""
+              ctiurl = metadata.get("reference")
+              ticket_title = "Brand Abuse from HALO : " + ctiurl
+              incident= {
+                  "name": ticket_title,
+                  "playbookId": "f166a8ce-a075-4457-8a29-438bb1cc2a21",
+                  # "playbookId": "2c703116-d3ef-498b-8a57-649189881cff", #Test-AFW
+                  "type": "BCA_Brand_Abuse",
+                  "customFields": {
+                      "otherurl": json.dumps(other_urls) if other_urls else "[]",
+                      # "otherurl": "\n".join(other_urls) if other_urls else "",
+                      "domainname": domain,
+                      "idcti":'none',
+                      "attackurl":ctiurl,
+                      "attacktype":metadata.get("type"),
+                      "alertcategory":metadata.get("type"),
+                      "alertsource":source,
+                      "datesubmitted":metadata.get("opened_date"),
+                      "base64data":"data:image/png;base64,"+encoded_value
+                  },
+                  "severity": 3,
+                  "status": 1,
+                  "createInvestigation": True
+              }
+
+          elif source == "HALOSOCMED":
+              # encoded_value = next(item['base64_data'] for item in encodedimage if item['url'] == representative_url)
+              encoded_value=""
+              ctiurl = metadata.get("reference")
+              ticket_title = "Brand Abuse from HALO : " + ctiurl
+              incident= {
+                  "name": ticket_title,
+                  "playbookId": "f166a8ce-a075-4457-8a29-438bb1cc2a21",
+                  # "playbookId": "2c703116-d3ef-498b-8a57-649189881cff", #Test-AFW
+                  "type": "BCA_Brand_Abuse",
+                  "customFields": {
+                      "otherurl": json.dumps(other_urls) if other_urls else "[]",
+                      "domainname": domain,
+                      "idcti":'none',
+                      "attackurl":ctiurl,
+                      "attacktype":metadata.get("channel"),
+                      "alertcategory":"Social Media",
+                      "alertsource":source,
+                      "datesubmitted":metadata.get("opened_date"),
+                      "base64data":"data:image/png;base64,"+encoded_value
+                  },
+                  "severity": 3,
+                  "status": 1,
+                  "createInvestigation": True
+              }
+
+          else:
+              return_error("Source cannot be found!")
+
+          # Create the incident.
+          if incident or len(incident) > 0:
+              res = demisto.executeCommand("core-api-post", {"uri":"/incident", "body":incident , "using":"Core REST API_instance_1"})
+              demisto.results(f"Creating incident for domain {domain} with representative URL: {representative_url}")
+              # demisto.results(f"Additional URLs for this domain ( {domain} ): {len(other_urls)}")
+
+              if isError(res):
+                  demisto.error(f"Error creating incident for domain {domain}: {get_error(res)}")
+                  return None
+
+              incident_id = res[0]['Contents']['response']['id']
+              return incident_id
+          else:
+              return
+
+      except Exception as e:
+          demisto.error(f"Exception creating incident for domain {domain}: {str(e)}\n{traceback.format_exc()}")
+          return None
+
+  def output_to_context(all_urls, urls_to_check_third_party, urls_to_process, incidents_created, total_data_error, source):
+      # Prepare summary output.
+      # Function yang digunakan untuk mempersiapkan output yang akan disimpan di context data.
+      # Dibuatkan function agar bisa digunakan berulang kali dimanapun.
+      # Output context dipisahkan by name variable.
+      summary = {
+          'total_urls_processed': len(all_urls),
+          'urls_in_existing_incidents': urls_to_check_third_party,
+          'urls_in_third_party': len(urls_to_check_third_party) - len(urls_to_process),
+          'urls_for_new_incidents': len(urls_to_process),
+          'urls_error_when_insert_continental': total_data_error,
+          'domain_groups_created': len(incidents_created),
+          'incidents_created': incidents_created
+      }
+
+      # Return results.
+      readable_output = f"""## URL Deduplication and Incident Creation Summary
+
+      \n### Statistics:
+      \n- Total URLs Processed: {summary['total_urls_processed']}
+      \n- URLs Found in Existing Incidents: {summary['urls_in_existing_incidents']}
+      \n- URLs Found in Third-Party Platform: {summary['urls_in_third_party']}
+      \n- URLs Processed for New Incidents: {summary['urls_for_new_incidents']}
+      \n- URLs Error when insert to Continental: {summary['urls_error_when_insert_continental']},
+      \n- Domain Groups Created: {summary['domain_groups_created']}
+
+      \n### Incidents Created:\n"""
+
+      if incidents_created:
+          incidents_table = []
+          for inc in incidents_created:
+              incidents_table.append({
+                  'Domain': inc['domain'],
+                  'Incident ID': inc['incident_id'],
+                  'Representative URL': inc['representative_url'],
+                  'Total URLs': inc['total_urls']
+              })
+
+          readable_output += tableToMarkdown('', incidents_table, headers=['Domain', 'Incident ID', 'Representative URL', 'Total URLs'])
+      else:
+          readable_output += "No new incidents created."
+
+      if source == "Netcraft":
+          demisto.results({
+              'Type': entryTypes['note'],
+              'ContentsFormat': formats['json'],
+              'Contents': summary,
+              'HumanReadable': readable_output,
+              'EntryContext': {
+                  'DedupCreateAlertNetcraft': summary
+              }
+          })
+          return
+      elif source == "CTM360":
+          demisto.results({
+              'Type': entryTypes['note'],
+              'ContentsFormat': formats['json'],
+              'Contents': summary,
+              'HumanReadable': readable_output,
+              'EntryContext': {
+                  'DedupCreateAlertCTM360': summary
+              }
+          })
+          return
+      elif source == "GIB":
+          demisto.results({
+              'Type': entryTypes['note'],
+              'ContentsFormat': formats['json'],
+              'Contents': summary,
+              'HumanReadable': readable_output,
+              'EntryContext': {
+                  'DedupCreateAlertGIB': summary
+              }
+          })
+          return
+      elif source == "HALOWEB":
+          demisto.results({
+              'Type': entryTypes['note'],
+              'ContentsFormat': formats['json'],
+              'Contents': summary,
+              'HumanReadable': readable_output,
+              'EntryContext': {
+                  'DedupCreateAlertHaloWeb': summary
+              }
+          })
+          return
+      elif source == "HALOSOCMED":
+          demisto.results({
+              'Type': entryTypes['note'],
+              'ContentsFormat': formats['json'],
+              'Contents': summary,
+              'HumanReadable': readable_output,
+              'EntryContext': {
+                  'DedupCreateAlertHaloSocmed': summary
+              }
+          })
+          return
+      else:
+          return_error("Source cannot be found!")
+
+  def output_to_context_new(all_urls, existing_incident, new_incidents, total_data_error, count_judol, source):
+      # Prepare summary output.
+      # Function yang digunakan untuk mempersiapkan output yang akan disimpan di context data.
+      # Dibuatkan function agar bisa digunakan berulang kali dimanapun.
+      # Output context dipisahkan by name variable.
+      summary = {
+          'total_urls_processed': len(all_urls),
+          'urls_in_existing_incidents': existing_incident,
+          'urls_for_new_incidents': new_incidents,
+          'urls_error_when_insert_continental': total_data_error,
+          'urls_judol': count_judol
+      }
+
+      name = f'DedupCreateAlert{source}'
+
+      # Return results.
+      readable_output = f"""## URL Deduplication and Incident Creation Summary
+
+      \n### Statistics:
+      \n- Total URLs Processed: {summary['total_urls_processed']}
+      \n- URLs Found in Existing Incidents in Continental: {summary['urls_in_existing_incidents']}
+      \n- URLs Processed for New Incidents to Continental: {summary['urls_for_new_incidents']}
+      \n- URLs Error when insert to Continental: {summary['urls_error_when_insert_continental']}
+      \n- URLs Judol: {summary['urls_judol']}"""
+
+      demisto.results({
+          'Type': entryTypes['note'],
+          'ContentsFormat': formats['json'],
+          'Contents': summary,
+          'HumanReadable': readable_output,
+          'EntryContext': {
+              name : summary
+          }
+      })
+      return
+
+  def determine_alertcategory(incident):
+      # Convert to lowercase for case-insensitive comparison
+      # Function yang digunakan untuk menentukan alert category untuk mengetahui.
+      # Apakah url yang sedang di cek merupakah Phishing Web, Social Media, Mobile App atau Others.
+      # Berdasarkan social media keyword / tipe alert dari CTI.
+      attack_type_lower = incident.lower()
+
+      # Check for Social Media condition
+      social_media_keywords = [
+          'instagram', 'facebook', 'youtube', 'tiktok', 'weibo', 'whatsapp',
+          'pinterest', 'twitter', 'linkedin', 'olx', 'vimeo', 'telegram',
+          'email', 'dailymotion', 'fake_shop', 'skype'
+      ]
+
+      social_media_exact_matches = [
+          'auto generated page', 'brand impersonation', 'executive impersonation',
+          'fake ad', 'other_social_media_infringement', 'reported_fraud_phone',
+          'soundcloud_brand_infringement'
+      ]
+
+      # Check for Social Media
+      is_social_media = False
+
+      # Check for keyword containment
+      for keyword in social_media_keywords:
+          if keyword in attack_type_lower:
+              is_social_media = True
+              break
+
+      # Check for exact matches
+      if not is_social_media:
+          for exact_match in social_media_exact_matches:
+              if attack_type_lower == exact_match:
+                  is_social_media = True
+                  break
+
+      # Check exclusions for Social Media
+      if is_social_media:
+          if 'phishkit' in attack_type_lower or attack_type_lower == 'exposed email address':
+              is_social_media = False
+
+      # Check for Website Phishing
+      website_phishing_contains = ['phishing']
+
+      website_phishing_equals = [
+          'brand_infringement', 'brand abuse', 'cyber evil twin site',
+          'domain infringement', 'phish redirector', 'malware',
+          'cryptocurrency_investment_scam', 'dropsite', 'fake_bank_url',
+          'malware_c2', 'malware_c2_distribution', 'other_url',
+          'phishing_url', 'phishkit_archive', 'sends_malware_attachments',
+          'sends_phishing_url', 'targeted_attack', 'malicious redirector'
+      ]
+
+      is_website_phishing = False
+
+      # Check for keyword containment
+      for keyword in website_phishing_contains:
+          if keyword in attack_type_lower:
+              is_website_phishing = True
+              break
+
+      # Check for exact matches
+      if not is_website_phishing:
+          for exact_match in website_phishing_equals:
+              if attack_type_lower == exact_match:
+                  is_website_phishing = True
+                  break
+
+      # Check for Aplikasi Ilegal
+      aplikasi_ilegal_equals = [
+          'fake_mobile_app', 'suspicious mobile app', 'android_malware_distribution'
+      ]
+
+      is_aplikasi_ilegal = False
+
+      # Check for exact matches
+      for exact_match in aplikasi_ilegal_equals:
+          if attack_type_lower == exact_match:
+              is_aplikasi_ilegal = True
+              break
+
+      # Determine the result
+      if is_social_media:
+          return "Social Media"
+      elif is_website_phishing:
+          return "Phishing Web"
+      elif is_aplikasi_ilegal:
+          return "Mobile App"
+      else:
+          return "Others"
+
+  def insert_and_auto_update_continental(domain, data, source, incident_id_job):
+      # Insert Data to Continental. Sectioning based on source alert.
+      # Function yang digunakan untuk Insert seluruh url ke Continental.
+      # Dan juga untuk update url menjadi closed di continental untuk url dengan domain yang sama (kecuali url/domain/index pertama).
+      exisiting_in_conti = 0
+      new_active_entry = 0
+      if source == "Netcraft":
+          first_url = ""
+          # Loop each data from domain group.
+          error_insert = []
+          encodedimage_data = []
+          for index, metadata in enumerate(data):
+              # prepare statement for input insert or update data.
+              attacktype = metadata.get("metadata",{}).get("attack_type")
+              attackurl = metadata.get("url")
+              alertcategory = determine_alertcategory(attacktype)
+              idcti = metadata.get("metadata",{}).get("id")
+              registrar = metadata.get("metadata",{}).get("registrar")
+              ipaddress = metadata.get("metadata",{}).get("ip")
+              addedby = "XSOAR"
+              datesubmitted = metadata.get("metadata",{}).get("date_submitted")
+              openeddate = convert_date_for_continental(datesubmitted, add_utc_timezone=False, dayfirst=False, fuzzy=True, yearfirst=True)
+              # screenshoturl = metadata.get("metadata",{}).get("screenshot_url")
+              # encodedimage = convert_image_base64(source, screenshoturl, idcti)
+
+              screenshoturl = 'null'
+              encodedimage = 'null'
+
+              try:
+                  screenshoturl = metadata.get("metadata",{}).get("screenshot_url")
+                  encodedimage = convert_image_base64(source, screenshoturl, idcti)
+              except Exception as e:
+                  pass
+
+              encodedimage_data.append({
+                  'url':attackurl,
+                  'base64_data':encodedimage
+              })
+              # Sectioning based on Alert Category.
+              # This code is convert from playbook task P-SMC-BCA-Brand Abuse-01-1.5 to script automation.
+              if alertcategory == "Social Media":
+                  # convert attack_type untuk input continental channel.
+                  if '_' in attacktype:
+                      attacktype = attacktype.split('_')[0]  # Get first part before underscore.
+
+                  # Replace transformations attacktype.
+                  attacktype = attacktype.replace('twitter', 'x')
+                  attacktype = attacktype.replace('Tiktok', 'TikTok')
+                  attacktype = attacktype.replace('Youtube', 'YouTube')
+                  attacktype = attacktype.replace('tiktok', 'TikTok')
+                  attacktype = attacktype.replace('youtube', 'YouTube')
+
+                  channel = attacktype
+
+                  # Replace transformations attackurl.
+                  attackurl = attackurl.replace('twitter', 'x')
+                  attackurl = attackurl.replace('%40', '@')
+                  res = demisto.executeCommand("continental-insert-abuse-social-media",{"channel": channel, "reference":attackurl, "incident_id":idcti, "incident_type":source, "added_by":addedby, "opened_date":openeddate, "encoded_image":encodedimage, "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  res2 = demisto.executeCommand("continental-update-abuse-social-media",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Created by job SOAR id {incident_id_job}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+              elif alertcategory == "Mobile App":
+                  res = demisto.executeCommand("continental-insert-abuse-webapps",{"type_incident": alertcategory, "reference":attackurl, "incident_id":idcti, "incident_type":source, "added_by":addedby, "opened_date":openeddate, "encoded_image":encodedimage, "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  res2 = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Created by job SOAR id {incident_id_job}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+              else:
+                  # alertcategory == Phishing Web & Others
+                  res = demisto.executeCommand("continental-insert-abuse-webapps",{"type_incident": alertcategory, "reference":attackurl, "incident_id":idcti, "registrar":registrar, "ip_address":ipaddress, "incident_type":source, "added_by":addedby, "opened_date":openeddate, "encoded_image":encodedimage, "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  res2 = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Created by job SOAR id {incident_id_job}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+              # Pengecekkan response insert continental.
+              result_value = json.loads(res[0]['Contents'])['result'] if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0] else None
+
+              # If result fail
+              if result_value == "fail":
+                  error_data = json.loads(res[0]['Contents'])['errors'] if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0] else None
+                  error_insert.append({
+                      'url': attackurl,
+                      'error': error_data
+                  })
+                  # error_insert["url"] = attackurl
+                  # error_insert["error"] = error_data
+                  # Kalau error nya Duplicate reference found, update source kalau berbeda:
+                  if 'Duplicate reference found' in error_data:
+                      exisiting_in_conti += 1
+                      update_source(attackurl, idcti, source)
+                  else:
+                      inc_id_new = create_incident_for_domain_group(domain, data)
+              else:
+                  inc_id_new = create_incident_for_domain_group(domain, data)
+                  new_active_entry += 1
+                  # add ID SOAR yg di create
+                  if alertcategory == "Social Media":
+                      res2 = demisto.executeCommand("continental-update-abuse-social-media",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Incident ID in SOAR for this URL: {inc_id_new}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  else:
+                      res2 = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Incident ID in SOAR for this URL: {inc_id_new}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+              # autodismissed for category Others
+              if alertcategory == "Others":
+                  res = demisto.executeCommand(f"continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Alert yang berasal dari {source} dengan Type {attacktype} diluar dari scope Brand Abuse", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+              else:
+                  if index == 0:
+                      first_url = attackurl
+                  else:
+                      if alertcategory == "Social Media":
+                          res = demisto.executeCommand("continental-update-abuse-social-media",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Penanganan temuan ini relate dengan reference {first_url} ", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+                      else:
+                          res = demisto.executeCommand(f"continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Penanganan temuan ini relate dengan reference {first_url} ", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+          return error_insert, encodedimage_data, exisiting_in_conti, new_active_entry
+
+      elif source == "CTM360":
+          first_url = ""
+          # Loop each data from domain group.
+          error_insert = []
+          encodedimage_data = []
+          for index, metadata in enumerate(data):
+              # prepare statement for input insert or update data.
+              attacktype = metadata.get("metadata",{}).get("type")
+              attackurl = metadata.get("url")
+              alertcategory = determine_alertcategory(attacktype)
+              idcti = metadata.get("metadata",{}).get("id")
+              registrar = metadata.get("metadata",{}).get("registrar")
+              ipaddress = metadata.get("metadata",{}).get("ip")
+              addedby = "XSOAR"
+              datesubmitted = metadata.get("metadata",{}).get("created_date")
+              openeddate = convert_date_for_continental(datesubmitted, add_utc_timezone=False, dayfirst=False, fuzzy=True, yearfirst=True)
+              # screenshoturl = metadata.get("metadata",{}).get("screenshots", [])[0].get("filename")
+              # encodedimage = convert_image_base64(source, screenshoturl, idcti)
+
+              screenshoturl = 'null'
+              encodedimage = 'null'
+
+              try:
+                  screenshoturl = metadata.get("metadata",{}).get("screenshots", [])[0].get("filename")
+                  encodedimage = convert_image_base64(source, screenshoturl, idcti)
+              except Exception as e:
+                  pass
+
+              encodedimage_data.append({
+                  'url':attackurl,
+                  'base64_data':encodedimage
+              })
+
+              # Sectioning based on Alert Category.
+              # This code is convert from playbook task P-SMC-BCA-Brand Abuse-01-1.5 to script automation.
+              if alertcategory == "Social Media":
+                  # Apply transformers in sequence.
+                  channel = attackurl
+                  # ExtractInbetween (from: //www., to: .com).
+                  extracted = extract_inbetween(channel, "//www.", ".com")
+                  if extracted != channel:  # If extraction was successful
+                      channel = extracted
+
+                  # ExtractInbetween (from: //, to: .com)
+                  extracted = extract_inbetween(channel, "//", ".com")
+                  if extracted != channel:
+                      channel = extracted
+
+                  # Replace (limit: , replaceWith: x, toReplace: Twitter)
+                  channel = channel.replace("Twitter", "x")
+
+                  # Replace (limit: , replaceWith: Whatsapp, toReplace: api.whatsapp)
+                  channel = channel.replace("api.whatsapp", "Whatsapp")
+
+                  # ExtractInbetween (from: //, to: /)
+                  extracted = extract_inbetween(channel, "//", "/")
+                  if extracted != channel:
+                      channel = extracted
+
+                  # Replace (limit: , replaceWith: Telegram, toReplace: t.me)
+                  channel = channel.replace("t.me", "Telegram")
+                  # Replace (limit: , replaceWith: Telegram, toReplace: t.me)
+                  channel = channel.replace("wa.me", "Whatsapp")
+
+
+                  # Replace transformations attackurl.
+                  attackurl = attackurl.replace('twitter', 'x')
+                  attackurl = attackurl.replace('%40', '@')
+
+                  res = demisto.executeCommand("continental-insert-abuse-social-media",{"channel": channel, "reference":attackurl, "incident_id":idcti, "incident_type":source, "added_by":addedby, "opened_date":openeddate, "encoded_image":encodedimage, "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  res2 = demisto.executeCommand("continental-update-abuse-social-media",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Created by job SOAR id {incident_id_job}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+              elif alertcategory == "Mobile App":
+                  res = demisto.executeCommand("continental-insert-abuse-webapps",{"type_incident": alertcategory, "reference":attackurl, "incident_id":idcti, "incident_type":source, "added_by":addedby, "opened_date":openeddate, "encoded_image":encodedimage, "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  res2 = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Created by job SOAR id {incident_id_job}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+              else:
+                  # alertcategory == Phishing Web & Others
+                  res = demisto.executeCommand("continental-insert-abuse-webapps",{"type_incident": alertcategory, "reference":attackurl, "incident_id":idcti, "registrar":registrar, "ip_address":ipaddress, "incident_type":source, "added_by":addedby, "opened_date":openeddate, "encoded_image":encodedimage, "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  res2 = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Created by job SOAR id {incident_id_job}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+              # Pengecekkan response insert continental.
+              result_value = json.loads(res[0]['Contents'])['result'] if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0] else None
+
+              if result_value == "fail":
+                  error_data = json.loads(res[0]['Contents'])['errors'] if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0] else None
+                  error_insert.append({
+                      'url': attackurl,
+                      'error': error_data
+                  })
+                  # Kalau error nya Duplicate reference found, update source kalau berbeda:
+                  if 'Duplicate reference found' in error_data:
+                      exisiting_in_conti += 1
+                      update_source(attackurl, idcti, source)
+                  else:
+                      inc_id_new = create_incident_for_domain_group(domain, data)
+              else:
+                  new_active_entry += 1
+                  inc_id_new = create_incident_for_domain_group(domain, data)
+                  if alertcategory == "Social Media":
+                      res2 = demisto.executeCommand("continental-update-abuse-social-media",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Incident ID in SOAR for this URL: {inc_id_new}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  else:
+                      res2 = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Incident ID in SOAR for this URL: {inc_id_new}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+              # autodismissed for category Others except Data Leakage (scribd cases).
+              if alertcategory == "Others" and attacktype != "Data Leakage":
+                  res = demisto.executeCommand(f"continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Alert yang berasal dari {source} dengan Type {attacktype} diluar dari scope Brand Abuse", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+              else:
+                  if index == 0:
+                      first_url = attackurl
+                  else:
+                      if alertcategory == "Social Media":
+                          res = demisto.executeCommand("continental-update-abuse-social-media",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Penanganan temuan ini relate dengan reference {first_url} ", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+                      else:
+                          res = demisto.executeCommand(f"continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Penanganan temuan ini relate dengan reference {first_url} ", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+          return error_insert, encodedimage_data, exisiting_in_conti, new_active_entry
+
+      elif source == "GIB":
+          first_url = ""
+          # Loop each data from domain group.
+          error_insert = []
+          encodedimage_data = []
+          for index, metadata in enumerate(data):
+              attacktype = "phishing"
+              attackurl = metadata.get("url")
+              alertcategory = determine_alertcategory(attacktype)
+              metadata_gib = metadata.get("metadata",{})
+              idcti = metadata_gib.get("id")
+              registrar = metadata_gib["phishing"][0]["domain"]["registrar"]
+              ipaddress = metadata_gib["phishing"][0]["ip"]["ip"]
+              addedby = "XSOAR"
+              datesubmitted = metadata_gib["phishing"][0]["date"]["added"]
+              openeddate = convert_date_for_continental(datesubmitted, add_utc_timezone=False, dayfirst=False, fuzzy=True, yearfirst=True)
+
+              screenshoturl = 'null'
+              encodedimage = 'null'
+
+              try:
+                  screenshoturl = metadata_gib["phishing"][0]["screen"]["pageScreen"]["filename"]
+                  encodedimage = convert_image_base64(source, screenshoturl, idcti)
+              except Exception as e:
+                  pass
+
+              encodedimage_data.append({
+                  'url':attackurl,
+                  'base64_data':encodedimage
+              })
+
+              # Insert to Continental and always Phishing Web, because GIB only provide Brand Abuse Phishing Web.
+              res = demisto.executeCommand("continental-insert-abuse-webapps",{"type_incident": alertcategory, "reference":attackurl, "incident_id":idcti, "registrar":registrar, "ip_address":ipaddress, "incident_type":source, "added_by":addedby, "opened_date":openeddate, "encoded_image":encodedimage, "using":"BCA Continental Brand Abuse_instance_SMC"})
+              res2 = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Created by job SOAR id {incident_id_job}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+              # Pengecekkan response insert continental.
+              result_value = json.loads(res[0]['Contents'])['result'] if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0] else None
+
+              if result_value == "fail":
+                  error_data = json.loads(res[0]['Contents'])['errors'] if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0] else None
+                  error_insert.append({
+                      'url': attackurl,
+                      'error': error_data
+                  })
+                  # error_insert["url"] = attackurl
+                  # error_insert["error"] = error_data
+                  # Kalau error nya Duplicate reference found, update source kalau berbeda:
+                  if 'Duplicate reference found' in error_data:
+                      exisiting_in_conti += 1
+                      update_source(attackurl, idcti, source)
+                  else:
+                      inc_id_new = create_incident_for_domain_group(domain, data)
+              else:
+                  new_active_entry += 1
+                  inc_id_new = create_incident_for_domain_group(domain, data)
+                  res2 = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Incident ID in SOAR for this URL: {inc_id_new}", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+              if index == 0:
+                  first_url = attackurl
+              else:
+                  res = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Penanganan temuan ini relate dengan reference {first_url} ", "source":"ISG", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+          return error_insert, encodedimage_data, exisiting_in_conti, new_active_entry
+
+      elif source == "HALOSOCMED" or source == "HALOWEB":
+          first_url = ""
+          # Loop each data from domain group.
+          error_insert = []
+          encodedimage_data = []
+          for index, metadata in enumerate(data):
+              attacktype = "phishing"
+              attackurl = metadata.get("url")
+              addedby = "SOAR"
+              encodedimage = get_screenshot(attackurl) # output Entry ID
+              res = demisto.executeCommand("continental-encoded-attachment-xsoar",{"attachment": encodedimage, "using":"BCA Continental Brand Abuse_instance_SMC"})
+              base64 = res[0].get('EntryContext', {}).get('encoded_attachment') if res and len(res) > 0 else None
+              # print(base64)
+              encodedimage_data.append({
+                  'url':attackurl,
+                  'base64_data':base64
+              })
+
+              # Update Image for HALO Cases.
+              if source == "HALOWEB":
+                  res = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Update Initiate Image using screenshot machine", "attachment":encodedimage, "source":"HALO", "using":"BCA Continental Brand Abuse_instance_SMC"})
+              else:
+                  res = demisto.executeCommand("continental-update-abuse-social-media",{"reference": attackurl, "updated_by":addedby , "action":"update", "notes":f"Update Initiate Image using screenshot machine", "attachment":encodedimage, "source":"HALO", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+              # Pengecekkan response insert continental.
+              result_value = json.loads(res[0]['Contents'])['result'] if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0] else None
+
+              if result_value == "fail":
+                  error_data = json.loads(res[0]['Contents'])['errors'] if res and isinstance(res, list) and len(res) > 0 and 'Contents' in res[0] else None
+                  error_insert.append({
+                      'url': attackurl,
+                      'error': error_data
+                  })
+
+              create_incident_for_domain_group(domain, data)
+
+              if index == 0:
+                  first_url = attackurl
+              else:
+                  if source == "HALOWEB":
+                      res = demisto.executeCommand("continental-update-abuse-webapps",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Penanganan temuan ini relate dengan reference {first_url} ", "source":"HALO", "using":"BCA Continental Brand Abuse_instance_SMC"})
+                  else:
+                      res = demisto.executeCommand("continental-update-abuse-social-media",{"reference": attackurl, "updated_by":addedby , "action":"dismiss", "notes":f"Penanganan temuan ini relate dengan reference {first_url} ", "source":"HALO", "using":"BCA Continental Brand Abuse_instance_SMC"})
+
+          return error_insert, encodedimage_data, exisiting_in_conti, new_active_entry
+
+  def convert_image_base64(source, data, idcti):
+      # Function yang digunakan untuk merubah data gambar dari raw menjadi base64 data.
+      # Netcraft membutuhkan EntryID untuk di rubah ke base64
+      # CTM membutuhkan filename yang berasal dari data CTM untuk di convert ke base64.
+      # GIB membutuhkan filename data juga yang berasal dari data GIB untuk di convert ke base64.
+      if source == "Netcraft":
+          if data and len(data) > 0:
+              res = demisto.executeCommand("continental-download-image-abuse",{"screenshot_url": data, "using":"BCA Continental Brand Abuse_instance_SMC"})
+              encodedimage = res[0].get("EntryContext", {}).get("encoded_image") if res and len(res) > 0 else None
+          else:
+              encodedimage = ""
+          return encodedimage
+      elif source == "CTM360":
+          if data and len(data) > 0:
+              res = demisto.executeCommand("get-ctm-cbs-screenshot",{"ticket_id": idcti, "filename":data, "using":"CTM360 SMC_instance_1"})
+              encodedimage = res[0].get("EntryContext", {}).get("encoded_image") if res and len(res) > 0 else None
+          else:
+              encodedimage = ""
+          return encodedimage
+      elif source == "GIB":
+          if data and len(data) > 0:
+              res = demisto.executeCommand("smc-gib-get-phishing-screenshot",{"id": idcti, "filename":data, "using":"Group IB SMC_instance"})
+              encodedimage = res[0].get("EntryContext", {}).get("encoded_image") if res and len(res) > 0 else None
+          else:
+              encodedimage = ""
+          return encodedimage
+
+      # return
+
+  def convert_date_for_continental(date_string: str, add_utc_timezone: bool = False, dayfirst: bool = False, fuzzy: bool = True, yearfirst: bool = True) -> Optional[str]:
+      # Function yang digunakan untuk convert tanggal agar sesuai dengan format continental.
+      """
+      Convert a date string to ISO 8601 format.
+
+      Args:
+          date_string (str): The date string to convert.
+          add_utc_timezone (bool): Whether to add UTC timezone.
+          dayfirst (bool): Whether to interpret the first value as the day.
+          fuzzy (bool): Whether to allow fuzzy parsing.
+          yearfirst (bool): Whether to interpret the first value as the year.
+
+      Returns:
+          str: The date string in ISO format or None if parsing fails.
+      """
+      if not date_string:
+          return None
+
+      # Configure settings for dateparser
+      settings = {
+          'DATE_ORDER': 'YMD' if yearfirst else ('DMY' if dayfirst else 'MDY'),
+          'FUZZY': fuzzy
+      }
+
+      if add_utc_timezone:
+          settings['TIMEZONE'] = 'UTC'
+
+      # Parse the date
+      parsed_date = dateparser.parse(date_string, settings=settings)
+
+      if not parsed_date:
+          return None
+
+      # Format in ISO 8601
+      if add_utc_timezone:
+          return parsed_date.isoformat()  # Includes timezone
+      else:
+          return parsed_date.strftime('%Y-%m-%dT%H:%M:%S')  # No timezone
+
+  def extract_inbetween(text, start_str, end_str):
+      # Function yang dibuat menyerupai transformer xsoar yang digunakan untuk separate/cut text berdasarkan keyword start string dan end string.
+      """Extract text between two strings"""
+      if not text or not start_str or not end_str:
+          return text
+
+      start_pos = text.find(start_str)
+      if start_pos == -1:
+          return text
+
+      start_pos += len(start_str)
+      end_pos = text.find(end_str, start_pos)
+      if end_pos == -1:
+          return text
+
+      return text[start_pos:end_pos]
+
+  def get_screenshot(url):
+      # Function yang digunakan untuk mendapatkan gambar untuk case HALO dengan memanfaatkan screnshot machine berbayar "Screenshot Machine".
+      res = demisto.executeCommand("screenshot-machine-get-screenshot",{"url":url, "cacheLimit":"0", "delay":"5000", "device":"mobile", "dimension":"800x600", "md5Secret":"continental", "using":"Screenshot Machine_instance_1"})
+      # Get FileID.
+      file_id = res[0].get('FileID')
+
+      # If FileID not exist, try to get from Metadata.
+      if not file_id:
+          file_id = res[0].get('Metadata', {}).get('fileID')
+
+      # Use fileID to get filepath.
+      if file_id:
+          return file_id
+      else:
+          return
+
+      # Open File Path and convert to base64.
+      # with open(file_data, 'rb') as f:
+      #     file_content = f.read()
+      #     base64_content = base64.b64encode(file_content).decode('utf-8')
+
+      # return base64_content
+
+  def update_source(url, idcti, source):
+      if not source == "HALOSOCMED" and not source == 'HALOWEB':
+          # exist_incident_true = [url for url, value in existing_in_incidents.items()]
+          res, query = sql_query(url)
+
+          # Get idcti
+          # if source == "GIB":
+          #     idcti = url_to_metadata[url].get("id")
+          # if source == "Netcraft":
+          #     idcti = url_to_metadata[url].get("id")
+          # if source == "CTM360":
+          #     idcti = url_to_metadata[url].get("id")
+
+          if res:
+              # Kalau tidak ada source di incident_type, add source baru
+              # existing_in_incidents[url] = True
+              if not source.lower() in res[0].get('incident_type').lower():
+                  if 'socmed' in query:
+                      if 'halo' in query:
+                          add_source(url, source, idcti, "HALO", "socmed")
+                      else:
+                          add_source(url, source, idcti, "ISG", "socmed")
+                  if 'webapps' in query:
+                      if 'halo' in query:
+                          add_source(url, source, idcti, "HALO", "webapps")
+                      else:
+                          add_source(url, source, idcti, "ISG", "webapps")
+
+
+  ''' MAIN FUNCTION '''
+
+  def main():
+      try:
+          # 1. Prepare and Mapping Data from input.
+          # Get input.
+          source = demisto.args().get('source')
+          timenetcraft = demisto.args().get('time_check_netcraft_to')
+          incident_id = demisto.args().get('incident_id')
+
+          # Get the array of URLs and metadata from input.
+          if source == "Netcraft":
+              urls_data = demisto.args().get('data',{}).get('Takedown', [])
+          else:
+              urls_data = demisto.args().get('data')
+
+          count_judol = 0
+          urls_to_check_third_party = ""
+          urls_to_process = ""
+          incidents_created = ""
+
+          # check if inputs data is none / no data.
+          if not urls_data:
+              all_urls=""
+              existing_incident=0
+              new_incidents=0
+              count_judol=0
+              total_data_error=0
+              # output_to_context_new(all_urls, urls_to_check_third_party, urls_to_process, incidents_created, total_data_error, source)
+              output_to_context_new(all_urls, existing_incident, new_incidents, total_data_error, count_judol, source)
+              return
+
+          # Parse JSON if it's a string.
+          if isinstance(urls_data, str):
+              try:
+                  urls_data = json.loads(urls_data)
+              except Exception as e:
+                  return_error(f"Failed to parse URLs data JSON: {str(e)}")
+
+          # convert dict to list.
+          # mostly if the data only one, the inputs will be a dict not a list.
+          if isinstance(urls_data, dict):
+              urls_data = [urls_data]
+
+          # Validate urls_data format
+          if not isinstance(urls_data, list):
+              return_error("URLs data must be an array of objects")
+
+          # Extract all URLs for batch processing.
+          all_urls = []
+          url_to_metadata = {}
+
+          # mapping url and metadata from urls_data.
+          for item in urls_data:
+              if source == "Netcraft":
+                  url = item['attack_url']
+              elif source == "CTM360":
+                  url = item["subject"]
+              elif source == "GIB":
+                  if "phishing" in item and isinstance(item["phishing"], list):
+                      for data in item["phishing"]:
+                          if "url" in data:
+                              url = data["url"]
+                          # Process each URL from phishing data
+                          if url:
+                              all_urls.append(url)
+                              # Store the entire item as metadata
+                              url_to_metadata[url] = item
+                      # Skip loop since we've already processed the URLs
+                      continue
+              elif source == "HALOWEB" or source == "HALOSOCMED":
+                  url = item["reference"]
+              else:
+                  return_error("Source cannot be found!")
+
+              if url:
+                  url = trim_trailing_slash(url)
+                  url = requests.utils.unquote(url)
+                  url = standardize_social_urls(url)  # Standarisasi URL sosmed
+
+                  if not cek_judol(url):
+                      all_urls.append(url)
+                      url_to_metadata[url] = item
+                  else:
+                      count_judol += 1
+
+          if not all_urls:
+              output_to_context_new(all_urls, existing_incident, new_incidents, total_data_error, count_judol, source)
+              demisto.results({
+                  'Type': entryTypes['note'],
+                  'ContentsFormat': formats['json'],
+                  'Contents': {"message": "No valid URLs found in input data"},
+                  'HumanReadable': "No valid URLs found in input data"
+              })
+              return
+
+          demisto.results(f"Processing {len(all_urls)} URLs")
+
+
+          # # 2. Check URLs against existing incidents.
+          # demisto.results("Checking URLs in existing incidents XSOAR...")
+          # existing_in_incidents = check_urls_in_incidents(all_urls)
+
+          # ========================================================================================================================== (EDITED)
+          # Menambah source pada Conti untuk yang exisit di incidents:
+          # SQL Query gagal ketika url string menggunakan special char
+          # if not source == "HALOSOCMED" and not source == 'HALOWEB':
+          #     # exist_incident_true = [url for url, value in existing_in_incidents.items()]
+          #     for url in all_urls:
+          #         # Get incident_type di Conti
+          #         res, query = sql_query(url)
+
+          #         # Get idcti
+          #         if source == "GIB":
+          #             idcti = url_to_metadata[url].get("id")
+          #         if source == "Netcraft":
+          #             idcti = url_to_metadata[url].get("id")
+          #         if source == "CTM360":
+          #             idcti = url_to_metadata[url].get("id")
+
+          #         if res:
+          #             # Kalau tidak ada source di incident_type, add source baru
+          #             existing_in_incidents[url] = True
+          #             if not source.lower() in res[0].get('incident_type').lower():
+          #                 if 'socmed' in query:
+          #                     if 'halo' in query:
+          #                         add_source(url, source, idcti, "HALO", "socmed")
+          #                     else:
+          #                         add_source(url, source, idcti, "ISG", "socmed")
+          #                 if 'webapps' in query:
+          #                     if 'halo' in query:
+          #                         add_source(url, source, idcti, "HALO", "webapps")
+          #                     else:
+          #                         add_source(url, source, idcti, "ISG", "webapps")
+
+          # =============================================================================================================================
+
+          # Filter out URLs that already exist in incidents.
+          # urls_to_check_third_party = [url for url in all_urls if not existing_in_incidents.get(url, False)]
+
+          # demisto.results(f"Found {len(all_urls) - len(urls_to_check_third_party)} URLs already in incidents")
+          # demisto.results(f"Proceeding with {len(urls_to_check_third_party)} URLs to check in third-party platform")
+
+          # if not urls_to_check_third_party:
+          #     urls_to_process=""
+          #     incidents_created=""
+          #     total_data_error=0
+          #     output_to_context(all_urls, urls_to_check_third_party, urls_to_process, incidents_created, total_data_error, source)
+          #     demisto.results("All URLs already exist in incidents")
+          #     return
+
+          # 3. Check remaining URLs against third-party platform.
+          # demisto.results("Checking URLs in third-party platform...")
+          # existing_in_third_party = check_urls_in_third_party(urls_to_check_third_party, timenetcraft)
+
+          # Filter out URLs that already exist in third-party platform.
+          # urls_to_process = [url for url in urls_to_check_third_party if not existing_in_third_party.get(url, False)]
+          # urls_to_process = [url for url in urls_to_check_third_party]
+
+          # demisto.results(f"Found {len(urls_to_check_third_party) - len(urls_to_process)} URLs already in third-party platform")
+          # demisto.results(f"Proceeding with {len(urls_to_process)} URLs to create incidents")
+
+          # if not urls_to_process:
+          #     incidents_created=""
+          #     total_data_error=0
+          #     output_to_context(all_urls, urls_to_check_third_party, urls_to_process, incidents_created, total_data_error, source)
+          #     demisto.results("All URLs already exist in incidents or third-party platform")
+          #     return
+
+          # 4. Not Group URLs by domain.
+          domain_groups = {}
+          # prepare exclude domain lists.
+          excluded_domains = [
+              'facebook.com', 'instagram.com', 'youtube.com', 'tiktok.com', 'weibo.com', 'whatsapp.com',
+              'pinterest.com', 'twitter.com', 'x.com', 'linkedin.com', 'olx.co.id', 'vimeo.com', 't.me',
+              'wa.me', 'dailymotion.com', 'aptoide.com', 'scribd.com', 'cake.me', 'apkturbo.com', 'fotografer.net',
+              'threads.com', 'carousell.com', 'arkapk.com', 'apkvk.com', 'apkpure.tools', 'discord.gg', 'reddit.com',
+              'snapchat.com', 'twitch.tv', 'apkamp.com'
+          ]
+
+          for url in all_urls:
+              domain = extract_domain(url)
+
+              if not domain:
+                  demisto.results(f"Could not extract domain from URL: {url}")
+                  continue
+
+              # Check the domain.
+              # if domain in exclude lists, url will be a key in dict.
+              # if domain not in exclude lists, domain will be a key in dict.
+              key = url
+
+              if key not in domain_groups:
+                  domain_groups[key] = []
+
+              domain_groups[key].append({
+                  'url': url,
+                  'metadata': url_to_metadata.get(url, {})
+              })
+
+          # # 4. Group URLs by domain.
+          # domain_groups = {}
+          # # prepare exclude domain lists.
+          # excluded_domains = [
+          #     'facebook.com', 'instagram.com', 'youtube.com', 'tiktok.com', 'weibo.com', 'whatsapp.com',
+          #     'pinterest.com', 'twitter.com', 'x.com', 'linkedin.com', 'olx.co.id', 'vimeo.com', 't.me',
+          #     'wa.me', 'dailymotion.com', 'aptoide.com', 'scribd.com', 'cake.me', 'apkturbo.com', 'fotografer.net',
+          #     'threads.com', 'carousell.com', 'arkapk.com', 'apkvk.com', 'apkpure.tools', 'discord.gg', 'reddit.com',
+          #     'snapchat.com', 'twitch.tv', 'apkamp.com'
+          # ]
+
+          # for url in all_urls:
+          #     domain = extract_domain(url)
+
+          #     if not domain:
+          #         demisto.results(f"Could not extract domain from URL: {url}")
+          #         continue
+
+          #     # Check the domain.
+          #     # if domain in exclude lists, url will be a key in dict.
+          #     # if domain not in exclude lists, domain will be a key in dict.
+          #     if domain in excluded_domains:
+          #         # demisto.results(f"Domain {domain} in exclude list, using full URL as key")
+          #         key = url
+          #     else:
+          #         key = domain
+
+          #     if key not in domain_groups:
+          #         domain_groups[key] = []
+
+          #     domain_groups[key].append({
+          #         'url': url,
+          #         'metadata': url_to_metadata.get(url, {})
+          #     })
+
+          # 5. Insert data and update dismissed automatically for child url on Continental for CTI.
+          #  add on get screenshot and auto update data to continental HALO
+          new_active_entry = 0
+          count_exisiting_in_conti = 0
+          error_data = []
+          if source == "Netcraft" or source == "CTM360" or source == "GIB":
+              error_data = []
+              base64_metadata = []
+              count_data = len(domain_groups)
+              demisto.results(f"Processing Insert And Auto Update Data in Continental for {count_data} domain/url")
+              for domain, data in domain_groups.items():
+                  result_insert, encodedimage, exisiting_in_conti, new_incidents = insert_and_auto_update_continental(domain, data, source, incident_id)
+                  count_exisiting_in_conti += exisiting_in_conti
+                  new_active_entry += new_incidents
+                  if result_insert and len(result_insert) > 1:
+                      for result_data in result_insert:
+                          error_data.append({
+                              'url': result_data.get("url"),
+                              'error': result_data.get("error")
+                          })
+                  elif result_insert and len(result_insert) > 0:
+                      error_data.append({
+                          'url': result_insert[0]["url"],
+                          'error': result_insert[0]["error"]
+                      })
+
+          elif source == "HALOWEB" or source == "HALOSOCMED":
+              count_data = len(domain_groups)
+              base64_metadata = []
+              error_data = []
+              if count_data and len(domain_groups) > 0 :
+                  demisto.results(f"Processing create incident for {count_data} domain/url")
+                  for domain, data in domain_groups.items():
+                      create_incident_for_domain_group(domain, data)
+                      # result_insert, encodedimage, exisiting_in_conti, new_incidents = insert_and_auto_update_continental(domain, data, source)
+                      # count_exisiting_in_conti += exisiting_in_conti
+                      # new_active_entry += new_incidents
+                      # base64_metadata.extend(encodedimage)
+                      # if result_insert and len(result_insert) > 1:
+                      #     for result_data in result_insert:
+                      #         error_data.append({
+                      #             'url': result_data.get("url"),
+                      #             'error': result_data.get("error")
+                      #         })
+                      # elif result_insert and len(result_insert) > 0:
+                      #     error_data.append({
+                      #         'url': result_insert[0]["url"],
+                      #         'error': result_insert[0]["error"]
+                      #     })
+                  # print(base64_metadata)
+
+
+          if error_data:
+              total_data_error = len(error_data)
+              demisto.results(f"There is Error when insert to continental with total {total_data_error} URLs from {source}")
+              demisto.results(f"List Error = {error_data}")
+          else:
+              total_data_error = 0
+
+
+          output_to_context_new(all_urls, count_exisiting_in_conti, new_active_entry, total_data_error, count_judol, source)
+
+      except Exception as e:
+          demisto.error(f"Error in dedup_create_alert script: {str(e)}\n{traceback.format_exc()}")
+          return_error(f"Error in dedup_create_alert script: {str(e)}")
+
+  ''' ENTRY POINT '''
+
+
+  if __name__ in ('__main__', '__builtin__', 'builtins'):
+      main()
+
+scripttarget: 0
+subtype: python3
+tags:
+- AFW
+type: python

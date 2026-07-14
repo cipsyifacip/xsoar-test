@@ -1,0 +1,223 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 081f119f-9de5-47fe-8f1b-f021532e843a
+inputs: []
+name: Timer Validation Demo - Cip
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 4854b451-a396-4d8b-81a0-d1fd5baf3d93
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 4854b451-a396-4d8b-81a0-d1fd5baf3d93
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 210,
+          "y": 10
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 46516691-8710-4910-8413-b266b0290d5c
+      iscommand: false
+      name: Generate Sample Data
+      script: 9e37516d-8902-4b1d-8034-2440414f3f95
+      type: regular
+      version: -1
+    taskid: 46516691-8710-4910-8413-b266b0290d5c
+    timertriggers:
+    - action: start
+      fieldname: testtimercip
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 210,
+          "y": 190
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: f4648c06-d42a-4d07-85b9-65a022d35b82
+      iscommand: false
+      name: Stop
+      type: title
+      version: -1
+    taskid: f4648c06-d42a-4d07-85b9-65a022d35b82
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 220,
+          "y": 620
+        }
+      }
+  "5":
+    continueonerrortype: ""
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "7"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 09bc69fe-75c8-499e-8896-508cd7976e3f
+      iscommand: false
+      name: Stop timer
+      script: 119a9750-4fc0-4cfe-8fc7-bb702a8f84b6
+      type: regular
+      version: -1
+    taskid: 09bc69fe-75c8-499e-8896-508cd7976e3f
+    timertriggers:
+    - action: stop
+      fieldname: testtimercip
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 640,
+          "y": 525
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "5"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: ab837af6-fac4-4a6a-8bb9-cf366196fea3
+      iscommand: false
+      name: Delay 30 detik
+      script: 795528ce-3244-4315-8bfb-ac98245cf4e0
+      type: regular
+      version: -1
+    taskid: ab837af6-fac4-4a6a-8bb9-cf366196fea3
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -90,
+          "y": 410
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "4"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      testingtimerfinal:
+        complex:
+          accessor: totalDuration}
+          root: ${incident.testtimercip
+          transformers:
+          - operator: Stringify
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: Change the properties of an incident
+      id: 56db89fa-b8f6-4b27-83fa-3d376208c5ed
+      iscommand: true
+      name: setIncident
+      script: Builtin|||setIncident
+      type: regular
+      version: -1
+    taskid: 56db89fa-b8f6-4b27-83fa-3d376208c5ed
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 370,
+          "y": 780
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 865,
+        "width": 1110,
+        "x": -90,
+        "y": 10
+      }
+    }
+  }

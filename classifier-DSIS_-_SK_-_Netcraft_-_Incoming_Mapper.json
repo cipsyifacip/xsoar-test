@@ -1,0 +1,120 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "44c2cbc1-e63b-400b-80f3-6f631e8935de",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {},
+	"locked": false,
+	"logicalVersion": 1,
+	"mapping": {
+		"DSIS - SK - Brand_Abuse": {
+			"dontMapEventToLabels": true,
+			"internalMapping": {
+				"Brand Abuse Alert Category": {
+					"complex": {
+						"filters": [],
+						"root": "attack_type",
+						"transformers": [
+							{
+								"operator": "90d117b1-c401-47f7-83f0-866a4d92e470"
+							}
+						]
+					}
+				},
+				"Brand Abuse Attack Type": {
+					"simple": "attack_type"
+				},
+				"Brand Abuse Attack URL": {
+					"complex": {
+						"filters": [],
+						"root": "attack_url",
+						"transformers": [
+							{
+								"args": {
+									"chars": {
+										"isContext": false,
+										"value": {
+											"simple": "/"
+										}
+									}
+								},
+								"operator": "StripChars"
+							},
+							{
+								"operator": "URLDecode"
+							},
+							{
+								"operator": "ca62455e-b19f-45a7-8160-f48e8a1db648"
+							}
+						]
+					}
+				},
+				"Brand Abuse Date Submitted": {
+					"simple": "date_submitted"
+				},
+				"Brand Abuse ID CTI": {
+					"simple": "id"
+				},
+				"Brand Abuse IP Addr": {
+					"simple": "ip"
+				},
+				"Brand Abuse Opened Date": {
+					"complex": {
+						"filters": [],
+						"root": "date_submitted",
+						"transformers": [
+							{
+								"args": {
+									"add_utc_timezone": {
+										"isContext": false
+									},
+									"dayfirst": {
+										"isContext": false,
+										"value": {
+											"simple": "false"
+										}
+									},
+									"fuzzy": {
+										"isContext": false
+									},
+									"yearfirst": {
+										"isContext": false,
+										"value": {
+											"simple": "true"
+										}
+									}
+								},
+								"operator": "DateStringToISOFormat"
+							}
+						]
+					}
+				},
+				"Brand Abuse Registrar": {
+					"simple": "registrar"
+				}
+			}
+		}
+	},
+	"name": "DSIS - SK - Netcraft - Incoming Mapper",
+	"nameRaw": "DSIS - SK - Netcraft - Incoming Mapper",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {},
+	"type": "mapping-incoming",
+	"unclassifiedCases": null,
+	"version": -1
+}

@@ -1,0 +1,1135 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 0bc747a3-ceee-4eb2-8e83-6ee7e0b9d6cc
+inputs: []
+name: SecOps - U1 - IP Reputation Check
+outputs: []
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: cbf741ac-237a-4c92-849b-71fb3bd29c27
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: cbf741ac-237a-4c92-849b-71fb3bd29c27
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+  "1":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: incident.sourceip
+          operator: isNotEmpty
+      label: "yes"
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "15"
+      "yes":
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: af937fc0-69e6-4034-896d-0c48955c435b
+      iscommand: false
+      name: IP is exist?
+      type: condition
+      version: -1
+    taskid: af937fc0-69e6-4034-896d-0c48955c435b
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 190
+        }
+      }
+  "2":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: incident.sourceip
+          operator: IsNotInCidrRanges
+          right:
+            value:
+              simple: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      label: "yes"
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "16"
+      "yes":
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: efa319de-97cd-4e7b-84ef-e122fe587b1f
+      iscommand: false
+      name: IP is not private address?
+      type: condition
+      version: -1
+    taskid: efa319de-97cd-4e7b-84ef-e122fe587b1f
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 240,
+          "y": 360
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "4"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 60db158e-a4e8-484d-8dd2-41179514123e
+      iscommand: false
+      name: Check IP Reputation
+      type: title
+      version: -1
+    taskid: 60db158e-a4e8-484d-8dd2-41179514123e
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 240,
+          "y": 550
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "5"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      ip:
+        simple: ${incident.sourceip}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Anomali ThreatStream v3
+      description: Checks the reputation of the given IP address.
+      id: 7e40c2e0-ac4a-46fa-818b-926831392748
+      iscommand: true
+      name: Check - Anomali
+      script: Anomali ThreatStream v3|||ip
+      type: regular
+      version: -1
+    taskid: 7e40c2e0-ac4a-46fa-818b-926831392748
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 680,
+          "y": 520
+        }
+      }
+  "5":
+    continueonerror: true
+    continueonerrortype: ""
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      ip:
+        simple: ${incident.sourceip}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: SOCRadar IOC Radar
+      description: Check IP reputation (when information is available, returns a JSON
+        with details). Uses all configured Threat Intelligence feeds.
+      id: 522f6a5d-9817-4829-8209-641b107291c5
+      iscommand: true
+      name: Check - SOC Radar
+      script: SOCRadar IOC Radar|||ip
+      type: regular
+      version: -1
+    taskid: 522f6a5d-9817-4829-8209-641b107291c5
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 680,
+          "y": 680
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "20"
+    note: false
+    quietmode: 0
+    reputationcalc: 2
+    scriptarguments:
+      ip:
+        simple: ${incident.sourceip}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the reputation of an IP address.
+      id: e7686b62-681b-4588-85fd-e0d14217f3b6
+      iscommand: true
+      name: Check - Virus Total
+      script: VirusTotal (API v3)|||ip
+      type: regular
+      version: -1
+    taskid: e7686b62-681b-4588-85fd-e0d14217f3b6
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 680,
+          "y": 850
+        }
+      }
+  "7":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore(val.Vendor=="Anomali ThreatStream v3").score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "0"
+        - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore(val.Vendor=="Anomali ThreatStream v3").score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "1"
+      - - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore(val.Vendor=="SOC Radar Automation").score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "0"
+        - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore(val.Vendor=="SOC Radar Automation").score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "0"
+      - - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore(val.Vendor=="VirusTotal (API v3)").score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "2"
+        - left:
+            iscontext: true
+            value:
+              simple: ${DBotScore(val.Vendor=="VirusTotal (API v3)").score}
+          operator: isEqualString
+          right:
+            value:
+              simple: "3"
+      label: "yes"
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "19"
+      "yes":
+      - "8"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: bc5bc1be-93f1-4a09-8e76-a6857cf23bcd
+      iscommand: false
+      name: Manual Review
+      type: condition
+      version: -1
+    taskid: bc5bc1be-93f1-4a09-8e76-a6857cf23bcd
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 240,
+          "y": 930
+        }
+      }
+  "8":
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "9"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: DbotReputation.VirusTotal
+      value:
+        complex:
+          accessor: Score
+          filters:
+          - - left:
+                iscontext: true
+                value:
+                  simple: DBotScore.[].Vendor
+              operator: isEqualString
+              right:
+                value:
+                  simple: VirusTotal(API v3)
+          root: DBotScore.[]
+          transformers:
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Unknown
+              toReplace:
+                value:
+                  simple: "0"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Good
+              toReplace:
+                value:
+                  simple: "1"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Suspicious
+              toReplace:
+                value:
+                  simple: "2"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Bad
+              toReplace:
+                value:
+                  simple: "3"
+            operator: replace
+          - args:
+              index:
+                value:
+                  simple: "0"
+            operator: atIndex
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 4899c65e-008d-49c4-8ee9-d41cc46b9c65
+      iscommand: false
+      name: Set Dbot Reputation VirusTotal
+      script: Set
+      type: regular
+      version: -1
+    taskid: 4899c65e-008d-49c4-8ee9-d41cc46b9c65
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 0,
+          "y": 1110
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "10"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: DbotReputation.SOCRadar
+      value:
+        complex:
+          accessor: Score
+          filters:
+          - - left:
+                iscontext: true
+                value:
+                  simple: DBotScore.[].Vendor
+              operator: isEqualString
+              right:
+                value:
+                  simple: SOC Radar Automation
+          root: DBotScore.[]
+          transformers:
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Unknown
+              toReplace:
+                value:
+                  simple: "0"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Good
+              toReplace:
+                value:
+                  simple: "1"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Suspicious
+              toReplace:
+                value:
+                  simple: "2"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Bad
+              toReplace:
+                value:
+                  simple: "3"
+            operator: replace
+          - args:
+              index:
+                value:
+                  simple: "0"
+            operator: atIndex
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: a70de7c0-c909-4e9f-8ff1-90ffb6833155
+      iscommand: false
+      name: Set Dbot Reputation SOC Radar
+      script: Set
+      type: regular
+      version: -1
+    taskid: a70de7c0-c909-4e9f-8ff1-90ffb6833155
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 0,
+          "y": 1270
+        }
+      }
+  "10":
+    continueonerrortype: ""
+    id: "10"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "11"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: DbotReputation.SOCRadar
+      value:
+        complex:
+          accessor: Score
+          filters:
+          - - left:
+                iscontext: true
+                value:
+                  simple: DBotScore.[].Vendor
+              operator: isEqualString
+              right:
+                value:
+                  simple: SOC Radar Automation
+          root: DBotScore.[]
+          transformers:
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Unknown
+              toReplace:
+                value:
+                  simple: "0"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Good
+              toReplace:
+                value:
+                  simple: "1"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Suspicious
+              toReplace:
+                value:
+                  simple: "2"
+            operator: replace
+          - args:
+              limit: {}
+              replaceWith:
+                value:
+                  simple: Bad
+              toReplace:
+                value:
+                  simple: "3"
+            operator: replace
+          - args:
+              index:
+                value:
+                  simple: "0"
+            operator: atIndex
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 31ff8e3a-10a8-48ff-8e5f-8f41c0c18237
+      iscommand: false
+      name: Set Dbot Reputation SOC Radar
+      script: Set
+      type: regular
+      version: -1
+    taskid: 31ff8e3a-10a8-48ff-8e5f-8f41c0c18237
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 0,
+          "y": 1430
+        }
+      }
+  "11":
+    continueonerrortype: ""
+    id: "11"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body:
+        simple: |-
+          Dear Team,<br><br>
+
+          This IP (${incident.sourceip}) requires manual analysis regarding on the threat intelligence verdicts below:<br><br>
+
+          - Anomali ThreatStream: ${DbotReputation.AnomaliThreatStream}<br>
+          - SOC Radar: ${DbotReputation.SOCRadar}<br>
+          - VirusTotal: ${DbotReputation.VirusTotal}<br><br>
+
+          Please provide your manual verdict by selecting one of the options below, or respond manually through XSOAR if needed.<br><br>
+
+          Thank you for your attention and support<br><br>
+
+          Best regards,  <br>
+          SecOps Team. <br><br>
+
+          Select an option to complete the investigation:
+      cc: null
+      format: ""
+      methods:
+      - email
+      replyOptions:
+      - Bad Mitigate
+      - Good - No Action
+      subject:
+        simple: Manual Review - ${incident.sourceip}
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to:
+        simple: abhy@dinamikasolusi.com,amin.ishaq@dinamikasolusi.com
+    nexttasks:
+      Bad Mitigate:
+      - "12"
+      Good - No Action:
+      - "13"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 4778d9ce-554b-48de-8c3b-26398b6f9748
+      iscommand: false
+      name: Send Email Notification
+      type: condition
+      version: -1
+    taskid: 4778d9ce-554b-48de-8c3b-26398b6f9748
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": -470,
+          "y": 1350
+        }
+      }
+  "12":
+    continueonerrortype: ""
+    id: "12"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "19"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      value:
+        simple: ${incident.sourceip}
+      verdict:
+        simple: Malicious
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.set.indicator
+      id: 517b71be-edf0-4677-8c98-514ac3eed807
+      iscommand: true
+      name: Malicious
+      script: Builtin|||setIndicator
+      type: regular
+      version: -1
+    taskid: 517b71be-edf0-4677-8c98-514ac3eed807
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -900,
+          "y": 1540
+        }
+      }
+  "13":
+    continueonerrortype: ""
+    id: "13"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "17"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      value:
+        simple: ${incident.sourceip}
+      verdict:
+        simple: Benign
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.set.indicator
+      id: 850ca362-d287-49b0-89aa-658c32bdf4d0
+      iscommand: true
+      name: Good
+      script: Builtin|||setIndicator
+      type: regular
+      version: -1
+    taskid: 850ca362-d287-49b0-89aa-658c32bdf4d0
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -470,
+          "y": 1540
+        }
+      }
+  "14":
+    continueonerrortype: ""
+    id: "14"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: cfb4d798-b43b-4326-8f43-8d457baa4480
+      iscommand: false
+      name: End of Playbook
+      type: title
+      version: -1
+    taskid: cfb4d798-b43b-4326-8f43-8d457baa4480
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 240,
+          "y": 2250
+        }
+      }
+  "15":
+    continueonerrortype: ""
+    id: "15"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      closeNotes:
+        simple: no source ip identified
+      id:
+        complex:
+          accessor: id
+          root: incident
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.close.inv
+      id: db3cbb9e-66fc-47f3-8394-bd6cc4c7773b
+      iscommand: true
+      name: Close Incident - No Information
+      script: Builtin|||closeInvestigation
+      type: regular
+      version: -1
+    taskid: db3cbb9e-66fc-47f3-8394-bd6cc4c7773b
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -190,
+          "y": 360
+        }
+      }
+  "16":
+    continueonerrortype: ""
+    id: "16"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      closeNotes:
+        simple: source ip is private address
+      id:
+        complex:
+          accessor: id
+          root: incident
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.close.inv
+      id: 7df4e99d-02f0-4efa-897a-3c312b58c0c5
+      iscommand: true
+      name: Close Incident - Private Address
+      script: Builtin|||closeInvestigation
+      type: regular
+      version: -1
+    taskid: 7df4e99d-02f0-4efa-897a-3c312b58c0c5
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -180,
+          "y": 535
+        }
+      }
+  "17":
+    continueonerrortype: ""
+    id: "17"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "14"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      id:
+        complex:
+          accessor: id
+          root: incident
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.close.inv
+      id: 1780a489-a5f1-4c01-84f0-df94fe819fed
+      iscommand: true
+      name: Close Incident
+      script: Builtin|||closeInvestigation
+      type: regular
+      version: -1
+    taskid: 1780a489-a5f1-4c01-84f0-df94fe819fed
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 230,
+          "y": 1920
+        }
+      }
+  "18":
+    continueonerrortype: ""
+    id: "18"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "17"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      value:
+        simple: ${incident.sourceip}
+      verdict:
+        simple: Benign
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: commands.local.cmd.set.indicator
+      id: b00a3d90-e69a-4080-8ba8-e547e2bd2da9
+      iscommand: true
+      name: Allow Indicator
+      script: Builtin|||setIndicator
+      type: regular
+      version: -1
+    taskid: b00a3d90-e69a-4080-8ba8-e547e2bd2da9
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 690,
+          "y": 1670
+        }
+      }
+  "19":
+    continueonerrortype: ""
+    id: "19"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body:
+        simple: |-
+          Dear Team,<br><br>
+
+          This IP (${incident.sourceip}) requires manual analysis regarding on the threat intelligence verdicts below:<br><br>
+
+          - Anomali ThreatStream: ${DbotReputation.AnomaliThreatStream}<br>
+          - SOC Radar: ${DbotReputation.SOCRadar}<br>
+          - VirusTotal: ${DbotReputation.VirusTotal}<br><br>
+
+          Please provide your manual verdict by selecting one of the options below, or respond manually through XSOAR if needed.<br><br>
+
+          Thank you for your attention and support<br><br>
+
+          Best regards,  <br>
+          SecOps Team. <br><br>
+
+          Select an option to complete the investigation:
+      cc: null
+      format: ""
+      methods:
+      - email
+      replyOptions:
+      - "Yes"
+      - "No"
+      subject:
+        simple: '[XSOAR] Approval of detected indicator'
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to:
+        simple: amin.ishaq@dinamikasolusi.com,abhy@dinamikasolusi.com
+    nexttasks:
+      "No":
+      - "18"
+      "Yes":
+      - "17"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 4a839bc4-956f-4f49-8ed1-12c110cb2e31
+      iscommand: false
+      name: Email approval of indicator
+      type: condition
+      version: -1
+    taskid: 4a839bc4-956f-4f49-8ed1-12c110cb2e31
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 230,
+          "y": 1670
+        }
+      }
+  "20":
+    continueonerrortype: ""
+    id: "20"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "22"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      summaryvirustotal:
+        complex:
+          accessor: Domain
+          root: VirusTotal
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: Change the properties of an incident
+      id: 1d8e7c80-6506-417e-8539-8377d4d85fb9
+      iscommand: true
+      name: setIncident additional Enrichments - VT
+      script: Builtin|||setIncident
+      type: regular
+      version: -1
+    taskid: 1d8e7c80-6506-417e-8539-8377d4d85fb9
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 830,
+          "y": 1040
+        }
+      }
+  "22":
+    continueonerrortype: ""
+    id: "22"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "23"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      summarythreatstream:
+        complex:
+          accessor: IP
+          root: ThreatStream
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: Change the properties of an incident
+      id: 230840f2-62a4-4b59-86d8-60ba3a8304b1
+      iscommand: true
+      name: setIncident additional Enrichments - Threatstream
+      script: Builtin|||setIncident
+      type: regular
+      version: -1
+    taskid: 230840f2-62a4-4b59-86d8-60ba3a8304b1
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 830,
+          "y": 1205
+        }
+      }
+  "23":
+    continueonerrortype: ""
+    id: "23"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "7"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      summarysocradar:
+        complex:
+          accessor: Domain
+          root: SOCRadarIOCRadar
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Builtin
+      description: Change the properties of an incident
+      id: 811626d2-1cf4-4403-80c6-b35a0f5548a5
+      iscommand: true
+      name: setIncident additional Enrichments - SOC Radar
+      script: Builtin|||setIncident
+      type: regular
+      version: -1
+    taskid: 811626d2-1cf4-4403-80c6-b35a0f5548a5
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 830,
+          "y": 1375
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {
+      "19_17_Yes": 0.45,
+      "19_18_No": 0.18,
+      "2_3_yes": 0.44
+    },
+    "paper": {
+      "dimensions": {
+        "height": 2265,
+        "width": 2110,
+        "x": -900,
+        "y": 50
+      }
+    }
+  }

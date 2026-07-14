@@ -1,0 +1,36 @@
+commonfields:
+  id: 0ecc7176-0072-4e01-8a3f-f20d282144a0
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.10404775
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: TestFilterData-Cip
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  data = demisto.args().get("data", [])
+
+  hasil = []
+
+  for item in data:
+      if item["value"] >= 50:
+          hasil.append(item)
+
+  return_results(hasil)
+scripttarget: 0
+subtype: python3
+tags: []
+type: python

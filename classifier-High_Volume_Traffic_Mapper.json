@@ -1,0 +1,85 @@
+{
+	"brands": null,
+	"cacheVersn": 0,
+	"defaultIncidentType": "",
+	"definitionId": "",
+	"description": "",
+	"feed": false,
+	"fromServerVersion": "",
+	"id": "5a2a1218-1aa6-490e-8742-09b0aa341137",
+	"incidentSamples": null,
+	"indicatorSamples": null,
+	"instanceIds": null,
+	"itemVersion": "",
+	"keyTypeMap": {},
+	"locked": false,
+	"logicalVersion": 1,
+	"mapping": {
+		"dbot_classification_incident_type_all": {
+			"dontMapEventToLabels": false,
+			"internalMapping": {
+				"App": {
+					"complex": {
+						"filters": [],
+						"root": "app",
+						"transformers": []
+					}
+				},
+				"Count": {
+					"simple": "count"
+				},
+				"Destination IP": {
+					"simple": "dstip"
+				},
+				"File Size": {
+					"simple": "total_bytes"
+				},
+				"Policy Actions": {
+					"simple": "action"
+				},
+				"Source IP": {
+					"simple": "srcip"
+				},
+				"Tags": {
+					"complex": {
+						"accessor": "[0]",
+						"filters": [],
+						"root": "mirror_tags",
+						"transformers": []
+					}
+				},
+				"Total Bytes": {
+					"complex": {
+						"filters": [],
+						"root": "total_bytes",
+						"transformers": []
+					}
+				},
+				"severity": {
+					"complex": {
+						"filters": [],
+						"root": "severity",
+						"transformers": []
+					}
+				},
+				"sourceInstance": {
+					"simple": "mirror_instance"
+				}
+			}
+		}
+	},
+	"name": "High Volume Traffic Mapper",
+	"nameRaw": "High Volume Traffic Mapper",
+	"packID": "",
+	"packName": "",
+	"propagationLabels": [
+		"all"
+	],
+	"sourceClassifierId": "",
+	"system": false,
+	"toServerVersion": "",
+	"transformer": {},
+	"type": "mapping-incoming",
+	"unclassifiedCases": null,
+	"version": -1
+}

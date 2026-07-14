@@ -1,0 +1,200 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 40e7929e-14a7-474c-81eb-18e66802c539
+inputs: []
+name: Check Log
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 0dbb3bc7-f987-42db-87db-522dca303954
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 0dbb3bc7-f987-42db-87db-522dca303954
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "4"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      Log_File:
+        simple: ${File.[1].Name}
+      entry_id:
+        simple: ${File.[2]EntryID}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Check Log againt keywords
+      id: a603fdd2-414e-427e-8c46-27bf5b0847b8
+      iscommand: false
+      name: Check Log
+      script: 17ccc1da-d1bd-4671-8954-791d05a19820
+      type: regular
+      version: -1
+    taskid: a603fdd2-414e-427e-8c46-27bf5b0847b8
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 350
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    form:
+      description: ""
+      expired: false
+      questions:
+      - defaultrows: []
+        fieldassociated: ""
+        gridcolumns: []
+        id: "0"
+        label: ""
+        labelarg:
+          simple: Input file
+        options: []
+        optionsarg: []
+        placeholder: ""
+        readonly: false
+        required: false
+        tooltip: ""
+        type: attachments
+      sender: ""
+      title: Inut
+      totalanswers: 0
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body: null
+      cc: null
+      format: ""
+      methods: []
+      subject: null
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to: null
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 0391dd8e-fada-4478-8293-7c25c3d56053
+      iscommand: false
+      name: Input
+      type: collection
+      version: -1
+    taskid: 0391dd8e-fada-4478-8293-7c25c3d56053
+    timertriggers: []
+    type: collection
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 180
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      body:
+        simple: ${LogAnalysis.summary}
+      bodyType:
+        simple: Text
+      subject:
+        simple: TESSSTTT
+      to:
+        simple: mazayasatrio123@gmail.com
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Send an email.
+      id: addd2e77-9296-471c-8c69-2ffcdafb8441
+      iscommand: true
+      name: Send Email
+      script: '|||send-mail'
+      type: regular
+      version: -1
+    taskid: addd2e77-9296-471c-8c69-2ffcdafb8441
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 530
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 575,
+        "width": 380,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }

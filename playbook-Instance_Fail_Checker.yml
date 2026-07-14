@@ -1,0 +1,93 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 040d660f-65df-4d77-80e3-9be4644f15e6
+inputs: []
+name: Instance Fail Checker
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 0f65c6a2-1bcb-4364-8574-bd0ad9d896fd
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 0f65c6a2-1bcb-4364-8574-bd0ad9d896fd
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      instance_name:
+        simple: DSIS - SK_instance_HO
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Executes a test for all integration instances available and returns
+        detailed information about succeeded and failed integration instances.
+      id: aceea693-d35e-4508-8096-ebe03b1ec9b3
+      iscommand: false
+      name: FailedInstances_Specific
+      script: e2909797-da52-4e8f-8cc1-c5aef61e8838
+      type: regular
+      version: -1
+    taskid: aceea693-d35e-4508-8096-ebe03b1ec9b3
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 230
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 275,
+        "width": 380,
+        "x": 450,
+        "y": 50
+      }
+    }
+  }

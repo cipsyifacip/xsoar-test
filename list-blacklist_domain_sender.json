@@ -1,0 +1,28 @@
+{
+	"allRead": true,
+	"allReadWrite": true,
+	"cacheVersn": 0,
+	"data": "rnicrosoft.com,cryptotothemoon.com,cryptotothemoon.com,1787973888.5520922.1772358630119@sjmktmail-trigger1i.marketo.org,furycube.com,rnicrosoft.com,rnicrosoft.com,malicious-domain.biz,furycube.com",
+	"definitionId": "",
+	"description": "",
+	"detached": false,
+	"fromServerVersion": "",
+	"id": "blacklist_domain_sender",
+	"itemVersion": "",
+	"locked": false,
+	"name": "blacklist_domain_sender",
+	"nameLocked": false,
+	"packID": "",
+	"packName": "",
+	"previousAllRead": true,
+	"previousAllReadWrite": true,
+	"propagationLabels": [
+		"all"
+	],
+	"system": false,
+	"tags": null,
+	"toServerVersion": "",
+	"truncated": false,
+	"type": "plain_text",
+	"version": -1
+}

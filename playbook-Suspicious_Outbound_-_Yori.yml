@@ -1,0 +1,154 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 26ed113b-c980-4abf-8445-6a864a38cc49
+inputs: []
+name: Suspicious Outbound - Yori
+outputs: []
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 9f320469-f2fa-4db2-8ec1-47a00505b638
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 9f320469-f2fa-4db2-8ec1-47a00505b638
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      ip:
+        simple: ${incident.destinationip}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the reputation of an IP address.
+      id: 43277a18-4a8e-49ba-8069-cecdb46175a2
+      iscommand: true
+      name: ip
+      script: VirusTotal (API v3)|||ip
+      type: regular
+      version: -1
+    taskid: 43277a18-4a8e-49ba-8069-cecdb46175a2
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 230,
+          "y": 400
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+      - "4"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 3b9691a2-97ef-423a-82e3-cec5df3b1611
+      iscommand: false
+      name: Checking IP
+      type: title
+      version: -1
+    taskid: 3b9691a2-97ef-423a-82e3-cec5df3b1611
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 190
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      ip:
+        simple: ${incident.destinationip}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: AbuseIPDB
+      description: Checks the specified IP address against the AbuseIP database.
+      id: 59ae3c0b-7957-4cae-84ba-66cafcc39815
+      iscommand: true
+      name: ip
+      script: AbuseIPDB|||ip
+      type: regular
+      version: -1
+    taskid: 59ae3c0b-7957-4cae-84ba-66cafcc39815
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -170,
+          "y": 400
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 445,
+        "width": 780,
+        "x": -170,
+        "y": 50
+      }
+    }
+  }
