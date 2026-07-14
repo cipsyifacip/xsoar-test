@@ -1,0 +1,344 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: d8608fd6-29c4-4c3e-8cce-7964f98f3339
+inputs:
+- description: ""
+  key: domain
+  playbookInputQuery: null
+  required: false
+  value: {}
+name: Lab-Ivan-SearchIndicator
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: dac58811-d6f3-48f8-84be-4d967bf3a300
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: dac58811-d6f3-48f8-84be-4d967bf3a300
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "9"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      query:
+        simple: type:domain and value:${inputs.domain}
+      retry-count:
+        simple: "0"
+      size:
+        simple: "100"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: |-
+        Searches Cortex XSOAR Indicators.
+
+        Search for XSOAR Indicators and returns the id, indicator_type, value, and score/verdict.
+
+        You can add additional fields from the indicators using the add_field_to_context argument.
+      id: a65b08fc-46d3-4131-815b-c1fec303dd65
+      iscommand: false
+      name: SearchIndicator
+      script: SearchIndicator
+      type: regular
+      version: -1
+    taskid: a65b08fc-46d3-4131-815b-c1fec303dd65
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 195
+        }
+      }
+  "2":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: ${foundIndicators}
+          operator: isExists
+          right:
+            value: {}
+      label: Found
+    - condition:
+      - - left:
+            value:
+              simple: ${foundIndicators}
+          operator: isEmpty
+      label: testNotFound
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "7"
+      Found:
+      - "3"
+      testNotFound:
+      - "8"
+    note: false
+    quietmode: 2
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 938f0472-372e-40aa-8106-635e0f1dd4ef
+      iscommand: false
+      name: Is indicator found?
+      type: condition
+      version: -1
+    taskid: 938f0472-372e-40aa-8106-635e0f1dd4ef
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 370
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 2
+    scriptarguments:
+      append:
+        simple: "true"
+      key:
+        simple: Found
+      stringify:
+        simple: "false"
+      value:
+        simple: ${foundIndicators}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: f6b66060-4563-4e31-86d4-db57924be251
+      iscommand: false
+      name: Set Found
+      script: Set
+      type: regular
+      version: -1
+    taskid: f6b66060-4563-4e31-86d4-db57924be251
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 545
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: d6ac25b6-f8fa-42be-8200-b21f5089fe84
+      iscommand: false
+      name: Complete
+      type: title
+      version: -1
+    taskid: d6ac25b6-f8fa-42be-8200-b21f5089fe84
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 265,
+          "y": 720
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 2
+    scriptarguments:
+      append:
+        simple: "true"
+      key:
+        simple: notFound
+      stringify:
+        simple: "true"
+      value:
+        simple: ${inputs.domain}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 3667e804-d1c6-4510-8d79-45d749c7c7f3
+      iscommand: false
+      name: Not Found
+      script: Set
+      type: regular
+      version: -1
+    taskid: 3667e804-d1c6-4510-8d79-45d749c7c7f3
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 480,
+          "y": 545
+        }
+      }
+  "8":
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 2
+    scriptarguments:
+      append:
+        simple: "true"
+      key:
+        simple: testNotFound
+      stringify:
+        simple: "true"
+      value:
+        simple: ${inputs.domain}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 037a78d2-8029-4b88-8238-9b33a539eb3c
+      iscommand: false
+      name: Not Found
+      script: Set
+      type: regular
+      version: -1
+    taskid: 037a78d2-8029-4b88-8238-9b33a539eb3c
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 910,
+          "y": 545
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    loop:
+      exitCondition: ""
+      iscommand: false
+      max: 100
+      wait: 1
+    note: false
+    quietmode: 0
+    scriptarguments:
+      subsubplaybook:
+        simple: ${subplaybook-3.foundIndicators}
+    separatecontext: true
+    skipunavailable: false
+    task:
+      brand: ""
+      id: b81ba7c6-be09-4616-84d0-25fa8f4de331
+      iscommand: false
+      name: Lab-Ivan-SeparateValue
+      playbookId: ca550573-de48-4c0c-8b60-bf6d7d9e6ade
+      type: playbook
+      version: -1
+    taskid: b81ba7c6-be09-4616-84d0-25fa8f4de331
+    timertriggers: []
+    type: playbook
+    view: |-
+      {
+        "position": {
+          "x": 970,
+          "y": 290
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {
+      "2_3_Found": 0.57
+    },
+    "paper": {
+      "dimensions": {
+        "height": 735,
+        "width": 1300,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
