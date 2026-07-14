@@ -1,0 +1,107 @@
+args:
+- description: Duration in seconds (int or string) to convert to Dd Hh Mm Ss format
+  name: value
+  required: true
+commonfields:
+  id: 5424e7fd-6db6-4c5b-8740-87fd18568bfa
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.10404775
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: DurationFormatter
+outputs:
+- contextPath: FormattedDuration
+  description: Formatted duration string
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import traceback
+
+
+  def seconds_to_duration_string(value):
+      """
+      Convert a value (int or numeric string) representing seconds
+      into a formatted string like '01d 13h 23m 31s'.
+      If days == 0, the day portion is omitted, e.g. '00h 00m 10s'.
+      Handles cases where the value might be a string or int.
+      """
+      if value is None:
+          raise ValueError("Input value is empty/None - cannot convert.")
+
+      if isinstance(value, str):
+          value = value.strip()
+          if value == "":
+              raise ValueError("Input value is an empty string - cannot convert.")
+          try:
+              total_seconds = int(float(value))  # handles "10", "10.0", " 10 "
+          except ValueError:
+              raise ValueError("Input value '{}' is not a valid number.".format(value))
+      elif isinstance(value, (int, float)):
+          total_seconds = int(value)
+      else:
+          raise ValueError("Input value has unsupported type: {}".format(type(value)))
+
+      if total_seconds < 0:
+          raise ValueError("Input value cannot be negative: {}".format(total_seconds))
+
+      days, remainder = divmod(total_seconds, 86400)
+      hours, remainder = divmod(remainder, 3600)
+      minutes, seconds = divmod(remainder, 60)
+
+      if days > 0:
+          return "{:02d}d {:02d}h {:02d}m {:02d}s".format(days, hours, minutes, seconds)
+      else:
+          return "{:02d}h {:02d}m {:02d}s".format(hours, minutes, seconds)
+
+
+  def main():
+      try:
+          args = demisto.args()
+          raw_value = args.get("value")
+
+          formatted_duration = seconds_to_duration_string(raw_value)
+
+          # Write back to the incident field
+          res = demisto.executeCommand(
+              "setIncident",
+              {"testingtimerfinal": formatted_duration}
+          )
+
+          if isError(res):
+              return_error(
+                  "Failed to set TestingTimerFinal field: {}".format(get_error(res))
+              )
+
+          # Return formatted output to context + War Room
+          return_results(CommandResults(
+              outputs_prefix="FormattedDuration",
+              outputs=formatted_duration,
+              readable_output="Converted duration: **{}**".format(formatted_duration),
+              raw_response=formatted_duration
+          ))
+
+      except Exception as e:
+          return_error(
+              "Failed to run script. Error: {}\n{}".format(str(e), traceback.format_exc())
+          )
+
+
+  if __name__ in ("__main__", "__builtin__", "builtins"):
+      main()
+scripttarget: 0
+subtype: python3
+tags: []
+type: python
