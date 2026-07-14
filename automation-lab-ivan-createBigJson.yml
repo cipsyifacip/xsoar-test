@@ -1,0 +1,95 @@
+args:
+- defaultValue: "10"
+  name: size_gb
+  required: true
+commonfields:
+  id: 2e8d14e4-d495-41e9-8b3f-a739e7b4a8d5
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.7444307
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: lab-ivan-createBigJson
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import json
+
+  def generate_huge_json(target_size_gb):
+      filename = "massive_data.json"
+      # Convert GB to bytes
+      target_bytes = target_size_gb * 1024 * 1024 * 1024
+      current_size = 0
+
+      sample_record = {
+          "id": 1000,
+          "name": "Jane Doe",
+          "email": "janedoe@example.com",
+          "bio": "Data generation for SecOps policy testing " * 10,
+          "active": True,
+          "tags": ["xsoar", "automation", "test-data"]
+      }
+
+      # We write to the local execution path first
+      with open(filename, 'w') as f:
+          f.write('[\n')
+          while current_size < target_bytes:
+              json_str = json.dumps(sample_record) + ',\n'
+              f.write(json_str)
+              current_size += len(json_str)
+
+          f.seek(f.tell() - 2, os.SEEK_SET)
+          f.write('\n]')
+
+      return filename
+
+  def main():
+      try:
+          # Get size from arguments, default to 10GB
+          args = demisto.args()
+          size_gb = int(args.get('size_gb', 10))
+
+          # 1. Generate the file
+          file_path = generate_huge_json(size_gb)
+
+          # 2. Use fileResult to put it in the War Room/Artifacts
+          with open(file_path, 'rb') as f:
+              file_data = f.read()
+              demisto.results(fileResult(file_path, file_data))
+
+          # 3. Output metadata to Context (NOT the file content)
+          context_output = {
+              "BigFile": {
+                  "Filename": file_path,
+                  "SizeGB": size_gb,
+                  "Status": "Generated and uploaded to War Room"
+              }
+          }
+
+          return_results(CommandResults(
+              readable_output=f"Successfully generated {size_gb}GB JSON file.",
+              outputs_prefix="GeneratedData",
+              outputs=context_output
+          ))
+
+      except Exception as e:
+          return_error(f"Failed to generate file: {str(e)}")
+
+  if __name__ in ('__main__', '__builtin__', 'builtins'):
+      main()
+scripttarget: 0
+subtype: python3
+tags: []
+type: python
