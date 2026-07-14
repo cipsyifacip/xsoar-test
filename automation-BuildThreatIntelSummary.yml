@@ -1,0 +1,76 @@
+commonfields:
+  id: adb0e86c-d59a-40da-8d50-46dc08865df2
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.12.13.7444307
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: BuildThreatIntelSummary
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: |-
+  import json
+
+  soc = demisto.context().get("SOCRadarIOC", {})
+  vt = demisto.context().get("VirusTotal", {})
+  ts = demisto.context().get("ThreatStream", {})
+
+  summary = "## Threat Intelligence Enrichment\n\n"
+
+  # SOC Radar
+  try:
+      country = soc.get("IP", {}).get("Geo", {}).get("Country", "N/A")
+      asn = soc.get("IP", {}).get("ASOwner", "N/A")
+
+      summary += "### SOC Radar\n"
+      summary += f"Country: {country}\n"
+      summary += f"ASN: {asn}\n\n"
+  except:
+      pass
+
+  # VirusTotal
+  try:
+      country = vt.get("IP", {}).get("Country", "N/A")
+      asn = vt.get("IP", {}).get("ASN", "N/A")
+
+      summary += "### VirusTotal\n"
+      summary += f"Country: {country}\n"
+      summary += f"ASN: {asn}\n\n"
+  except:
+      pass
+
+  # ThreatStream
+  try:
+      country = ts.get("IP", {}).get("GeoLocation", "N/A")
+      asn = ts.get("IP", {}).get("ASN", "N/A")
+
+      summary += "### ThreatStream\n"
+      summary += f"Country: {country}\n"
+      summary += f"ASN: {asn}\n\n"
+  except:
+      pass
+
+  demisto.results({
+      "Type": entryTypes["note"],
+      "ContentsFormat": formats["markdown"],
+      "Contents": summary,
+      "EntryContext": {
+          "EnrichmentSummary": summary
+      }
+  })
+scripttarget: 0
+subtype: python3
+tags: []
+type: python
