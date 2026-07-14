@@ -1,0 +1,479 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: 96b27766-4e10-4fc9-82ae-7dcc14ea98f2
+inputs: []
+name: Check PDF and log
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: b06498f2-ee6c-4c48-8e8b-ccf3df5e4400
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: b06498f2-ee6c-4c48-8e8b-ccf3df5e4400
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 50
+        }
+      }
+  "1":
+    continueonerrortype: ""
+    form:
+      description: ""
+      expired: false
+      questions:
+      - defaultrows: []
+        fieldassociated: ""
+        gridcolumns: []
+        id: "0"
+        label: ""
+        labelarg:
+          simple: Insert the PDF file
+        options: []
+        optionsarg: []
+        placeholder: ""
+        readonly: false
+        required: false
+        tooltip: insert it here!
+        type: attachments
+      sender: Your SOC team
+      title: Insert File
+      totalanswers: 0
+    formDisplay:
+      bodybackgroundcolor: ""
+      bodyfontcolor: ""
+      headerbackgroundcolor: ""
+      headerfontcolor: ""
+      isexternalrtl: false
+      sender: ""
+      submitbuttonbackgroundcolor: ""
+      submitbuttonfontcolor: ""
+      submittext: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    message:
+      bcc: null
+      body: null
+      cc: null
+      format: ""
+      methods: []
+      subject: null
+      timings:
+        completeafterreplies: 1
+        completeaftersla: false
+        completeafterv2: true
+        retriescount: 2
+        retriesinterval: 360
+      to: null
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 5a8ef436-58a1-4c12-836f-a5961a3da347
+      iscommand: false
+      name: Input File
+      type: collection
+      version: -1
+    taskid: 5a8ef436-58a1-4c12-836f-a5961a3da347
+    timertriggers: []
+    type: collection
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 220
+        }
+      }
+  "2":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: File.Extension
+          operator: isEqualString
+          right:
+            value:
+              simple: pdf
+      label: "yes"
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: File.Extension
+          operator: isEqualString
+          right:
+            value:
+              simple: txt
+      label: If txt
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      If txt:
+      - "10"
+      "yes":
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: db92ad20-ec26-4e1e-8619-26ae7b283327
+      iscommand: false
+      name: Check if pdf or txt
+      type: condition
+      version: -1
+    taskid: db92ad20-ec26-4e1e-8619-26ae7b283327
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 450,
+          "y": 390
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "4"
+      - "5"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      File_EntryID:
+        simple: ${File.EntryID}
+      file_id:
+        simple: ${File.[1].EntryID}
+      file_name:
+        simple: ${File.EntryID}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 29d8f638-fb30-4439-8d25-ea99aa31b37c
+      iscommand: false
+      name: ParsePDF
+      script: 783b0aa4-4de3-4a34-8225-9bad673df5b5
+      type: regular
+      version: -1
+    taskid: 29d8f638-fb30-4439-8d25-ea99aa31b37c
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1090,
+          "y": 530
+        }
+      }
+  "4":
+    continueonerrortype: ""
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "8"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      extended_data:
+        simple: "false"
+      url:
+        simple: ${PDFParser.URL}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the reputation of a URL.
+      id: 244724c3-5821-44ae-824e-ba7f0cfac0ef
+      iscommand: true
+      name: Check URLs
+      script: VirusTotal (API v3)|||url
+      type: regular
+      version: -1
+    taskid: 244724c3-5821-44ae-824e-ba7f0cfac0ef
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1380,
+          "y": 710
+        }
+      }
+  "5":
+    continueonerrortype: ""
+    fieldMapping:
+    - incidentfield: ip
+      output:
+        simple: ${IP.Address}
+    id: "5"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "8"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      extended_data:
+        simple: "false"
+      ip:
+        simple: ${PDFParser.IP}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: VirusTotal (API v3)
+      description: Checks the reputation of an IP address.
+      id: 2e44f501-4be9-4b14-83bc-620373c15d76
+      iscommand: true
+      name: Check IPs
+      script: VirusTotal (API v3)|||ip
+      type: regular
+      version: -1
+    taskid: 2e44f501-4be9-4b14-83bc-620373c15d76
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 870,
+          "y": 710
+        }
+      }
+  "6":
+    continueonerrortype: ""
+    id: "6"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "9"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      bodyType:
+        simple: HTML
+      htmlBody:
+        simple: "<h3>\U0001F50E Analysis Report (With Location)</h3>\n<p><strong>File:</strong>
+          ${File.Name}</p>\n\n<hr>\n\n<h4>\U0001F30D Clean IPs & Locations</h4>\n<ul>\n
+          \   <li>\n        <strong>${IP.(val.Address + ' -- ' + val.Geo.Country)}</strong>\n
+          \   </li>\n</ul>\n\n<hr>\n\n<h4>\U0001F9A0 Malicious Findings (Score 1)</h4>\n<ul>\n
+          \   <li>${DBotScore(val.Score==1).Indicator}</li>\n</ul>\n\n<p><em>Generated
+          by Cortex XSOAR</em></p>\n"
+      subject:
+        simple: TEST HTML
+      to:
+        simple: mazayasatrio123@gmail.com
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Mail Sender (New)
+      description: Send an email.
+      id: e90e1dc2-6d1a-4476-89dc-d3e8dad68d8d
+      iscommand: true
+      name: Send Email
+      script: Mail Sender (New)|||send-mail
+      type: regular
+      version: -1
+    taskid: e90e1dc2-6d1a-4476-89dc-d3e8dad68d8d
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1140,
+          "y": 1230
+        }
+      }
+  "7":
+    continueonerrortype: ""
+    id: "7"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      value:
+        simple: ${IP.Address}${IP.Malicious.Vendor}${IP.Malicious.Description}${DBotScore.Indicator}${DBotScore.Score}${VirusTotal.IP.attributes.whois}${VirusTotal.IP.attributes.last_analysis_stats}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Prints text to war room (Markdown supported)
+      id: 19f437da-0956-47a4-82dd-f2df09ce747c
+      iscommand: false
+      name: Printer
+      script: Print
+      type: regular
+      version: -1
+    taskid: 19f437da-0956-47a4-82dd-f2df09ce747c
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1780,
+          "y": 550
+        }
+      }
+  "8":
+    continueonerrortype: ""
+    id: "8"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "6"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      seconds:
+        simple: "5"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Sleep for X seconds.
+      id: 44ad9257-2850-4cad-801b-1cefa071981d
+      iscommand: false
+      name: Sleep
+      script: Sleep
+      type: regular
+      version: -1
+    taskid: 44ad9257-2850-4cad-801b-1cefa071981d
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1140,
+          "y": 980
+        }
+      }
+  "9":
+    continueonerrortype: ""
+    id: "9"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 84211266-d5e4-45b2-8b97-b811746b57ca
+      iscommand: false
+      name: End
+      tags:
+      - End
+      type: title
+      version: -1
+    taskid: 84211266-d5e4-45b2-8b97-b811746b57ca
+    timertriggers: []
+    type: title
+    view: |-
+      {
+        "position": {
+          "x": 1140,
+          "y": 1400
+        }
+      }
+  "10":
+    continueonerrortype: ""
+    id: "10"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      entry_id:
+        simple: ${File.[1].EntryID}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Check Log againt keywords
+      id: e0cd72aa-74fe-44fb-89d1-9b19bc412d9b
+      iscommand: false
+      name: Check Log
+      script: 17ccc1da-d1bd-4671-8954-791d05a19820
+      type: regular
+      version: -1
+    taskid: e0cd72aa-74fe-44fb-89d1-9b19bc412d9b
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 20,
+          "y": 560
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 1415,
+        "width": 2140,
+        "x": 20,
+        "y": 50
+      }
+    }
+  }
