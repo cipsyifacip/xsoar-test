@@ -1,0 +1,103 @@
+args:
+- description: the input url
+  name: value
+  required: true
+commonfields:
+  id: 8d6f4fd3-5d87-4272-891c-955ad258f6a2
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.9.7.24076
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: URLparsed_no_ouput
+outputs:
+- contextPath: ParsedURL_Netloc
+  type: string
+pswd: ""
+runas: DBotWeakRole
+runonce: true
+script: |-
+  from urllib.parse import urlparse
+
+  def checkplatform(domain):
+      """Normalizes the base URL based on the identified domain."""
+      if any(name in domain for name in ['facebook.com', 'fb.com', 'fb.me']):
+          return "https://www.facebook.com"
+      elif any(name in domain for name in ['t.me', 'telegram.me', 'telegram.org']):
+          return "https://t.me"
+      elif any(name in domain for name in ['tiktok.com', 'tiktok', 'douyincom']):
+          return "https://www.tiktok.com"
+      elif any(name in domain for name in ['whatsapp.com', 'wa.me']):
+          return "https://wa.me"
+      elif any(name in domain for name in ['pinterest.', 'pin.it']):
+          return "https://www.pinterest.com"
+      elif any(name in domain for name in ['twitter.com', 'x.com', 't.co']):
+          return "https://x.com"
+      elif any(name in domain for name in ['linkedin.com', 'lnkd.in']):
+          return "https://www.linkedin.com"
+
+      # Return original protocol + domain if no match
+      return None
+
+  def transform_url(url_string):
+      """Parses a single URL string and applies platform logic."""
+      if not isinstance(url_string, str):
+          return url_string
+
+      parsed_url = urlparse(url_string)
+      domain = parsed_url.netloc.lower()
+      path = parsed_url.path
+      query = f"?{parsed_url.query}" if parsed_url.query else ""
+
+      base_normalized = checkplatform(domain)
+
+      if base_normalized:
+          return base_normalized + path + query
+      return url_string
+
+  def main():
+      # Fetch the argument
+      raw_value = demisto.args().get("value")
+
+      # Standardize input into a list so we can loop over it
+      if not isinstance(raw_value, list):
+          items = [raw_value]
+      else:
+          items = raw_value
+
+      results = []
+
+      for item in items:
+          # Check if item is the dict format: {'DecodedURL': '...'}
+          if isinstance(item, dict) and 'DecodedURL' in item:
+              url_to_process = item.get('DecodedURL')
+              results.append(transform_url(url_to_process))
+          # If it's just a raw string
+          elif isinstance(item, str):
+              results.append(transform_url(item))
+          else:
+              # Fallback for unexpected types
+              results.append(item)
+
+      # If only one result, return as string; otherwise return the list
+      output = results[0] if len(results) == 1 else results
+      demisto.results(output)
+
+  if __name__ == "__builtin__" or __name__ == "builtins":
+      main()
+scripttarget: 0
+subtype: python3
+tags:
+- transformer
+type: python
