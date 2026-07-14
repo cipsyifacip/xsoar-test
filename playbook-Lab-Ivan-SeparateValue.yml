@@ -1,0 +1,180 @@
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+id: ca550573-de48-4c0c-8b60-bf6d7d9e6ade
+inputs:
+- description: ""
+  key: subsubplaybook
+  playbookInputQuery: null
+  required: false
+  value: {}
+name: Lab-Ivan-SeparateValue
+outputs: []
+quiet: true
+starttaskid: "0"
+tasks:
+  "0":
+    continueonerrortype: ""
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 1d631b37-a365-47a6-8c26-2122fb45d8c0
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: 1d631b37-a365-47a6-8c26-2122fb45d8c0
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+  "1":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: inputs.subsubplaybook
+          operator: isExists
+      label: found
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: inputs.subsubplaybook
+          operator: isNotExists
+      label: not found
+    continueonerrortype: ""
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      found:
+      - "2"
+      not found:
+      - "3"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: dd72a4bd-a9fe-4b77-8fe7-41990cdb0c81
+      iscommand: false
+      name: condition
+      type: condition
+      version: -1
+    taskid: dd72a4bd-a9fe-4b77-8fe7-41990cdb0c81
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 230
+        }
+      }
+  "2":
+    continueonerrortype: ""
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: found
+      value:
+        simple: ${inputs.subsubplaybook}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: 995499eb-d290-45e4-8ed2-b40b82f03a62
+      iscommand: false
+      name: found
+      script: Set
+      type: regular
+      version: -1
+    taskid: 995499eb-d290-45e4-8ed2-b40b82f03a62
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -170,
+          "y": 460
+        }
+      }
+  "3":
+    continueonerrortype: ""
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      key:
+        simple: notFound
+      value:
+        simple: ${inputs.subsubplaybook}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Set a value in context under the key you entered.
+      id: b867114d-cd77-4971-8820-548ed7f077dc
+      iscommand: false
+      name: found
+      script: Set
+      type: regular
+      version: -1
+    taskid: b867114d-cd77-4971-8820-548ed7f077dc
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 300,
+          "y": 480
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 525,
+        "width": 850,
+        "x": -170,
+        "y": 50
+      }
+    }
+  }
