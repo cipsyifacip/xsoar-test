@@ -1,0 +1,76 @@
+args:
+- description: the input url
+  name: value
+  required: true
+commonfields:
+  id: 90d117b1-c401-47f7-83f0-866a4d92e470
+  version: -1
+contentitemexportablefields:
+  contentitemfields:
+    definitionid: ""
+    fromServerVersion: ""
+    itemVersion: ""
+    packID: ""
+    packName: ""
+    prevname: ""
+    propagationLabels:
+    - all
+    toServerVersion: ""
+dockerimage: demisto/python3:3.9.7.24076
+enabled: true
+engineinfo: {}
+mainengineinfo: {}
+name: Brand_Abuse_AlertCategory
+pswd: ""
+runas: DBotWeakRole
+runonce: true
+script: |-
+  def main():
+      # Fetch the argument
+      val = demisto.args().get("value")
+
+      if not val:
+          return demisto.results("Others")
+
+      # Social Media, website phishing, and aplikasi ilegal lists
+      social_media_lists = [
+          'instagram', 'facebook', 'youtube', 'tiktok', 'weibo', 'whatsapp', 'pinterest', 'twitter',
+          'linkedin', 'olx', 'vimeo', 'telegram', 'email', 'dailymotion', 'fake_shop', 'skype',
+          'auto generated page', 'brand impersonation', 'executive impersonation', 'fake ad',
+          'other_social_media_infringement', 'reported_fraud_phone', 'soundcloud_brand_infringement'
+      ]
+
+      website_phishing_lists = [
+          'brand_infringement', 'brand abuse', 'cyber evil twin site', 'domain infringement',
+          'phish redirector', 'malware', 'cryptocurrency_investment_scam', 'dropsite',
+          'fake_bank_url', 'malware_c2', 'malware_c2_distribution', 'other_url', 'phishing_url',
+          'phishkit_archive', 'sends_malware_attachments', 'sends_phishing_url', 'targeted_attack',
+          'malicious redirector'
+      ]
+
+      aplikasi_ilegal_lists = [
+          'fake_mobile_app', 'suspicious mobile app', 'android_malware_distribution'
+      ]
+
+      # Check if any keyword exists in the string OR it is an exact match
+      if any(k in val for k in social_media_lists):
+          if 'phishkit' in val or val == 'exposed email address':
+              return demisto.results("Phishing Web")
+          return demisto.results("Social Media")
+
+      if any(k in val for k in website_phishing_lists):
+          return demisto.results("Phishing Web")
+
+      if any(k in val for k in aplikasi_ilegal_lists):
+          return demisto.results("Mobile App")
+
+      return demisto.results("Others")
+
+  if __name__ == "__builtin__" or __name__ == "builtins":
+      main()
+scripttarget: 0
+subtype: python3
+tags:
+- transformer
+- general
+type: python
